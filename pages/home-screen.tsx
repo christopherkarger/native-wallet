@@ -1,0 +1,57 @@
+import React from "react";
+import { FlatList, StyleSheet, View } from "react-native";
+import GradientView from "../components/gradient-view";
+import AppText from "../components/text";
+import WalletCard from "../components/wallet-card";
+
+const HomeScreen = (props) => {
+  return (
+    <GradientView>
+      <View style={styles.inner}>
+        <AppText style={styles.pfHeadline}>Portfolio</AppText>
+        <AppText style={styles.pfSubheadline}>Balance</AppText>
+        <AppText style={styles.balance}>7.334 €</AppText>
+      </View>
+
+      <FlatList
+        horizontal={true}
+        contentContainerStyle={{ paddingRight: 20, paddingLeft: 20 }}
+        keyboardShouldPersistTaps="handled"
+        data={[1, 2, 3, 4]}
+        keyExtractor={(_, index) => index.toString()}
+        renderItem={({ item, index }) => {
+          return (
+            <WalletCard
+              style={index > 0 ? { marginLeft: 20 } : {}}
+            ></WalletCard>
+          );
+        }}
+      ></FlatList>
+    </GradientView>
+  );
+};
+
+const styles = StyleSheet.create({
+  inner: {
+    marginLeft: 20,
+    marginRight: 20,
+  },
+  pfHeadline: {
+    fontSize: 40,
+    lineHeight: 40,
+    fontFamily: "roboto-black",
+  },
+  pfSubheadline: {
+    fontSize: 15,
+    marginTop: 30,
+  },
+  balance: {
+    fontSize: 40,
+    fontFamily: "roboto-black",
+    position: "relative",
+    top: -5,
+    marginBottom: 15,
+  },
+});
+
+export default HomeScreen;

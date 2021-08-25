@@ -1,21 +1,30 @@
-import { StatusBar } from 'expo-status-bar';
-import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import AppLoading from "expo-app-loading";
+import * as Font from "expo-font";
+import React, { useState } from "react";
+import { LogBox } from "react-native";
+import Main from "./pages/main";
+
+LogBox.ignoreLogs(["Setting a timer"]);
+
+const fetchFonts = () => {
+  return Font.loadAsync({
+    "roboto-black": require("./assets/fonts/Roboto-Black.ttf"),
+    "roboto-regular": require("./assets/fonts/Roboto-Regular.ttf"),
+  });
+};
 
 export default function App() {
-  return (
-    <View style={styles.container}>
-      <Text>Open up App.tsx to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
-  );
-}
+  const [appIsReady, setAppIsReady] = useState(false);
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+  if (!appIsReady) {
+    return (
+      <AppLoading
+        startAsync={fetchFonts}
+        onFinish={() => setAppIsReady(true)}
+        onError={console.warn}
+      />
+    );
+  }
+
+  return <Main />;
+}
