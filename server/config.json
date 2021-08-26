@@ -1,3 +1,37 @@
 {
-  "supported": ["Bitcoin", "Ethereum","Cardano", "Dodge"]
+  "supported": [
+    {
+      "short": "btc",
+      "name": "Bitcoin"
+    },
+    {
+      "short": "eth",
+      "name": "Ethereum"
+    },
+    {
+      "short": "eth",
+      "name": "ERC20"
+    },
+    {
+      "short": "ada",
+      "name": "Cardano"
+    },
+    {
+      "short": "doge",
+      "name": "DogeCoin"
+    },
+    {
+      "short": "ltc",
+      "name": "Litecoin"
+    },
+    {
+      "short": "dash",
+      "name": "Dash"
+    }
+  ],
+
+  "urls": {
+    "main": "https://api.blockcypher.com/v1/${coin}/main/addrs/${address}",
+    "ada":"https://cardano-mainnet.blockfrost.io/api/v0/addresses/${address}"
+  }
 }

@@ -1,8 +1,9 @@
 import React from "react";
-import { FlatList, StyleSheet, View } from "react-native";
+import { StyleSheet, View } from "react-native";
 import GradientView from "../components/gradient-view";
+import Market from "../components/market";
 import AppText from "../components/text";
-import WalletCard from "../components/wallet-card";
+import Wallets from "../components/wallets";
 
 const HomeScreen = (props) => {
   return (
@@ -13,20 +14,8 @@ const HomeScreen = (props) => {
         <AppText style={styles.balance}>7.334 €</AppText>
       </View>
 
-      <FlatList
-        horizontal={true}
-        contentContainerStyle={{ paddingRight: 20, paddingLeft: 20 }}
-        keyboardShouldPersistTaps="handled"
-        data={[1, 2, 3, 4]}
-        keyExtractor={(_, index) => index.toString()}
-        renderItem={({ item, index }) => {
-          return (
-            <WalletCard
-              style={index > 0 ? { marginLeft: 20 } : {}}
-            ></WalletCard>
-          );
-        }}
-      ></FlatList>
+      <Wallets data={[1, 2, 3, 4]}></Wallets>
+      <Market data={[1, 2, 3, 4]}></Market>
     </GradientView>
   );
 };

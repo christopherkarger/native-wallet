@@ -18,7 +18,11 @@ const fetchFonts = async () => {
       "roboto-black": require("./assets/fonts/Roboto-Black.ttf"),
       "roboto-regular": require("./assets/fonts/Roboto-Regular.ttf"),
     }),
-  ]).then(() => {});
+  ])
+    .then(() => {})
+    .catch((err) => {
+      throw new Error(err);
+    });
 };
 
 export default function App() {
