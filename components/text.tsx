@@ -1,6 +1,6 @@
 import React from "react";
 import { StyleSheet, Text } from "react-native";
-import { Colors } from "../constants";
+import { Colors, Fonts } from "../constants";
 
 const AppText = (props) => {
   if (!props.children) {
@@ -15,7 +15,7 @@ const AppText = (props) => {
 const styles = StyleSheet.create({
   text: {
     color: Colors.white,
-    fontFamily: "roboto-regular",
+    fontFamily: Fonts.regular,
   },
 });
 

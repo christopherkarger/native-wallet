@@ -1,5 +1,6 @@
 import React from "react";
 import { Image, StyleSheet, View } from "react-native";
+import { Colors, Fonts } from "../constants";
 import GraphLine from "./graph-line";
 import AppText from "./text";
 
@@ -16,8 +17,8 @@ const WalletCard = (props) => {
       <GraphLine
         data={[10, 12, 14, 12, 13]}
         width={310}
-        height={60}
-        lineColor="rgba(255, 255, 255, .25)"
+        height={58}
+        lineColor={Colors.green}
         strokeWidth={2}
       ></GraphLine>
       <View style={styles.cryptoWrapper}>
@@ -26,7 +27,7 @@ const WalletCard = (props) => {
           source={require("../assets/icons/crypto/btc.png")}
         ></Image>
         <AppText style={styles.cryptoName}>Bitcoin</AppText>
-        <AppText style={styles.percentage}>7,4%</AppText>
+        <AppText style={styles.percentage}>+7,4%</AppText>
       </View>
     </View>
   );
@@ -47,7 +48,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   amount: {
-    fontFamily: "roboto-black",
+    fontFamily: Fonts.bold,
     fontSize: 25,
     marginBottom: 0,
   },
@@ -56,22 +57,23 @@ const styles = StyleSheet.create({
     marginLeft: 10,
   },
   cryptoWrapper: {
-    paddingTop: 13,
+    paddingTop: 11,
     flexDirection: "row",
     alignItems: "center",
   },
   cryptoName: {
     fontSize: 15,
-    fontFamily: "roboto-black",
+    fontFamily: Fonts.bold,
     marginRight: "auto",
   },
   logo: {
-    width: 32,
-    height: 32,
-    marginRight: 10,
+    width: 36,
+    height: 36,
+    marginRight: 12,
   },
   percentage: {
     fontSize: 14,
+    color: Colors.green,
   },
 });
 

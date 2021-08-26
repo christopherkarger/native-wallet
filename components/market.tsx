@@ -1,5 +1,6 @@
 import React from "react";
 import { FlatList, Image, StyleSheet, View } from "react-native";
+import { Colors, Fonts } from "../constants";
 import AppText from "./text";
 
 const Market = (props) => {
@@ -22,6 +23,9 @@ const Market = (props) => {
                 <AppText style={styles.yourCoin}>Bitcoin</AppText>
                 <AppText style={styles.yourCoinShort}>BTC</AppText>
               </View>
+              <View style={styles.priceWrapper}>
+                <AppText style={styles.price}>51.234 €</AppText>
+              </View>
             </View>
           );
         }}
@@ -36,7 +40,7 @@ const styles = StyleSheet.create({
   },
   yourCoinsHeadline: {
     fontSize: 25,
-    fontFamily: "roboto-black",
+    fontFamily: Fonts.bold,
     marginBottom: 15,
   },
   yourCoinsWrapper: {
@@ -48,17 +52,24 @@ const styles = StyleSheet.create({
     paddingTop: 14,
   },
   yourCoinLogo: {
-    width: 25,
-    height: 25,
+    width: 36,
+    height: 36,
   },
   yourCoin: {
-    fontFamily: "roboto-black",
-    fontSize: 15,
-    marginLeft: 10,
+    fontSize: 16,
+    marginLeft: 12,
   },
   yourCoinShort: {
-    fontSize: 11,
-    marginLeft: 10,
+    fontSize: 14,
+    marginLeft: 12,
+    color: Colors.lightWhite,
+  },
+  priceWrapper: {
+    marginLeft: "auto",
+  },
+  price: {
+    fontFamily: Fonts.bold,
+    fontSize: 20,
   },
 });
 export default Market;

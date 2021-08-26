@@ -15,8 +15,10 @@ const fetchFonts = async () => {
         console.log(res);
       }),
     Font.loadAsync({
-      "roboto-black": require("./assets/fonts/Roboto-Black.ttf"),
-      "roboto-regular": require("./assets/fonts/Roboto-Regular.ttf"),
+      "karla-light": require("./assets/fonts/Karla-Light.ttf"),
+      "karla-regular": require("./assets/fonts/Karla-Regular.ttf"),
+      "karla-semibold": require("./assets/fonts/Karla-SemiBold.ttf"),
+      "karla-bold": require("./assets/fonts/Karla-Bold.ttf"),
     }),
   ])
     .then(() => {})

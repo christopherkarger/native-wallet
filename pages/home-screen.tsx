@@ -4,6 +4,7 @@ import GradientView from "../components/gradient-view";
 import Market from "../components/market";
 import AppText from "../components/text";
 import Wallets from "../components/wallets";
+import { Fonts } from "../constants";
 
 const HomeScreen = (props) => {
   return (
@@ -28,7 +29,7 @@ const styles = StyleSheet.create({
   pfHeadline: {
     fontSize: 40,
     lineHeight: 40,
-    fontFamily: "roboto-black",
+    fontFamily: Fonts.bold,
   },
   pfSubheadline: {
     fontSize: 15,
@@ -36,7 +37,7 @@ const styles = StyleSheet.create({
   },
   balance: {
     fontSize: 40,
-    fontFamily: "roboto-black",
+    fontFamily: Fonts.bold,
     position: "relative",
     top: -5,
     marginBottom: 15,
