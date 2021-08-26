@@ -1,33 +1,38 @@
 import React from "react";
 import { Image, StyleSheet, View } from "react-native";
 import { Colors, Fonts } from "../constants";
-import GraphLine from "./graph-line";
 import AppText from "./text";
 
 const WalletCard = (props) => {
   return (
     <View style={{ ...styles.card, ...props.style }}>
-      <View style={styles.amountWrapper}>
-        <AppText style={styles.amount}>{props.data.amount}</AppText>
-        <AppText style={styles.amountShort}>
-          {props.data.name.toUpperCase()}
-        </AppText>
-      </View>
-
-      <GraphLine
-        data={[10, 12, 14, 12, 13]}
-        width={310}
-        height={58}
-        lineColor={Colors.green}
-        strokeWidth={2}
-      ></GraphLine>
       <View style={styles.cryptoWrapper}>
         <Image
           style={styles.logo}
           source={require("../assets/icons/crypto/btc.png")}
         ></Image>
-        <AppText style={styles.cryptoName}>Bitcoin</AppText>
-        <AppText style={styles.percentage}>+7,4%</AppText>
+        <AppText style={styles.cryptoName}>{props.data.cryptoName}</AppText>
+        <AppText
+          style={(() => {
+            return props.data.percentage >= 0
+              ? {
+                  ...styles.percentage,
+                  ...styles.percentagePos,
+                }
+              : {
+                  ...styles.percentage,
+                  ...styles.percentageNeg,
+                };
+          })()}
+        >
+          {props.data.percentage > 0 ? "+" : ""}
+          {props.data.percentage}
+        </AppText>
+      </View>
+
+      <View style={styles.amountWrapper}>
+        <AppText style={styles.amount}>{props.data.amount}</AppText>
+        <AppText style={styles.amountShort}>{props.data.shortName}</AppText>
       </View>
     </View>
   );
@@ -35,10 +40,11 @@ const WalletCard = (props) => {
 
 const styles = StyleSheet.create({
   card: {
-    paddingHorizontal: 15,
-    paddingTop: 8,
+    paddingHorizontal: 20,
+    paddingTop: 13,
+    paddingBottom: 15,
     width: 215,
-    height: 160,
+    height: 140,
     borderRadius: 25,
     backgroundColor: "rgba(255,255,255, .13)",
   },
@@ -46,18 +52,18 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
+    flex: 1,
   },
   amount: {
     fontFamily: Fonts.bold,
-    fontSize: 25,
-    marginBottom: 0,
+    fontSize: 30,
   },
   amountShort: {
     fontSize: 15,
     marginLeft: 10,
+    color: Colors.lightWhite,
   },
   cryptoWrapper: {
-    paddingTop: 11,
     flexDirection: "row",
     alignItems: "center",
   },
@@ -73,7 +79,12 @@ const styles = StyleSheet.create({
   },
   percentage: {
     fontSize: 14,
+  },
+  percentagePos: {
     color: Colors.green,
+  },
+  percentageNeg: {
+    color: Colors.red,
   },
 });
 

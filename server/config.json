@@ -1,31 +1,31 @@
 {
   "supported": [
     {
-      "short": "btc",
+      "short": "BTC",
       "name": "Bitcoin"
     },
     {
-      "short": "eth",
+      "short": "ETH",
       "name": "Ethereum"
     },
     {
-      "short": "eth",
+      "short": "",
       "name": "ERC20"
     },
     {
-      "short": "ada",
+      "short": "ADA",
       "name": "Cardano"
     },
     {
-      "short": "doge",
+      "short": "DOGE",
       "name": "DogeCoin"
     },
     {
-      "short": "ltc",
+      "short": "LTC",
       "name": "Litecoin"
     },
     {
-      "short": "dash",
+      "short": "DASH",
       "name": "Dash"
     }
   ],

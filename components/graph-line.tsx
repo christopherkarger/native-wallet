@@ -33,6 +33,7 @@ const GraphLine = (props) => {
           decimalPlaces: 2,
           color: () => props.lineColor,
           strokeWidth: props.strokeWidth,
+          width: props.width * 1.2,
         }}
         bezier
       />
@@ -45,8 +46,10 @@ const styles = StyleSheet.create({
   },
   chart: {
     position: "relative",
-    left: "-38%",
-    top: "-7%",
+    left: "-33%",
+    top: "-20%",
+    padding: 0,
+    margin: 0,
   },
 });
 

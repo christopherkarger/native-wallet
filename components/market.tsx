@@ -1,6 +1,7 @@
 import React from "react";
-import { FlatList, Image, StyleSheet, View } from "react-native";
+import { Dimensions, FlatList, Image, StyleSheet, View } from "react-native";
 import { Colors, Fonts } from "../constants";
+import GraphLine from "./graph-line";
 import AppText from "./text";
 
 const Market = (props) => {
@@ -19,10 +20,23 @@ const Market = (props) => {
                 style={styles.yourCoinLogo}
                 source={require("../assets/icons/crypto/btc.png")}
               ></Image>
+
               <View>
                 <AppText style={styles.yourCoin}>Bitcoin</AppText>
                 <AppText style={styles.yourCoinShort}>BTC</AppText>
               </View>
+              {Dimensions.get("window").width >= 400 && (
+                <View style={styles.graph}>
+                  <GraphLine
+                    data={[10, 12, 14, 12, 13]}
+                    width={200}
+                    height={58}
+                    lineColor={Colors.green}
+                    strokeWidth={2}
+                  ></GraphLine>
+                </View>
+              )}
+
               <View style={styles.priceWrapper}>
                 <AppText style={styles.price}>51.234 €</AppText>
               </View>
@@ -46,10 +60,10 @@ const styles = StyleSheet.create({
   yourCoinsWrapper: {
     flexDirection: "row",
     alignItems: "center",
-    marginBottom: 15,
+    marginBottom: 10,
     borderTopWidth: 1,
     borderColor: "rgba(255,255,255, 0.1)",
-    paddingTop: 14,
+    paddingTop: 12,
   },
   yourCoinLogo: {
     width: 36,
@@ -70,6 +84,10 @@ const styles = StyleSheet.create({
   price: {
     fontFamily: Fonts.bold,
     fontSize: 20,
+  },
+  graph: {
+    marginLeft: 23,
+    transform: [{ translateY: 5 }],
   },
 });
 export default Market;

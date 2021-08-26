@@ -1,5 +1,6 @@
 import React from "react";
 import { FlatList, StyleSheet } from "react-native";
+import { Wallet } from "../models/wallet";
 import WalletCard from "./wallet-card";
 
 const Wallets = (props) => {
@@ -14,10 +15,7 @@ const Wallets = (props) => {
       renderItem={({ item, index }) => {
         return (
           <WalletCard
-            data={{
-              name: "btc",
-              amount: 0.1,
-            }}
+            data={new Wallet("Bitcoin", "BTC", "12.3232", 7.4)}
             style={index > 0 ? { marginLeft: 20 } : {}}
           ></WalletCard>
         );
