@@ -7,7 +7,7 @@ import AppText from "./text";
 const Market = (props) => {
   return (
     <View style={styles.inner}>
-      <AppText style={styles.yourCoinsHeadline}>Krypto Markt</AppText>
+      <AppText style={styles.marketHeadline}>Krypto Markt</AppText>
 
       <FlatList
         data={props.data}
@@ -52,7 +52,7 @@ const styles = StyleSheet.create({
     marginLeft: 20,
     marginRight: 20,
   },
-  yourCoinsHeadline: {
+  marketHeadline: {
     fontSize: 25,
     fontFamily: Fonts.bold,
     marginBottom: 15,

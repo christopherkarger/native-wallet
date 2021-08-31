@@ -26,7 +26,8 @@ const Wallets = (props) => {
 
 const styles = StyleSheet.create({
   wallets: {
-    marginBottom: 40,
+    marginBottom: 30,
+    flexGrow: 0,
   },
 });
 
