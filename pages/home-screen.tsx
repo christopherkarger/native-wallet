@@ -5,10 +5,16 @@ import Market from "../components/market";
 import AppText from "../components/text";
 import Wallets from "../components/wallets";
 import { Colors, Fonts } from "../constants";
+import { Wallet } from "../models/wallet";
 
 const HomeScreen = (props) => {
-  const walletsData: any[] = [];
-  const marketData = [1, 2, 3, 4];
+  const walletsData: Wallet[] = [
+    // new Wallet("Bitcoin", "BTC", 12.3232, 7.4),
+    // new Wallet("Ethereum", "ETH", 0.1, 7.4),
+    // new Wallet("Dogecoin", "DOGE", 0.533, 7.4),
+    // new Wallet("Litecoin", "LTC", 5000.3232, 7.4),
+  ];
+  const marketData: any[] = [];
 
   return (
     <>

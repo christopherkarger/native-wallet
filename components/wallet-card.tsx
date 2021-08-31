@@ -4,6 +4,7 @@ import { Colors, Fonts } from "../constants";
 import AppText from "./text";
 
 const WalletCard = (props) => {
+  console.log(props.data);
   return (
     <View style={{ ...styles.card, ...props.style }}>
       <View style={styles.cryptoWrapper}>
@@ -31,7 +32,7 @@ const WalletCard = (props) => {
       </View>
 
       <View style={styles.amountWrapper}>
-        <AppText style={styles.amount}>{props.data.amount}</AppText>
+        <AppText style={styles.amount}>{props.data.walletAmount}</AppText>
         <AppText style={styles.amountShort}>{props.data.shortName}</AppText>
       </View>
     </View>
