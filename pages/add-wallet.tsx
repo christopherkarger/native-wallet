@@ -1,15 +1,23 @@
 import React from "react";
 import { StyleSheet } from "react-native";
-import AppText from "../components/text";
+import SubPageHeader from "../components/sub-page-header";
 
 const AddWalletScreen = (props) => {
   return (
     <>
-      <AppText>Hallo</AppText>
+      <SubPageHeader navigation={props.navigation}>
+        Neues Wallet anlegen
+      </SubPageHeader>
     </>
   );
 };
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  header: {
+    flexDirection: "row",
+    justifyContent: "center",
+    alignContent: "center",
+  },
+});
 
 export default AddWalletScreen;
