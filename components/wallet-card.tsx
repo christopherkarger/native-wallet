@@ -4,14 +4,10 @@ import { Colors, Fonts } from "../constants";
 import AppText from "./text";
 
 const WalletCard = (props) => {
-  console.log(props.data);
   return (
     <View style={{ ...styles.card, ...props.style }}>
       <View style={styles.cryptoWrapper}>
-        <Image
-          style={styles.logo}
-          source={require("../assets/icons/crypto/btc.png")}
-        ></Image>
+        <Image style={styles.logo} source={props.data.icon}></Image>
         <AppText style={styles.cryptoName}>{props.data.cryptoName}</AppText>
         <AppText
           style={(() => {
