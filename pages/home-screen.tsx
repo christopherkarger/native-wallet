@@ -9,13 +9,13 @@ import { Wallet } from "../models/wallet";
 
 const HomeScreen = (props) => {
   const walletsData: Wallet[] = [
-    new Wallet("Bitcoin", "BTC", 12.3232, 7.4),
-    new Wallet("Cardano", "ADA", 503.444, 7.4),
-    new Wallet("Ethereum", "ETH", 0.1, 7.4),
-    new Wallet("Dogecoin", "DOGE", 0.533, 7.4),
-    new Wallet("Litecoin", "LTC", 5000.3232, 7.4),
+    //   new Wallet("Bitcoin", "BTC", 12.3232, 7.4),
+    //   new Wallet("Cardano", "ADA", 503.444, 7.4),
+    //   new Wallet("Ethereum", "ETH", 0.1, 7.4),
+    //   new Wallet("Dogecoin", "DOGE", 0.533, 7.4),
+    //   new Wallet("Litecoin", "LTC", 5000.3232, 7.4),
   ];
-  const marketData: any[] = [];
+  const marketData: any[] = [1, 2, 3, 4];
 
   return (
     <>

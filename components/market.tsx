@@ -18,7 +18,7 @@ const Market = (props) => {
             <View style={styles.yourCoinsWrapper}>
               <Image
                 style={styles.yourCoinLogo}
-                source={require("../assets/icons/crypto/btc.png")}
+                source={require("@/node_modules/cryptocurrency-icons/128/color/btc.png")}
               ></Image>
 
               <View>

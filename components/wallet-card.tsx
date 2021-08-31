@@ -7,7 +7,7 @@ const WalletCard = (props) => {
   return (
     <View style={{ ...styles.card, ...props.style }}>
       <View style={styles.cryptoWrapper}>
-        <Image style={styles.logo} source={props.data.icon}></Image>
+        <Image style={styles.logo} source={props.data.icon.path}></Image>
         <AppText style={styles.cryptoName}>{props.data.cryptoName}</AppText>
         <AppText
           style={(() => {

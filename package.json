@@ -9,6 +9,7 @@
     "deploy-server": "cd server && firebase deploy"
   },
   "dependencies": {
+    "@react-native-picker/picker": "1.16.1",
     "@react-navigation/native": "^6.0.2",
     "@react-navigation/native-stack": "^6.1.0",
     "cryptocurrency-icons": "^0.18.0",
@@ -29,6 +30,7 @@
     "@babel/core": "^7.9.0",
     "@types/react": "~16.9.35",
     "@types/react-native": "~0.63.2",
+    "babel-plugin-root-import": "^6.6.0",
     "typescript": "~4.0.0"
   },
   "private": true
