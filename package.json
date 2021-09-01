@@ -9,7 +9,6 @@
     "deploy-server": "cd server && firebase deploy"
   },
   "dependencies": {
-    "@react-native-picker/picker": "1.16.1",
     "@react-navigation/native": "^6.0.2",
     "@react-navigation/native-stack": "^6.1.0",
     "cryptocurrency-icons": "^0.18.0",

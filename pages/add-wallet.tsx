@@ -1,4 +1,3 @@
-import { Picker } from "@react-native-picker/picker";
 import React, { useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { Colors } from "~/constants";
@@ -12,17 +11,8 @@ const AddWalletScreen = (props) => {
       <SubPageHeader navigation={props.navigation}>
         Neues Wallet anlegen
       </SubPageHeader>
-      <View style={styles.pickerWrapper}>
-        <Picker
-          style={styles.picker}
-          selectedValue={cryptoName}
-          onValueChange={(v) => setCryptoName(v)}
-          accessibilityLabel="Styled Picker Accessibility Label"
-        >
-          <Picker.Item label="Java" value="java" />
-          <Picker.Item label="JavaScript" value="js" />
-        </Picker>
-      </View>
+      <View></View>
+
       {/* <TextInput
         style={styles.textInput}
         placeholder="Wallet Adresse"
