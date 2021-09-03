@@ -25,18 +25,17 @@ const preload = () => {
 
 export default function App() {
   const [appIsReady, setAppIsReady] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [loadingError, setLoadingError] = useState(false);
   const [fetchedConfig, setFetchedConfig] = useState(defaultConfig);
 
   useEffect(() => {
+    setLoading(true);
     fetch(config.configUrl)
       .then((response) => response.json())
-      .then((res: IConfig) => {
-        setFetchedConfig(res);
-      })
-      .catch(() => {
-        setLoadingError(true);
-      });
+      .then((res: IConfig) => setFetchedConfig(res))
+      .catch(() => setLoadingError(true))
+      .finally(() => setLoading(false));
   }, []);
 
   if (!appIsReady) {
@@ -49,13 +48,14 @@ export default function App() {
     );
   }
 
-  if (loadingError) {
+  if (loading || loadingError) {
     return (
       <GradientView>
         <StatusBar style="light" />
-        <SafeArea style={styles.configFailedArea}>
-          <AppText style={styles.configFailedText}>
-            Da ist wohl was schief gegangen!
+        <SafeArea style={styles.configLoadingArea}>
+          <AppText style={styles.configLoadingText}>
+            {loading && <>Lade...</>}
+            {loadingError && <>Da ist wohl was schief gegangen!...</>}
           </AppText>
         </SafeArea>
       </GradientView>
@@ -71,14 +71,14 @@ export default function App() {
 }
 
 const styles = StyleSheet.create({
-  configFailedArea: {
+  configLoadingArea: {
     flex: 1,
     width: "100%",
     height: "100%",
     alignItems: "center",
     justifyContent: "center",
   },
-  configFailedText: {
+  configLoadingText: {
     fontFamily: Fonts.bold,
     fontSize: 18,
   },
