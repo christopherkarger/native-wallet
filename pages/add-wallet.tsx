@@ -1,41 +1,64 @@
 import React, { useState } from "react";
-import { StyleSheet, View } from "react-native";
+import { StyleSheet, TouchableWithoutFeedback, View } from "react-native";
+import Modal from "~/components/modal";
+import SafeArea from "~/components/safe-area";
+import AppText from "~/components/text";
 import { Colors } from "~/constants";
+import { AppConfig } from "~/models/context";
 import SubPageHeader from "../components/sub-page-header";
 
 const AddWalletScreen = (props) => {
   const [cryptoName, setCryptoName] = useState("");
+  const [showModal, setShowModal] = useState(false);
 
   return (
-    <>
-      <SubPageHeader navigation={props.navigation}>
-        Neues Wallet anlegen
-      </SubPageHeader>
-      <View></View>
+    <AppConfig.Consumer>
+      {(config) => (
+        <SafeArea>
+          <SubPageHeader navigation={props.navigation}>
+            Neues Wallet anlegen
+          </SubPageHeader>
 
-      {/* <TextInput
-        style={styles.textInput}
-        placeholder="Wallet Adresse"
-      ></TextInput> */}
-    </>
+          <View style={styles.inner}>
+            <TouchableWithoutFeedback
+              onPress={() => {
+                console.log(config);
+                setShowModal(true);
+              }}
+            >
+              <View style={styles.cryptoName}>
+                <AppText>Name der Kryptowährung</AppText>
+              </View>
+            </TouchableWithoutFeedback>
+          </View>
+
+          <Modal
+            show={showModal}
+            onClose={() => {
+              setShowModal(false);
+            }}
+          >
+            <AppText style={styles.addCryptoModal}>Hallo</AppText>
+          </Modal>
+        </SafeArea>
+      )}
+    </AppConfig.Consumer>
   );
 };
 
 const styles = StyleSheet.create({
-  pickerWrapper: {
-    backgroundColor: "red",
-    width: 50,
-    height: 50,
+  inner: {
+    marginHorizontal: 20,
   },
-  picker: {
-    color: Colors.transparent,
-    width: "100%",
-    height: "100%",
-    backgroundColor: Colors.transparent,
+  cryptoName: {
+    borderColor: Colors.fadeLight,
+    borderRadius: 5,
+    borderWidth: 1,
+    paddingVertical: 12,
+    paddingHorizontal: 15,
   },
-  textInput: {
-    borderColor: Colors.lightWhite,
-    borderWidth: 2,
+  addCryptoModal: {
+    color: "black",
   },
 });
 

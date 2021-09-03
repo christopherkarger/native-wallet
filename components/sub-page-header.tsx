@@ -6,7 +6,7 @@ import AppText from "./text";
 
 const SubPageHeader = (props) => {
   return (
-    <View style={styles.header}>
+    <View style={{ ...styles.header, ...props.style }}>
       <TouchableOpacity
         style={styles.backButton}
         onPress={() => props.navigation.goBack()}
@@ -23,6 +23,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "center",
     alignContent: "center",
+    marginBottom: 20,
   },
   backButton: {
     position: "absolute",

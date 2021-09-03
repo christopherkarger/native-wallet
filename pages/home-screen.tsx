@@ -1,5 +1,6 @@
 import React from "react";
 import { StyleSheet, View } from "react-native";
+import SafeArea from "~/components/safe-area";
 import EmptyWallets from "../components/empty-wallets";
 import Market from "../components/market";
 import AppText from "../components/text";
@@ -18,7 +19,7 @@ const HomeScreen = (props) => {
   const marketData: any[] = [1, 2, 3, 4];
 
   return (
-    <>
+    <SafeArea>
       {walletsData.length === 0 && (
         <EmptyWallets navigation={props.navigation}></EmptyWallets>
       )}
@@ -35,7 +36,7 @@ const HomeScreen = (props) => {
       {walletsData.length > 0 && marketData.length > 0 && (
         <Market data={marketData}></Market>
       )}
-    </>
+    </SafeArea>
   );
 };
 
