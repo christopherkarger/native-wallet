@@ -3,10 +3,11 @@ interface ICrypto {
   short: string;
 }
 
+interface ICryptoUrls {
+  [key: string]: string;
+}
+
 export interface IConfig {
   supported: ICrypto[];
-  urls: {
-    ada: string;
-    main: string;
-  };
+  urls: ICryptoUrls[];
 }

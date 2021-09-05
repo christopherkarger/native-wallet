@@ -1,9 +1,9 @@
 import React, { useState } from "react";
-import { StyleSheet, TouchableWithoutFeedback, View } from "react-native";
+import { FlatList, StyleSheet, TouchableOpacity, View } from "react-native";
 import Modal from "~/components/modal";
 import SafeArea from "~/components/safe-area";
 import AppText from "~/components/text";
-import { Colors } from "~/constants";
+import { Colors, Fonts } from "~/constants";
 import { AppConfig } from "~/models/context";
 import SubPageHeader from "../components/sub-page-header";
 
@@ -20,16 +20,17 @@ const AddWalletScreen = (props) => {
           </SubPageHeader>
 
           <View style={styles.inner}>
-            <TouchableWithoutFeedback
+            <TouchableOpacity
               onPress={() => {
-                console.log(config);
                 setShowModal(true);
               }}
             >
               <View style={styles.cryptoName}>
-                <AppText>Name der Kryptowährung</AppText>
+                <AppText>
+                  {cryptoName ? cryptoName : "Name der Kryptowährung"}
+                </AppText>
               </View>
-            </TouchableWithoutFeedback>
+            </TouchableOpacity>
           </View>
 
           <Modal
@@ -38,7 +39,25 @@ const AddWalletScreen = (props) => {
               setShowModal(false);
             }}
           >
-            <AppText style={styles.addCryptoModal}>Hallo</AppText>
+            <FlatList
+              data={config.supported}
+              keyExtractor={(_, index) => index.toString()}
+              renderItem={({ item, index }) => {
+                return (
+                  <TouchableOpacity
+                    onPress={() => {
+                      setCryptoName(item.name);
+                      setShowModal(false);
+                    }}
+                    style={styles.addCryptoItemWrapper}
+                  >
+                    <AppText style={styles.addCryptoModalText}>
+                      {item.name}
+                    </AppText>
+                  </TouchableOpacity>
+                );
+              }}
+            ></FlatList>
           </Modal>
         </SafeArea>
       )}
@@ -57,8 +76,13 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
     paddingHorizontal: 15,
   },
-  addCryptoModal: {
-    color: "black",
+  addCryptoItemWrapper: {
+    paddingVertical: 13,
+    paddingHorizontal: 8,
+  },
+  addCryptoModalText: {
+    color: Colors.text,
+    fontFamily: Fonts.bold,
   },
 });
 

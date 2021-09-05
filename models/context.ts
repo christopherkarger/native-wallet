@@ -3,9 +3,6 @@ import { IConfig } from "../models/config";
 
 export const defaultConfig: IConfig = {
   supported: [],
-  urls: {
-    ada: "",
-    main: "",
-  },
+  urls: [],
 };
 export const AppConfig = React.createContext<IConfig>(defaultConfig);

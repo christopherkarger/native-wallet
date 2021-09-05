@@ -40,6 +40,7 @@ const styles = StyleSheet.create({
   inner: {
     backgroundColor: Colors.white,
     zIndex: 20,
+    maxHeight: "40%",
   },
 });
 

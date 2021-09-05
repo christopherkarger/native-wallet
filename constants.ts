@@ -23,4 +23,5 @@ export const Colors = {
   green: "#01B670",
   red: "#E8503A",
   btcRGB: "247,147,25",
+  text: "#333333",
 };
