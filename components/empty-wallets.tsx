@@ -1,7 +1,7 @@
 import React from "react";
-import { Image, StyleSheet, TouchableOpacity, View } from "react-native";
-import { Colors, Fonts, PathNames } from "../constants";
-import AppText from "./text";
+import { Image, StyleSheet, View } from "react-native";
+import { PathNames } from "../constants";
+import Button from "./button";
 
 const EmptyWallets = (props) => {
   return (
@@ -9,12 +9,11 @@ const EmptyWallets = (props) => {
       <View style={styles.innerWrapper}>
         <Image source={require("../assets/wallet.png")}></Image>
         <View style={styles.addWalletWrapper}>
-          <TouchableOpacity
+          <Button
+            style={styles.addWallet}
             onPress={() => props.navigation.navigate(PathNames.addWallet)}
-            style={styles.addWalletButton}
-          >
-            <AppText style={styles.addWalletText}>Wallet hinzufügen</AppText>
-          </TouchableOpacity>
+            text="Wallet hinzufügen"
+          ></Button>
         </View>
       </View>
     </View>
@@ -35,16 +34,9 @@ const styles = StyleSheet.create({
   addWalletWrapper: {
     alignItems: "center",
   },
-  addWalletButton: {
+
+  addWallet: {
     marginTop: 25,
-    textAlign: "center",
-    backgroundColor: Colors.green,
-    paddingHorizontal: 15,
-    paddingVertical: 10,
-    borderRadius: 20,
-  },
-  addWalletText: {
-    fontFamily: Fonts.bold,
   },
 });
 

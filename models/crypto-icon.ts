@@ -1,7 +1,9 @@
+import { ImageSourcePropType } from "react-native";
+
 export class CryptoIcon {
   constructor(readonly cryptoName: string) {}
 
-  get path(): NodeRequire {
+  get path(): ImageSourcePropType {
     switch (this.cryptoName) {
       case "Bitcoin":
         return require("~/node_modules/cryptocurrency-icons/128/color/btc.png");

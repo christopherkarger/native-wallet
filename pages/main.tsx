@@ -2,11 +2,16 @@ import { DefaultTheme, NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import React from "react";
 import GradientView from "~/components/gradient-view";
+import { createLocalDBTable } from "~/db";
 import { Colors, PathNames } from "../constants";
 import AddWalletScreen from "./add-wallet";
 import HomeScreen from "./home-screen";
 
 const Stack = createNativeStackNavigator();
+
+createLocalDBTable().catch(() => {
+  console.warn("Local DB could no be created");
+});
 
 const AppTheme = {
   ...DefaultTheme,

@@ -1,8 +1,18 @@
-import React from "react";
-import { Dimensions, StyleSheet, TouchableOpacity, View } from "react-native";
+import React, { useEffect } from "react";
+import {
+  Dimensions,
+  Keyboard,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import { Colors } from "~/constants";
 
 const Modal = (props) => {
+  useEffect(() => {
+    Keyboard.dismiss();
+  }, [props.show]);
+
   return (
     <>
       {props.show && (
@@ -41,6 +51,11 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.white,
     zIndex: 20,
     maxHeight: "40%",
+    width: "80%",
+    position: "relative",
+    left: "10%",
+    borderRadius: 10,
+    overflow: "hidden",
   },
 });
 
