@@ -4,14 +4,30 @@ const dbName = "wallets";
 
 const db = SQLite.openDatabase(`${dbName}.db`);
 
+export interface ILocalWallet {
+  cryptoAddress: string;
+  cryptoName: string;
+  cryptoCurrency: string;
+  id: number;
+}
+
+interface ISQLResult extends SQLite.SQLResultSet {
+  rows: {
+    _array: ILocalWallet[];
+    length: number;
+    item(index: number): any;
+  };
+}
+
 export const createLocalDBTable = () => {
-  return new Promise<SQLite.SQLResultSet>((resolve, reject) => {
+  return new Promise<ISQLResult>((resolve, reject) => {
     db.transaction((tx) => {
       tx.executeSql(
-        `CREATE TABLE IF NOT EXISTS ${dbName} (id INTEGER PRIMARY KEY NOT NULL, cryptoName TEXT NOT NULL, cryptoAddress TEXT NOT NULL);`,
+        `CREATE TABLE IF NOT EXISTS ${dbName} (id INTEGER PRIMARY KEY NOT NULL, cryptoName TEXT NOT NULL, cryptoCurrency TEXT NOT NULL, cryptoAddress TEXT NOT NULL);`,
         [],
         (_, result) => {
-          resolve(result);
+          console.log(result);
+          resolve(<ISQLResult>result);
         },
         (_, error) => {
           reject(error);
@@ -24,15 +40,16 @@ export const createLocalDBTable = () => {
 
 export const insertItemToLocalDB = (
   cryptoName: string,
+  cryptoCurrency: string,
   cryptoAddress: string
 ) => {
-  return new Promise<SQLite.SQLResultSet>((resolve, reject) => {
+  return new Promise<ISQLResult>((resolve, reject) => {
     db.transaction((tx) => {
       tx.executeSql(
-        `INSERT INTO ${dbName} (cryptoName, cryptoAddress) VALUES (?,?);`,
-        [cryptoName, cryptoAddress],
+        `INSERT INTO ${dbName} (cryptoName, cryptoCurrency, cryptoAddress) VALUES (?,?,?);`,
+        [cryptoName, cryptoCurrency, cryptoAddress],
         (_, result) => {
-          resolve(result);
+          resolve(<ISQLResult>result);
         },
         (_, error) => {
           reject(error);
@@ -44,13 +61,31 @@ export const insertItemToLocalDB = (
 };
 
 export const selectLocalDBTable = () => {
-  return new Promise<SQLite.SQLResultSet>((resolve, reject) => {
+  return new Promise<ISQLResult>((resolve, reject) => {
     db.transaction((tx) => {
       tx.executeSql(
         `SELECT * FROM ${dbName}`,
         [],
         (_, result) => {
-          resolve(result);
+          resolve(<ISQLResult>result);
+        },
+        (_, error) => {
+          reject(error);
+          return true;
+        }
+      );
+    });
+  });
+};
+
+export const dropLocalDBTable = () => {
+  return new Promise<ISQLResult>((resolve, reject) => {
+    db.transaction((tx) => {
+      tx.executeSql(
+        `DROP TABLE IF EXISTS ${dbName}`,
+        [],
+        (_, result) => {
+          resolve(<ISQLResult>result);
         },
         (_, error) => {
           reject(error);

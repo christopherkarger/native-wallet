@@ -1,6 +1,6 @@
 interface ICrypto {
   name: string;
-  short: string;
+  currency: string;
 }
 
 interface ICryptoUrls {

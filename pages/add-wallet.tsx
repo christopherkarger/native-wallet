@@ -21,8 +21,9 @@ import SubPageHeader from "../components/sub-page-header";
 
 const AddWalletScreen = (props) => {
   const [cryptoName, setCryptoName] = useState("");
-  const [showModal, setShowModal] = useState(false);
+  const [cryptoCurrency, setCryptoCurrency] = useState("");
   const [cryptoAddress, setEnteredCryptoAddress] = useState("");
+  const [showModal, setShowModal] = useState(false);
   return (
     <AppConfig.Consumer>
       {(config) => (
@@ -53,12 +54,21 @@ const AddWalletScreen = (props) => {
                 ></TextInput>
                 <Button
                   onPress={() => {
-                    insertItemToLocalDB(cryptoName, cryptoAddress)
+                    if (!cryptoName || !cryptoAddress) {
+                      return;
+                    }
+                    insertItemToLocalDB(
+                      cryptoName,
+                      cryptoCurrency,
+                      cryptoAddress
+                    )
                       .then(() => {
-                        props.navigation.navigate(PathNames.home);
+                        props.navigation.navigate(PathNames.home, {
+                          updateWallet: true,
+                        });
                       })
-                      .catch(() => {
-                        throw new Error("Insert wallet into local db failed");
+                      .catch((err) => {
+                        console.log(err);
                       });
                   }}
                   style={styles.addWallet}
@@ -83,6 +93,7 @@ const AddWalletScreen = (props) => {
                   <TouchableOpacity
                     onPress={() => {
                       setCryptoName(item.name);
+                      setCryptoCurrency(item.currency);
                       setShowModal(false);
                     }}
                   >
@@ -149,7 +160,7 @@ const styles = StyleSheet.create({
     left: 0,
   },
   addWallet: {
-    marginTop: 25,
+    marginTop: 5,
   },
 });
 

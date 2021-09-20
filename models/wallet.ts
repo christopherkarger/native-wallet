@@ -2,17 +2,21 @@ import { CryptoIcon } from "./crypto-icon";
 
 export class Wallet {
   readonly icon: CryptoIcon;
+  readonly amount?: number;
+  readonly percentage?: number;
 
   constructor(
     readonly cryptoName: string,
-    readonly shortName: string,
-    readonly amount: number,
-    readonly percentage: number
+    readonly cryptoCurrency: string,
+    readonly cryptoAddress: string
   ) {
     this.icon = new CryptoIcon(cryptoName);
   }
 
-  get walletAmount(): string {
+  get walletAmount(): string | undefined {
+    if (!this.amount) {
+      return;
+    }
     const maxChars = 7;
     if (this.amount.toString().split("").length > maxChars) {
       const toFixedDecimal = this.amount.toFixed(2);

@@ -9,7 +9,8 @@ import HomeScreen from "./home-screen";
 
 const Stack = createNativeStackNavigator();
 
-createLocalDBTable().catch(() => {
+createLocalDBTable().catch((err) => {
+  console.log(err);
   console.warn("Local DB could no be created");
 });
 
