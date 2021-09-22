@@ -19,10 +19,16 @@ const HomeScreen = (props) => {
         const localWallets = await selectLocalDBTable().catch(() => {});
         if (localWallets && localWallets.rows.length) {
           const localWalletsArr = localWallets.rows._array;
+
           setWalletsData(
             localWalletsArr.map(
               (e: ILocalWallet) =>
-                new Wallet(e.cryptoName, e.cryptoCurrency, e.cryptoAddress)
+                new Wallet(
+                  e.cryptoName,
+                  e.cryptoCurrency,
+                  e.cryptoAddress,
+                  e.cryptoBalance
+                )
             )
           );
         }
@@ -33,14 +39,6 @@ const HomeScreen = (props) => {
       routeSub();
     };
   }, []);
-
-  //const walletsData: Wallet[] = [
-  //   new Wallet("Bitcoin", "BTC", 12.3232, 7.4),
-  //   new Wallet("Cardano", "ADA", 503.444, 7.4),
-  //   new Wallet("Ethereum", "ETH", 0.1, 7.4),
-  //   new Wallet("Dogecoin", "DOGE", 0.533, 7.4),
-  //   new Wallet("Litecoin", "LTC", 5000.3232, 7.4),
-  //];
 
   const marketData: any[] = [];
 

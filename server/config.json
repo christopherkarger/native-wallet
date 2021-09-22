@@ -30,8 +30,8 @@
     }
   ],
 
-  "urls": [
-    { "main": "https://api.blockcypher.com/v1/${coin}/main/addrs/${address}" },
-    { "ada":"https://cardano-mainnet.blockfrost.io/api/v0/addresses/${address}" }
-  ]   
+  "urls": { 
+    "main": "https://api.blockcypher.com/v1/${currency}/main/addrs/${address}",
+    "ada":"https://cardano-mainnet.blockfrost.io/api/v0/addresses/${address}"
+  }  
 }

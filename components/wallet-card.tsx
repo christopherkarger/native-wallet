@@ -1,14 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { Image, StyleSheet, View } from "react-native";
 import { Colors, Fonts } from "../constants";
 import AppText from "./text";
 
 const WalletCard = (props) => {
-  const [walletAmount, setWalletAmount] = useState("0");
-  useEffect(() => {
-    console.log(props.data);
-    console.log("get wallet amount of - ", props.data.cryptoAddress);
-  }, []);
   return (
     <View style={{ ...styles.card, ...props.style }}>
       <View style={styles.cryptoWrapper}>
@@ -33,7 +28,7 @@ const WalletCard = (props) => {
       </View>
 
       <View style={styles.amountWrapper}>
-        <AppText style={styles.amount}>{walletAmount}</AppText>
+        <AppText style={styles.amount}>{props.data.walletAmount}</AppText>
         {!!props.data.cryptoCurrency && (
           <AppText style={styles.amountShort}>
             {props.data.cryptoCurrency}

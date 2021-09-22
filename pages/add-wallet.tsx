@@ -1,5 +1,5 @@
 import { LinearGradient } from "expo-linear-gradient";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import {
   FlatList,
   Image,
@@ -17,13 +17,45 @@ import { Colors, Fonts, PathNames } from "~/constants";
 import { insertItemToLocalDB } from "~/db";
 import { AppConfig } from "~/models/context";
 import { CryptoIcon } from "~/models/crypto-icon";
+import { fetchAddress } from "~/services/fetch-address";
 import SubPageHeader from "../components/sub-page-header";
 
 const AddWalletScreen = (props) => {
+  const appConfig = useContext(AppConfig);
   const [cryptoName, setCryptoName] = useState("");
   const [cryptoCurrency, setCryptoCurrency] = useState("");
   const [cryptoAddress, setEnteredCryptoAddress] = useState("");
   const [showModal, setShowModal] = useState(false);
+  const [fetchingAndSavingAddress, setFetchingAndSavingAddress] =
+    useState(false);
+
+  const addWallet = async () => {
+    if (fetchingAndSavingAddress || !cryptoName || !cryptoAddress) {
+      return;
+    }
+    let balance = 0;
+    try {
+      setFetchingAndSavingAddress(true);
+      balance = await fetchAddress(cryptoAddress, cryptoCurrency, appConfig);
+    } catch {
+      setFetchingAndSavingAddress(false);
+      return;
+    }
+
+    insertItemToLocalDB(cryptoName, cryptoCurrency, cryptoAddress, balance)
+      .then(() => {
+        props.navigation.navigate(PathNames.home, {
+          updateWallet: true,
+        });
+      })
+      .catch(() => {
+        throw new Error("Inser Wallet into DB failed");
+      })
+      .finally(() => {
+        setFetchingAndSavingAddress(false);
+      });
+  };
+
   return (
     <AppConfig.Consumer>
       {(config) => (
@@ -54,25 +86,12 @@ const AddWalletScreen = (props) => {
                 ></TextInput>
                 <Button
                   onPress={() => {
-                    if (!cryptoName || !cryptoAddress) {
-                      return;
-                    }
-                    insertItemToLocalDB(
-                      cryptoName,
-                      cryptoCurrency,
-                      cryptoAddress
-                    )
-                      .then(() => {
-                        props.navigation.navigate(PathNames.home, {
-                          updateWallet: true,
-                        });
-                      })
-                      .catch((err) => {
-                        console.log(err);
-                      });
+                    addWallet();
                   }}
                   style={styles.addWallet}
-                  text="Wallet anlegen"
+                  text={
+                    fetchingAndSavingAddress ? "Lade Wallet" : "Wallet anlegen"
+                  }
                 ></Button>
               </View>
             </View>

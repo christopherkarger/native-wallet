@@ -9,5 +9,5 @@ interface ICryptoUrls {
 
 export interface IConfig {
   supported: ICrypto[];
-  urls: ICryptoUrls[];
+  urls: ICryptoUrls;
 }

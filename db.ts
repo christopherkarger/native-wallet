@@ -8,6 +8,7 @@ export interface ILocalWallet {
   cryptoAddress: string;
   cryptoName: string;
   cryptoCurrency: string;
+  cryptoBalance: number;
   id: number;
 }
 
@@ -23,10 +24,9 @@ export const createLocalDBTable = () => {
   return new Promise<ISQLResult>((resolve, reject) => {
     db.transaction((tx) => {
       tx.executeSql(
-        `CREATE TABLE IF NOT EXISTS ${dbName} (id INTEGER PRIMARY KEY NOT NULL, cryptoName TEXT NOT NULL, cryptoCurrency TEXT NOT NULL, cryptoAddress TEXT NOT NULL);`,
+        `CREATE TABLE IF NOT EXISTS ${dbName} (id INTEGER PRIMARY KEY NOT NULL, cryptoName TEXT NOT NULL, cryptoCurrency TEXT NOT NULL, cryptoAddress TEXT NOT NULL, cryptoBalance INTEGER NOT NULL);`,
         [],
         (_, result) => {
-          console.log(result);
           resolve(<ISQLResult>result);
         },
         (_, error) => {
@@ -41,13 +41,14 @@ export const createLocalDBTable = () => {
 export const insertItemToLocalDB = (
   cryptoName: string,
   cryptoCurrency: string,
-  cryptoAddress: string
+  cryptoAddress: string,
+  cryptoBalance: number
 ) => {
   return new Promise<ISQLResult>((resolve, reject) => {
     db.transaction((tx) => {
       tx.executeSql(
-        `INSERT INTO ${dbName} (cryptoName, cryptoCurrency, cryptoAddress) VALUES (?,?,?);`,
-        [cryptoName, cryptoCurrency, cryptoAddress],
+        `INSERT INTO ${dbName} (cryptoName, cryptoCurrency, cryptoAddress, cryptoBalance) VALUES (?,?,?,?);`,
+        [cryptoName, cryptoCurrency, cryptoAddress, cryptoBalance],
         (_, result) => {
           resolve(<ISQLResult>result);
         },

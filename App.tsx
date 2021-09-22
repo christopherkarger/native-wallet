@@ -31,10 +31,13 @@ export default function App() {
 
   useEffect(() => {
     setLoading(true);
-    fetch(`${config.configUrl}?${new Date().getTime().toString()}`)
+    fetch(config.configUrl)
       .then((response) => response.json())
       .then((res: IConfig) => setFetchedConfig(res))
-      .catch(() => setLoadingError(true))
+      .catch((err) => {
+        console.log(err);
+        setLoadingError(true);
+      })
       .finally(() => setLoading(false));
   }, []);
 
