@@ -23,12 +23,7 @@ const HomeScreen = (props) => {
           setWalletsData(
             localWalletsArr.map(
               (e: ILocalWallet) =>
-                new Wallet(
-                  e.cryptoName,
-                  e.cryptoCurrency,
-                  e.cryptoAddress,
-                  e.cryptoBalance
-                )
+                new Wallet(e.name, e.currency, e.address, e.balance)
             )
           );
         }

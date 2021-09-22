@@ -22,34 +22,35 @@ import SubPageHeader from "../components/sub-page-header";
 
 const AddWalletScreen = (props) => {
   const appConfig = useContext(AppConfig);
-  const [cryptoName, setCryptoName] = useState("");
-  const [cryptoCurrency, setCryptoCurrency] = useState("");
-  const [cryptoAddress, setEnteredCryptoAddress] = useState("");
+  const [name, setName] = useState("");
+  const [currency, setCurrency] = useState("");
+  const [address, setEnteredAddress] = useState("");
   const [showModal, setShowModal] = useState(false);
   const [fetchingAndSavingAddress, setFetchingAndSavingAddress] =
     useState(false);
 
   const addWallet = async () => {
-    if (fetchingAndSavingAddress || !cryptoName || !cryptoAddress) {
+    if (fetchingAndSavingAddress || !name || !address) {
       return;
     }
     let balance = 0;
     try {
       setFetchingAndSavingAddress(true);
-      balance = await fetchAddress(cryptoAddress, cryptoCurrency, appConfig);
+      balance = await fetchAddress(address, currency, appConfig);
     } catch {
       setFetchingAndSavingAddress(false);
       return;
     }
 
-    insertItemToLocalDB(cryptoName, cryptoCurrency, cryptoAddress, balance)
+    insertItemToLocalDB(name, currency, address, balance, new Date().getTime())
       .then(() => {
         props.navigation.navigate(PathNames.home, {
           updateWallet: true,
         });
       })
-      .catch(() => {
-        throw new Error("Inser Wallet into DB failed");
+      .catch((err) => {
+        console.log(err);
+        throw new Error("Insert Wallet into DB failed");
       })
       .finally(() => {
         setFetchingAndSavingAddress(false);
@@ -73,16 +74,14 @@ const AddWalletScreen = (props) => {
                   }}
                 >
                   <View style={styles.cryptoInput}>
-                    <AppText>
-                      {cryptoName ? cryptoName : "Name der Kryptowährung"}
-                    </AppText>
+                    <AppText>{name ? name : "Name der Kryptowährung"}</AppText>
                   </View>
                 </TouchableOpacity>
                 <TextInput
                   style={styles.cryptoInput}
                   placeholder="Adresse"
                   placeholderTextColor={Colors.white}
-                  onChangeText={setEnteredCryptoAddress}
+                  onChangeText={setEnteredAddress}
                 ></TextInput>
                 <Button
                   onPress={() => {
@@ -111,8 +110,8 @@ const AddWalletScreen = (props) => {
                 return (
                   <TouchableOpacity
                     onPress={() => {
-                      setCryptoName(item.name);
-                      setCryptoCurrency(item.currency);
+                      setName(item.name);
+                      setCurrency(item.currency);
                       setShowModal(false);
                     }}
                   >

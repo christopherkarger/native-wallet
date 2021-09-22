@@ -5,10 +5,11 @@ const dbName = "wallets";
 const db = SQLite.openDatabase(`${dbName}.db`);
 
 export interface ILocalWallet {
-  cryptoAddress: string;
-  cryptoName: string;
-  cryptoCurrency: string;
-  cryptoBalance: number;
+  address: string;
+  name: string;
+  currency: string;
+  balance: number;
+  fetchedDate: number;
   id: number;
 }
 
@@ -24,7 +25,7 @@ export const createLocalDBTable = () => {
   return new Promise<ISQLResult>((resolve, reject) => {
     db.transaction((tx) => {
       tx.executeSql(
-        `CREATE TABLE IF NOT EXISTS ${dbName} (id INTEGER PRIMARY KEY NOT NULL, cryptoName TEXT NOT NULL, cryptoCurrency TEXT NOT NULL, cryptoAddress TEXT NOT NULL, cryptoBalance INTEGER NOT NULL);`,
+        `CREATE TABLE IF NOT EXISTS ${dbName} (id INTEGER PRIMARY KEY NOT NULL, name TEXT NOT NULL, currency TEXT NOT NULL, address TEXT NOT NULL, balance INTEGER NOT NULL, fetchedDate INTEGER NOT NULL);`,
         [],
         (_, result) => {
           resolve(<ISQLResult>result);
@@ -39,16 +40,17 @@ export const createLocalDBTable = () => {
 };
 
 export const insertItemToLocalDB = (
-  cryptoName: string,
-  cryptoCurrency: string,
-  cryptoAddress: string,
-  cryptoBalance: number
+  name: string,
+  currency: string,
+  address: string,
+  balance: number,
+  fetchedDate: number
 ) => {
   return new Promise<ISQLResult>((resolve, reject) => {
     db.transaction((tx) => {
       tx.executeSql(
-        `INSERT INTO ${dbName} (cryptoName, cryptoCurrency, cryptoAddress, cryptoBalance) VALUES (?,?,?,?);`,
-        [cryptoName, cryptoCurrency, cryptoAddress, cryptoBalance],
+        `INSERT INTO ${dbName} (name, currency, address, balance, fetchedDate) VALUES (?,?,?,?,?);`,
+        [name, currency, address, balance, fetchedDate],
         (_, result) => {
           resolve(<ISQLResult>result);
         },
