@@ -5,18 +5,20 @@ export class Wallet {
   readonly percentage?: number;
 
   constructor(
-    readonly cryptoName: string,
-    readonly cryptoCurrency: string,
-    readonly cryptoAddress: string,
-    readonly cryptoBalance: number
+    readonly id: number,
+    readonly name: string,
+    readonly currency: string,
+    readonly address: string,
+    readonly balance: number,
+    readonly fetchedDate: number
   ) {
-    this.icon = new CryptoIcon(cryptoName);
+    this.icon = new CryptoIcon(name);
   }
 
   get walletAmount(): string | undefined {
     const maxChars = 7;
-    if (this.cryptoBalance.toString().split("").length > maxChars) {
-      const toFixedDecimal = this.cryptoBalance.toFixed(2);
+    if (this.balance.toString().split("").length > maxChars) {
+      const toFixedDecimal = this.balance.toFixed(2);
 
       if (toFixedDecimal.length > maxChars) {
         return `${toFixedDecimal
@@ -28,6 +30,6 @@ export class Wallet {
 
       return toFixedDecimal;
     }
-    return this.cryptoBalance.toString();
+    return this.balance.toString();
   }
 }

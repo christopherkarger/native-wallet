@@ -1,6 +1,6 @@
+import { MaterialIcons } from "@expo/vector-icons";
 import React, { useEffect, useState } from "react";
-import { StyleSheet, View } from "react-native";
-import Button from "~/components/button";
+import { StyleSheet, TouchableOpacity, View } from "react-native";
 import SafeArea from "~/components/safe-area";
 import { ILocalWallet, selectLocalDBTable } from "~/db";
 import { Wallet } from "~/models/wallet";
@@ -23,7 +23,14 @@ const HomeScreen = (props) => {
           setWalletsData(
             localWalletsArr.map(
               (e: ILocalWallet) =>
-                new Wallet(e.name, e.currency, e.address, e.balance)
+                new Wallet(
+                  e.id,
+                  e.name,
+                  e.currency,
+                  e.address,
+                  e.balance,
+                  e.fetchedDate
+                )
             )
           );
         }
@@ -52,17 +59,27 @@ const HomeScreen = (props) => {
 
       {walletsData.length > 0 && (
         <View>
-          <WalletList data={walletsData}></WalletList>
-          <View style={styles.inner}>
-            <Button
-              onPress={() => props.navigation.navigate(PathNames.addWallet)}
-              text="Wallet hinzufügen"
-            ></Button>
-          </View>
+          <WalletList
+            data={walletsData}
+            navigation={props.navigation}
+          ></WalletList>
+          <View style={styles.inner}></View>
         </View>
       )}
+
       {walletsData.length > 0 && marketData.length > 0 && (
         <Market data={marketData}></Market>
+      )}
+
+      {walletsData.length > 0 && (
+        <View style={styles.addWalletButtonWrapper}>
+          <TouchableOpacity
+            style={styles.addWalletButton}
+            onPress={() => props.navigation.navigate(PathNames.addWallet)}
+          >
+            <MaterialIcons name="add-circle" size={50} color={Colors.green} />
+          </TouchableOpacity>
+        </View>
       )}
     </SafeArea>
   );
@@ -90,6 +107,14 @@ const styles = StyleSheet.create({
     top: -5,
     marginBottom: 15,
   },
+  addWalletButtonWrapper: {
+    position: "absolute",
+    bottom: 10,
+    alignItems: "center",
+    justifyContent: "center",
+    width: "100%",
+  },
+  addWalletButton: {},
 });
 
 export default HomeScreen;

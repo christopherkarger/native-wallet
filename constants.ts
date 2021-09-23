@@ -5,6 +5,7 @@ export const isAndroid = Platform.OS === "android";
 export const PathNames = {
   home: "home",
   addWallet: "add-wallet",
+  singleWallet: "single-wallet",
 };
 
 export const Fonts = {
@@ -17,7 +18,7 @@ export const Fonts = {
 export const Colors = {
   transparent: "transparent",
   bgDark: "#070628",
-  fadeLight: "rgba(255,255,255, 0.15)",
+  fadeLight: "rgba(255,255,255, 0.4)",
   white: "#ffffff",
   lightWhite: "rgba(255,255,255, 0.5)",
   green: "#01B670",

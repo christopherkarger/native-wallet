@@ -1,14 +1,21 @@
 import React from "react";
-import { Image, StyleSheet, View } from "react-native";
-import { Colors, Fonts } from "../constants";
+import { Image, StyleSheet, TouchableOpacity, View } from "react-native";
+import { Colors, Fonts, PathNames } from "../constants";
 import AppText from "./text";
 
 const WalletCard = (props) => {
   return (
-    <View style={{ ...styles.card, ...props.style }}>
+    <TouchableOpacity
+      onPress={() => {
+        props.navigation.navigate(PathNames.singleWallet, {
+          data: props.data,
+        });
+      }}
+      style={{ ...styles.card, ...props.style }}
+    >
       <View style={styles.cryptoWrapper}>
         <Image style={styles.logo} source={props.data.icon.path}></Image>
-        <AppText style={styles.cryptoName}>{props.data.cryptoName}</AppText>
+        <AppText style={styles.cryptoName}>{props.data.name}</AppText>
         <AppText
           style={(() => {
             return props.data.percentage >= 0
@@ -29,13 +36,11 @@ const WalletCard = (props) => {
 
       <View style={styles.amountWrapper}>
         <AppText style={styles.amount}>{props.data.walletAmount}</AppText>
-        {!!props.data.cryptoCurrency && (
-          <AppText style={styles.amountShort}>
-            {props.data.cryptoCurrency}
-          </AppText>
+        {!!props.data.currency && (
+          <AppText style={styles.amountShort}>{props.data.currency}</AppText>
         )}
       </View>
-    </View>
+    </TouchableOpacity>
   );
 };
 
@@ -43,9 +48,8 @@ const styles = StyleSheet.create({
   card: {
     paddingHorizontal: 20,
     paddingTop: 13,
-    paddingBottom: 15,
-    width: 215,
-    height: 140,
+    width: 200,
+    height: 130,
     borderRadius: 25,
     backgroundColor: "rgba(255,255,255, .13)",
   },
@@ -57,7 +61,7 @@ const styles = StyleSheet.create({
   },
   amount: {
     fontFamily: Fonts.bold,
-    fontSize: 30,
+    fontSize: 25,
   },
   amountShort: {
     fontSize: 15,

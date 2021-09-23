@@ -21,13 +21,22 @@ export const fetchAddress = (
   return fetch(url)
     .then((response) =>
       response.json().then((res) => {
+        console.log(res);
         if (res.final_balance !== undefined) {
           let balance: number;
           switch (addressType) {
             default:
               balance = +res.final_balance;
           }
-          return balance / 100000000;
+
+          switch (currency) {
+            case "eth":
+              // Balance returned in Wei
+              return balance / 1000000000000000000;
+            default:
+              // Balance returned in satoshis
+              return balance / 100000000;
+          }
         } else {
           throw new Error("wallet not found");
         }

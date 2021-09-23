@@ -44,16 +44,12 @@ const AddWalletScreen = (props) => {
 
     insertItemToLocalDB(name, currency, address, balance, new Date().getTime())
       .then(() => {
-        props.navigation.navigate(PathNames.home, {
-          updateWallet: true,
-        });
+        props.navigation.navigate(PathNames.home);
       })
       .catch((err) => {
         console.log(err);
-        throw new Error("Insert Wallet into DB failed");
-      })
-      .finally(() => {
         setFetchingAndSavingAddress(false);
+        throw new Error("Insert Wallet into DB failed");
       });
   };
 

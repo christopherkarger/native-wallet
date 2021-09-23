@@ -15,6 +15,7 @@ const Wallets = (props) => {
         renderItem={({ item, index }) => {
           return (
             <WalletCard
+              navigation={props.navigation}
               data={item}
               style={index > 0 ? { marginLeft: 20 } : {}}
             ></WalletCard>

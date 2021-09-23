@@ -6,6 +6,7 @@ import { createLocalDBTable } from "~/db";
 import { Colors, PathNames } from "../constants";
 import AddWalletScreen from "./add-wallet";
 import HomeScreen from "./home-screen";
+import SingleWallet from "./single-wallet";
 
 const Stack = createNativeStackNavigator();
 
@@ -37,6 +38,10 @@ const Main = () => {
           <Stack.Screen
             name={PathNames.addWallet}
             component={AddWalletScreen}
+          />
+          <Stack.Screen
+            name={PathNames.singleWallet}
+            component={SingleWallet}
           />
         </Stack.Navigator>
       </NavigationContainer>
