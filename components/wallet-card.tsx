@@ -1,19 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { Image, StyleSheet, TouchableOpacity, View } from "react-native";
-import { Wallet } from "~/models/wallet";
 import { Colors, Fonts, PathNames } from "../constants";
 import AppText from "./text";
 
 const WalletCard = (props) => {
   const data = props.data.wallets[0];
-  const [amount, setAmount] = useState(0);
+  const [amount, setAmount] = useState(props.data.totalBalance);
 
   useEffect(() => {
-    let amount = 0;
-    props.data.wallets.forEach((w: Wallet) => {
-      amount += w.balance;
-    });
-    setAmount(amount);
+    setAmount(props.data.totalBalance);
   }, [props.data.wallets]);
 
   return (
@@ -47,7 +42,9 @@ const WalletCard = (props) => {
       </View>
 
       <View style={styles.amountWrapper}>
-        <AppText style={styles.amount}>{data.walletAmount(amount)}</AppText>
+        <AppText style={styles.amount}>
+          {props.data.niceBalance(amount)}
+        </AppText>
         {!!data.currency && (
           <AppText style={styles.amountShort}>{data.currency}</AppText>
         )}
