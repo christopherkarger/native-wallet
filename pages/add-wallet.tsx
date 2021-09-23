@@ -1,5 +1,5 @@
 import { LinearGradient } from "expo-linear-gradient";
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   FlatList,
   Image,
@@ -22,12 +22,23 @@ import SubPageHeader from "../components/sub-page-header";
 
 const AddWalletScreen = (props) => {
   const appConfig = useContext(AppConfig);
+  const [nameChangeAllowed, setNameChangeAllowed] = useState(true);
   const [name, setName] = useState("");
   const [currency, setCurrency] = useState("");
   const [address, setEnteredAddress] = useState("");
   const [showModal, setShowModal] = useState(false);
   const [fetchingAndSavingAddress, setFetchingAndSavingAddress] =
     useState(false);
+  const [connectedToId, setConnectedToId] = useState<number>();
+
+  useEffect(() => {
+    if (props.route.params && props.route.params.addToWallet) {
+      setConnectedToId(props.route.params.id);
+      setName(props.route.params.name);
+      setCurrency(props.route.params.currency);
+      setNameChangeAllowed(false);
+    }
+  }, []);
 
   const addWallet = async () => {
     if (fetchingAndSavingAddress || !name || !address) {
@@ -42,7 +53,14 @@ const AddWalletScreen = (props) => {
       return;
     }
 
-    insertItemToLocalDB(name, currency, address, balance, new Date().getTime())
+    insertItemToLocalDB(
+      name,
+      currency,
+      address,
+      balance,
+      new Date().getTime(),
+      connectedToId
+    )
       .then(() => {
         props.navigation.navigate(PathNames.home);
       })
@@ -66,11 +84,15 @@ const AddWalletScreen = (props) => {
               <View style={styles.inner}>
                 <TouchableOpacity
                   onPress={() => {
-                    setShowModal(true);
+                    if (nameChangeAllowed) {
+                      setShowModal(true);
+                    }
                   }}
                 >
                   <View style={styles.cryptoInput}>
-                    <AppText>{name ? name : "Name der Kryptowährung"}</AppText>
+                    <AppText>
+                      {name ? name : "Wähle eine Kryptowährung"}
+                    </AppText>
                   </View>
                 </TouchableOpacity>
                 <TextInput

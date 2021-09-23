@@ -10,15 +10,16 @@ export class Wallet {
     readonly currency: string,
     readonly address: string,
     readonly balance: number,
-    readonly fetchedDate: number
+    readonly fetchedDate: number,
+    readonly connectedToIndex?: number
   ) {
     this.icon = new CryptoIcon(name);
   }
 
-  get walletAmount(): string | undefined {
+  walletAmount(balance: number): string {
     const maxChars = 7;
-    if (this.balance.toString().split("").length > maxChars) {
-      const toFixedDecimal = this.balance.toFixed(2);
+    if (balance.toString().split("").length > maxChars) {
+      const toFixedDecimal = `≈ ${balance.toFixed(2)}`;
 
       if (toFixedDecimal.length > maxChars) {
         return `${toFixedDecimal
@@ -30,6 +31,6 @@ export class Wallet {
 
       return toFixedDecimal;
     }
-    return this.balance.toString();
+    return balance.toString();
   }
 }

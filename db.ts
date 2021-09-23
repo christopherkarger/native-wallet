@@ -1,4 +1,5 @@
 import * as SQLite from "expo-sqlite";
+import { CryptoIcon } from "./models/crypto-icon";
 
 const dbName = "wallets";
 
@@ -11,6 +12,8 @@ export interface ILocalWallet {
   balance: number;
   fetchedDate: number;
   id: number;
+  icon: CryptoIcon;
+  connectedToId?: number;
 }
 
 interface ISQLResult extends SQLite.SQLResultSet {
@@ -25,7 +28,7 @@ export const createLocalDBTable = () => {
   return new Promise<ISQLResult>((resolve, reject) => {
     db.transaction((tx) => {
       tx.executeSql(
-        `CREATE TABLE IF NOT EXISTS ${dbName} (id INTEGER PRIMARY KEY NOT NULL, name TEXT NOT NULL, currency TEXT NOT NULL, address TEXT NOT NULL, balance INTEGER NOT NULL, fetchedDate INTEGER NOT NULL);`,
+        `CREATE TABLE IF NOT EXISTS ${dbName} (id INTEGER PRIMARY KEY NOT NULL, name TEXT NOT NULL, currency TEXT NOT NULL, address TEXT NOT NULL, balance INTEGER NOT NULL, fetchedDate INTEGER NOT NULL, connectedToId INTEGER);`,
         [],
         (_, result) => {
           resolve(<ISQLResult>result);
@@ -44,13 +47,14 @@ export const insertItemToLocalDB = (
   currency: string,
   address: string,
   balance: number,
-  fetchedDate: number
+  fetchedDate: number,
+  connectedToId?: number
 ) => {
   return new Promise<ISQLResult>((resolve, reject) => {
     db.transaction((tx) => {
       tx.executeSql(
-        `INSERT INTO ${dbName} (name, currency, address, balance, fetchedDate) VALUES (?,?,?,?,?);`,
-        [name, currency, address, balance, fetchedDate],
+        `INSERT INTO ${dbName} (name, currency, address, balance, fetchedDate, connectedToId) VALUES (?,?,?,?,?,?);`,
+        [name, currency, address, balance, fetchedDate, connectedToId],
         (_, result) => {
           resolve(<ISQLResult>result);
         },

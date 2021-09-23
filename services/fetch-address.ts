@@ -21,7 +21,6 @@ export const fetchAddress = (
   return fetch(url)
     .then((response) =>
       response.json().then((res) => {
-        console.log(res);
         if (res.final_balance !== undefined) {
           let balance: number;
           switch (addressType) {

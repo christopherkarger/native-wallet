@@ -2,8 +2,9 @@ import { MaterialIcons } from "@expo/vector-icons";
 import React, { useEffect, useState } from "react";
 import { StyleSheet, TouchableOpacity, View } from "react-native";
 import SafeArea from "~/components/safe-area";
-import { ILocalWallet, selectLocalDBTable } from "~/db";
-import { Wallet } from "~/models/wallet";
+import { selectLocalDBTable } from "~/db";
+import { WalletWrapper } from "~/models/wallet-wrapper";
+import { getWalletWrapper } from "~/services/getWalletWrapper";
 import EmptyWallets from "../components/empty-wallets";
 import Market from "../components/market";
 import AppText from "../components/text";
@@ -11,28 +12,14 @@ import WalletList from "../components/wallet-list";
 import { Colors, Fonts, PathNames } from "../constants";
 
 const HomeScreen = (props) => {
-  const [walletsData, setWalletsData] = useState<Wallet[]>([]);
+  const [walletsData, setWalletsData] = useState<WalletWrapper[]>([]);
 
   useEffect(() => {
     const routeSub = props.navigation.addListener("focus", () => {
       (async () => {
         const localWallets = await selectLocalDBTable().catch(() => {});
         if (localWallets && localWallets.rows.length) {
-          const localWalletsArr = localWallets.rows._array;
-
-          setWalletsData(
-            localWalletsArr.map(
-              (e: ILocalWallet) =>
-                new Wallet(
-                  e.id,
-                  e.name,
-                  e.currency,
-                  e.address,
-                  e.balance,
-                  e.fetchedDate
-                )
-            )
-          );
+          setWalletsData(getWalletWrapper(localWallets.rows._array));
         }
       })();
     });

@@ -1,9 +1,21 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Image, StyleSheet, TouchableOpacity, View } from "react-native";
+import { Wallet } from "~/models/wallet";
 import { Colors, Fonts, PathNames } from "../constants";
 import AppText from "./text";
 
 const WalletCard = (props) => {
+  const data = props.data.wallets[0];
+  const [amount, setAmount] = useState(0);
+
+  useEffect(() => {
+    let amount = 0;
+    props.data.wallets.forEach((w: Wallet) => {
+      amount += w.balance;
+    });
+    setAmount(amount);
+  }, [props.data.wallets]);
+
   return (
     <TouchableOpacity
       onPress={() => {
@@ -14,11 +26,11 @@ const WalletCard = (props) => {
       style={{ ...styles.card, ...props.style }}
     >
       <View style={styles.cryptoWrapper}>
-        <Image style={styles.logo} source={props.data.icon.path}></Image>
-        <AppText style={styles.cryptoName}>{props.data.name}</AppText>
+        <Image style={styles.logo} source={data.icon.path}></Image>
+        <AppText style={styles.cryptoName}>{data.name}</AppText>
         <AppText
           style={(() => {
-            return props.data.percentage >= 0
+            return data.percentage >= 0
               ? {
                   ...styles.percentage,
                   ...styles.percentagePos,
@@ -29,15 +41,15 @@ const WalletCard = (props) => {
                 };
           })()}
         >
-          {props.data.percentage > 0 ? "+" : ""}
-          {props.data.percentage}
+          {data.percentage > 0 ? "+" : ""}
+          {data.percentage}
         </AppText>
       </View>
 
       <View style={styles.amountWrapper}>
-        <AppText style={styles.amount}>{props.data.walletAmount}</AppText>
-        {!!props.data.currency && (
-          <AppText style={styles.amountShort}>{props.data.currency}</AppText>
+        <AppText style={styles.amount}>{data.walletAmount(amount)}</AppText>
+        {!!data.currency && (
+          <AppText style={styles.amountShort}>{data.currency}</AppText>
         )}
       </View>
     </TouchableOpacity>
