@@ -3,7 +3,7 @@ import { FlatList, Image, StyleSheet, View } from "react-native";
 import Button from "~/components/button";
 import SafeArea from "~/components/safe-area";
 import SubPageHeader from "~/components/sub-page-header";
-import { Fonts, PathNames } from "~/constants";
+import { Colors, Fonts, PathNames } from "~/constants";
 import { ILocalWallet } from "~/db";
 import AppText from "../components/text";
 
@@ -32,6 +32,7 @@ const SingleWallet = (props) => {
           renderItem={({ item, index }) => {
             return (
               <View style={styles.singleWalletWrapper}>
+                {index > 0 && <View style={styles.divider}></View>}
                 <AppText>Adresse:</AppText>
                 <AppText style={styles.address}>{item.address}</AppText>
                 <AppText>Balance:</AppText>
@@ -79,10 +80,15 @@ const styles = StyleSheet.create({
   balance: {
     fontSize: 25,
     fontFamily: Fonts.bold,
-    marginBottom: 20,
   },
   address: {
     fontFamily: Fonts.bold,
+    marginBottom: 20,
+  },
+  divider: {
+    width: "100%",
+    height: 1,
+    backgroundColor: Colors.lightWhite,
     marginBottom: 20,
   },
 });
