@@ -1,17 +1,18 @@
-import { Wallet } from "../models/wallet";
 import { WalletWrapper } from "../models/wallet-wrapper";
 import { IMarketData } from "./fetch-marketdata";
-
-export const calcBalance = (
-  marketData: IMarketData,
-  wallet: WalletWrapper | Wallet
-): number => {
-  return 1;
-};
 
 export const calcTotalBalance = (
   marketData: IMarketData,
   walletWrapper: WalletWrapper[]
-): number => {
-  return 2;
+): string => {
+  let balance = 0;
+  walletWrapper.forEach((wrapper) => {
+    wrapper.wallets.forEach((wallet) => {
+      const data = marketData[wallet.name];
+      if (data) {
+        balance += data.price * wallet.balance;
+      }
+    });
+  });
+  return balance.toFixed(2);
 };

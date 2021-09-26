@@ -14,7 +14,7 @@ import { Colors, Fonts, PathNames } from "../constants";
 
 const HomeScreen = (props) => {
   const [walletsData, setWalletsData] = useState<WalletWrapper[]>([]);
-  const [totalBalance, setTotalBalance] = useState(0);
+  const [totalBalance, setTotalBalance] = useState("0");
   const marketData = useContext(MarketData);
 
   useEffect(() => {
@@ -32,7 +32,7 @@ const HomeScreen = (props) => {
 
   useEffect(() => {
     setTotalBalance(calcTotalBalance(marketData, walletsData));
-  }, [marketData]);
+  }, [marketData, walletsData]);
 
   return (
     <SafeArea>
@@ -42,7 +42,7 @@ const HomeScreen = (props) => {
       {walletsData.length > 0 && (
         <View style={styles.inner}>
           <AppText style={styles.pfHeadline}>Portfolio</AppText>
-          <AppText style={styles.pfSubheadline}>Balance</AppText>
+          <AppText style={styles.pfSubheadline}>Guthaben</AppText>
           <AppText style={styles.balance}>{totalBalance} €</AppText>
         </View>
       )}

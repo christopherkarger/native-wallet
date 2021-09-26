@@ -13,6 +13,7 @@ import { IConfig } from "./models/config";
 import { AppConfig, defaultConfig, MarketData } from "./models/context";
 import Main from "./pages/main";
 import { fetchMarketData, IMarketData } from "./services/fetch-marketdata";
+import useAppStatus from "./services/handle-app-state";
 
 LogBox.ignoreLogs(["Setting a timer"]);
 
@@ -26,22 +27,16 @@ const preload = () => {
 };
 
 export default function App() {
+  let dbConnection: firebase.database.Reference | undefined;
   const [appIsReady, setAppIsReady] = useState(false);
   const [loading, setLoading] = useState(false);
   const [loadingError, setLoadingError] = useState(false);
   const [fetchedConfig, setFetchedConfig] = useState(defaultConfig);
   const [marketData, setMarketData] = useState<IMarketData>({});
+  const appStatus = useAppStatus();
 
   useEffect(() => {
     setLoading(true);
-
-    let dbConnection: firebase.database.Reference | undefined;
-    fetchMarketData((data, db) => {
-      if (dbConnection === undefined) {
-        dbConnection = db;
-      }
-      setMarketData(data);
-    });
 
     fetch(config.configUrl)
       .then((response) => response.json())
@@ -51,11 +46,21 @@ export default function App() {
         setLoadingError(true);
       })
       .finally(() => setLoading(false));
-
-    return () => {
-      dbConnection?.off();
-    };
   }, []);
+
+  useEffect(() => {
+    if (appStatus === "active") {
+      fetchMarketData((data, db) => {
+        if (dbConnection === undefined) {
+          dbConnection = db;
+        }
+        setMarketData(data);
+      });
+    } else {
+      dbConnection?.off();
+      dbConnection = undefined;
+    }
+  }, [appStatus]);
 
   if (!appIsReady) {
     return (
