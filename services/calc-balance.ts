@@ -8,3 +8,10 @@ export const calcBalance = (
 ): number => {
   return 1;
 };
+
+export const calcTotalBalance = (
+  marketData: IMarketData,
+  walletWrapper: WalletWrapper[]
+): number => {
+  return 1;
+};

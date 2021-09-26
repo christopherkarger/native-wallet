@@ -5,6 +5,7 @@ import { StyleSheet, TouchableOpacity, View } from "react-native";
 import SafeArea from "~/components/safe-area";
 import { selectLocalDBTable } from "~/db";
 import { WalletWrapper } from "~/models/wallet-wrapper";
+import { calcTotalBalance } from "~/services/calc-balance";
 import { fetchMarketData, IMarketData } from "~/services/fetch-marketdata";
 import { getWalletWrapper } from "~/services/getWalletWrapper";
 import EmptyWallets from "../components/empty-wallets";
@@ -16,12 +17,14 @@ const HomeScreen = (props) => {
   const [walletsData, setWalletsData] = useState<WalletWrapper[]>([]);
   const [firebaseDb, setFirebaseDb] = useState<firebase.database.Reference>();
   const [marketData, setMarketData] = useState<IMarketData>();
+  const [totalBalance, setTotalBalance] = useState(0);
 
   useEffect(() => {
     fetchMarketData((data, db) => {
       if (!firebaseDb) {
         setFirebaseDb(db);
       }
+      setTotalBalance(calcTotalBalance(data, walletsData));
       setMarketData(data);
     });
 
@@ -49,7 +52,7 @@ const HomeScreen = (props) => {
         <View style={styles.inner}>
           <AppText style={styles.pfHeadline}>Portfolio</AppText>
           <AppText style={styles.pfSubheadline}>Balance</AppText>
-          <AppText style={styles.balance}>7.334 €</AppText>
+          <AppText style={styles.balance}>{totalBalance} €</AppText>
         </View>
       )}
 
