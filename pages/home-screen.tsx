@@ -1,12 +1,11 @@
 import { MaterialIcons } from "@expo/vector-icons";
-import firebase from "firebase";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { StyleSheet, TouchableOpacity, View } from "react-native";
 import SafeArea from "~/components/safe-area";
 import { selectLocalDBTable } from "~/db";
+import { MarketData } from "~/models/context";
 import { WalletWrapper } from "~/models/wallet-wrapper";
 import { calcTotalBalance } from "~/services/calc-balance";
-import { fetchMarketData, IMarketData } from "~/services/fetch-marketdata";
 import { getWalletWrapper } from "~/services/getWalletWrapper";
 import EmptyWallets from "../components/empty-wallets";
 import AppText from "../components/text";
@@ -15,33 +14,25 @@ import { Colors, Fonts, PathNames } from "../constants";
 
 const HomeScreen = (props) => {
   const [walletsData, setWalletsData] = useState<WalletWrapper[]>([]);
-  const [firebaseDb, setFirebaseDb] = useState<firebase.database.Reference>();
-  const [marketData, setMarketData] = useState<IMarketData>();
   const [totalBalance, setTotalBalance] = useState(0);
+  const marketData = useContext(MarketData);
 
   useEffect(() => {
-    fetchMarketData((data, db) => {
-      if (!firebaseDb) {
-        setFirebaseDb(db);
+    const routeSub = props.navigation.addListener("focus", async () => {
+      const localWallets = await selectLocalDBTable().catch(() => {});
+      if (localWallets && localWallets.rows.length) {
+        setWalletsData(getWalletWrapper(localWallets.rows._array));
       }
-      setTotalBalance(calcTotalBalance(data, walletsData));
-      setMarketData(data);
-    });
-
-    const routeSub = props.navigation.addListener("focus", () => {
-      (async () => {
-        const localWallets = await selectLocalDBTable().catch(() => {});
-        if (localWallets && localWallets.rows.length) {
-          setWalletsData(getWalletWrapper(localWallets.rows._array));
-        }
-      })();
     });
 
     return () => {
       routeSub();
-      firebaseDb?.off();
     };
   }, []);
+
+  useEffect(() => {
+    setTotalBalance(calcTotalBalance(marketData, walletsData));
+  }, [marketData]);
 
   return (
     <SafeArea>

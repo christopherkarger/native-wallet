@@ -13,5 +13,5 @@ export const calcTotalBalance = (
   marketData: IMarketData,
   walletWrapper: WalletWrapper[]
 ): number => {
-  return 1;
+  return 2;
 };

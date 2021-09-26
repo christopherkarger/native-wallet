@@ -1,6 +1,7 @@
 import AppLoading from "expo-app-loading";
 import * as Font from "expo-font";
 import { StatusBar } from "expo-status-bar";
+import firebase from "firebase/app";
 import React, { useEffect, useState } from "react";
 import { LogBox, StyleSheet } from "react-native";
 import GradientView from "./components/gradient-view";
@@ -9,8 +10,9 @@ import AppText from "./components/text";
 import { config } from "./config";
 import { Fonts } from "./constants";
 import { IConfig } from "./models/config";
-import { AppConfig, defaultConfig } from "./models/context";
+import { AppConfig, defaultConfig, MarketData } from "./models/context";
 import Main from "./pages/main";
+import { fetchMarketData, IMarketData } from "./services/fetch-marketdata";
 
 LogBox.ignoreLogs(["Setting a timer"]);
 
@@ -28,9 +30,19 @@ export default function App() {
   const [loading, setLoading] = useState(false);
   const [loadingError, setLoadingError] = useState(false);
   const [fetchedConfig, setFetchedConfig] = useState(defaultConfig);
+  const [marketData, setMarketData] = useState<IMarketData>({});
 
   useEffect(() => {
     setLoading(true);
+
+    let dbConnection: firebase.database.Reference | undefined;
+    fetchMarketData((data, db) => {
+      if (dbConnection === undefined) {
+        dbConnection = db;
+      }
+      setMarketData(data);
+    });
+
     fetch(config.configUrl)
       .then((response) => response.json())
       .then((res: IConfig) => setFetchedConfig(res))
@@ -39,6 +51,10 @@ export default function App() {
         setLoadingError(true);
       })
       .finally(() => setLoading(false));
+
+    return () => {
+      dbConnection?.off();
+    };
   }, []);
 
   if (!appIsReady) {
@@ -67,8 +83,10 @@ export default function App() {
 
   return (
     <AppConfig.Provider value={fetchedConfig}>
-      <StatusBar style="light" />
-      <Main />
+      <MarketData.Provider value={marketData}>
+        <StatusBar style="light" />
+        <Main />
+      </MarketData.Provider>
     </AppConfig.Provider>
   );
 }
