@@ -4,11 +4,11 @@ import Button from "~/components/button";
 import SafeArea from "~/components/safe-area";
 import SubPageHeader from "~/components/sub-page-header";
 import { Colors, Fonts, PathNames } from "~/constants";
-import { ILocalWallet } from "~/db";
+import { WalletWrapper } from "~/models/wallet-wrapper";
 import AppText from "../components/text";
 
 const SingleWallet = (props) => {
-  const [wallets] = useState<ILocalWallet[]>(props.route.params.data.wallets);
+  const [walletWrapper] = useState<WalletWrapper>(props.route.params.data);
 
   useEffect(() => {
     // console.log(111111111);
@@ -18,16 +18,19 @@ const SingleWallet = (props) => {
   return (
     <SafeArea>
       <SubPageHeader navigation={props.navigation}>
-        {wallets[0].name}
+        {walletWrapper.wallets[0].name}
       </SubPageHeader>
       <View style={styles.inner}>
         <View style={{ ...styles.center, ...styles.logoWrapper }}>
-          <Image style={styles.logo} source={wallets[0].icon.path}></Image>
+          <Image
+            style={styles.logo}
+            source={walletWrapper.wallets[0].icon.path}
+          ></Image>
         </View>
         <FlatList
           contentContainerStyle={{}}
           keyboardShouldPersistTaps="handled"
-          data={wallets}
+          data={walletWrapper.wallets}
           keyExtractor={(_, index) => index.toString()}
           renderItem={({ item, index }) => {
             return (
@@ -47,9 +50,9 @@ const SingleWallet = (props) => {
           onPress={() => {
             props.navigation.navigate(PathNames.addWallet, {
               addToWallet: true,
-              currency: wallets[0].currency,
-              name: wallets[0].name,
-              id: wallets[0].id,
+              currency: walletWrapper.wallets[0].currency,
+              name: walletWrapper.wallets[0].name,
+              id: walletWrapper.wallets[0].id,
             });
           }}
           text="Addresse zu diesem Wallet hinzufügen"

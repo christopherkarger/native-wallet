@@ -1,20 +1,30 @@
 import { MaterialIcons } from "@expo/vector-icons";
+import firebase from "firebase";
 import React, { useEffect, useState } from "react";
 import { StyleSheet, TouchableOpacity, View } from "react-native";
 import SafeArea from "~/components/safe-area";
 import { selectLocalDBTable } from "~/db";
 import { WalletWrapper } from "~/models/wallet-wrapper";
+import { fetchMarketData, IMarketData } from "~/services/fetch-marketdata";
 import { getWalletWrapper } from "~/services/getWalletWrapper";
 import EmptyWallets from "../components/empty-wallets";
-import Market from "../components/market";
 import AppText from "../components/text";
 import WalletList from "../components/wallet-list";
 import { Colors, Fonts, PathNames } from "../constants";
 
 const HomeScreen = (props) => {
   const [walletsData, setWalletsData] = useState<WalletWrapper[]>([]);
+  const [firebaseDb, setFirebaseDb] = useState<firebase.database.Reference>();
+  const [marketData, setMarketData] = useState<IMarketData>();
 
   useEffect(() => {
+    fetchMarketData((data, db) => {
+      if (!firebaseDb) {
+        setFirebaseDb(db);
+      }
+      setMarketData(data);
+    });
+
     const routeSub = props.navigation.addListener("focus", () => {
       (async () => {
         const localWallets = await selectLocalDBTable().catch(() => {});
@@ -26,10 +36,9 @@ const HomeScreen = (props) => {
 
     return () => {
       routeSub();
+      firebaseDb?.off();
     };
   }, []);
-
-  const marketData: any[] = [];
 
   return (
     <SafeArea>
@@ -54,9 +63,9 @@ const HomeScreen = (props) => {
         </View>
       )}
 
-      {walletsData.length > 0 && marketData.length > 0 && (
+      {/* {walletsData.length > 0 && marketData.length > 0 && (
         <Market data={marketData}></Market>
-      )}
+      )} */}
 
       {walletsData.length > 0 && (
         <View style={styles.addWalletButtonWrapper}>
