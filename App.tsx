@@ -9,11 +9,11 @@ import SafeArea from "./components/safe-area";
 import AppText from "./components/text";
 import { config } from "./config";
 import { Fonts } from "./constants";
+import useAppStatus from "./hooks/handle-app-state";
 import { IConfig } from "./models/config";
 import { AppConfig, defaultConfig, MarketData } from "./models/context";
 import Main from "./pages/main";
 import { fetchMarketData, IMarketData } from "./services/fetch-marketdata";
-import useAppStatus from "./services/handle-app-state";
 
 LogBox.ignoreLogs(["Setting a timer"]);
 

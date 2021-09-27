@@ -3,36 +3,27 @@ import React, { useContext, useEffect, useState } from "react";
 import { StyleSheet, TouchableOpacity, View } from "react-native";
 import SafeArea from "~/components/safe-area";
 import { selectLocalDBTable } from "~/db";
-import { AppConfig, MarketData } from "~/models/context";
+import { useUpdateLocalWalletBalances } from "~/hooks/update-local-wallet-balances";
+import { MarketData } from "~/models/context";
 import { WalletWrapper } from "~/models/wallet-wrapper";
 import { calcTotalBalance } from "~/services/calc-balance";
 import { getWalletWrapper } from "~/services/getWalletWrapper";
-import { updateWalletBalance } from "~/services/update-wallet-balance";
 import EmptyWallets from "../components/empty-wallets";
 import AppText from "../components/text";
 import WalletList from "../components/wallet-list";
 import { Colors, Fonts, PathNames } from "../constants";
 
 const HomeScreen = (props) => {
-  const appConfig = useContext(AppConfig);
   const [walletsData, setWalletsData] = useState<WalletWrapper[]>([]);
   const [totalBalance, setTotalBalance] = useState("0");
   const marketData = useContext(MarketData);
-  const [initHomeScreen, setInitHomeScreen] = useState(false);
+  useUpdateLocalWalletBalances();
 
   useEffect(() => {
-    async () => {};
-
     const routeListener = props.navigation.addListener("focus", async () => {
       const localWallets = await selectLocalDBTable().catch(() => {});
       if (localWallets && localWallets.rows.length) {
-        const walletsDataWrapper = getWalletWrapper(localWallets.rows._array);
-        setWalletsData(walletsDataWrapper);
-
-        if (!initHomeScreen) {
-          updateWalletBalance(walletsDataWrapper, appConfig);
-          setInitHomeScreen(true);
-        }
+        setWalletsData(getWalletWrapper(localWallets.rows._array));
       }
     });
 
