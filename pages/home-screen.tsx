@@ -12,7 +12,7 @@ import EmptyWallets from "../components/empty-wallets";
 import AppText from "../components/text";
 import WalletList from "../components/wallet-list";
 import { Colors, Fonts, PathNames } from "../constants";
-
+let counter = 0;
 const HomeScreen = (props) => {
   const [walletsData, setWalletsData] = useState<WalletWrapper[]>([]);
   const [totalBalance, setTotalBalance] = useState("0");
