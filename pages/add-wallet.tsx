@@ -47,7 +47,7 @@ const AddWalletScreen = (props) => {
     let balance = 0;
     try {
       setFetchingAndSavingAddress(true);
-      balance = await fetchAddress(address, currency, appConfig);
+      balance = await fetchAddress(address, name, appConfig);
     } catch {
       setFetchingAndSavingAddress(false);
       return;
@@ -106,6 +106,7 @@ const AddWalletScreen = (props) => {
                     addWallet();
                   }}
                   style={styles.addWallet}
+                  disabled={!name || !address}
                   text={
                     fetchingAndSavingAddress ? "Lade Wallet" : "Wallet anlegen"
                   }

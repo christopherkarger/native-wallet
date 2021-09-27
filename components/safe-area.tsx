@@ -4,7 +4,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 
 const SafeArea = (props) => {
   return (
-    <SafeAreaView style={{ ...styles.areaView, ...props.style }}>
+    <SafeAreaView style={[styles.areaView, props.style]}>
       {props.children}
     </SafeAreaView>
   );

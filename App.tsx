@@ -38,7 +38,7 @@ export default function App() {
   useEffect(() => {
     setLoading(true);
 
-    fetch(`${config.configUrl}?${new Date().toString()}`)
+    fetch(`${config.configUrl}?v5`)
       .then((response) => response.json())
       .then((res: IConfig) => setFetchedConfig(res))
       .catch((err) => {

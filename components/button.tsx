@@ -5,12 +5,19 @@ import AppText from "./text";
 
 const Button = (props) => {
   return (
-    <TouchableOpacity
-      onPress={() => props.onPress()}
-      style={{ ...styles.button, ...props.style }}
-    >
-      {props.text && <AppText style={styles.buttonText}>{props.text}</AppText>}
-      {!props.text && <View> {props.children}</View>}
+    <TouchableOpacity disabled={props.disabled} onPress={() => props.onPress()}>
+      <View
+        style={[
+          styles.button,
+          props.style,
+          props.disabled ? styles.disabled : {},
+        ]}
+      >
+        {props.text && (
+          <AppText style={styles.buttonText}>{props.text}</AppText>
+        )}
+        {!props.text && <View> {props.children}</View>}
+      </View>
     </TouchableOpacity>
   );
 };
@@ -22,7 +29,9 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     borderRadius: 20,
   },
-
+  disabled: {
+    opacity: 0.5,
+  },
   buttonText: {
     textAlign: "center",
     alignItems: "center",

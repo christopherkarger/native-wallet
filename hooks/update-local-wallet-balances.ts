@@ -19,7 +19,7 @@ export const useUpdateLocalWalletBalances = async () => {
               await waitTime(1000);
               const balance = await fetchAddress(
                 wallet.address,
-                wallet.currency,
+                wallet.name,
                 appConfig
               );
               updateItemToLocalDB(wallet.id, balance);
