@@ -108,7 +108,25 @@ export const updateItemToLocalDB = (id: number, balance: number) => {
     db.transaction((tx) => {
       tx.executeSql(
         `UPDATE ${dbName} SET balance = ? WHERE id = ?`,
-        [balance],
+        [balance, id],
+        (_, result) => {
+          resolve(result);
+        },
+        (_, error) => {
+          reject(error);
+          return true;
+        }
+      );
+    });
+  });
+};
+
+export const deleteItemFromLocalDB = (id: number) => {
+  return new Promise<SQLite.SQLResultSet>((resolve, reject) => {
+    db.transaction((tx) => {
+      tx.executeSql(
+        `DELETE FROM ${dbName} WHERE id = ?`,
+        [id],
         (_, result) => {
           resolve(result);
         },

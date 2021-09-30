@@ -24,6 +24,8 @@ const HomeScreen = (props) => {
       const localWallets = await selectLocalDBTable().catch(() => {});
       if (localWallets && localWallets.rows.length) {
         setWalletsData(getWalletWrapper(localWallets.rows._array));
+      } else {
+        setWalletsData([]);
       }
     });
 

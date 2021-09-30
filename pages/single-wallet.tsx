@@ -1,14 +1,17 @@
 import React, { useState } from "react";
-import { FlatList, Image, StyleSheet, View } from "react-native";
+import { Alert, FlatList, Image, StyleSheet, View } from "react-native";
 import Button from "~/components/button";
 import SafeArea from "~/components/safe-area";
 import SubPageHeader from "~/components/sub-page-header";
 import { Colors, Fonts, PathNames } from "~/constants";
+import { deleteItemFromLocalDB } from "~/db";
 import { WalletWrapper } from "~/models/wallet-wrapper";
 import AppText from "../components/text";
 
 const SingleWallet = (props) => {
-  const [walletWrapper] = useState<WalletWrapper>(props.route.params.data);
+  const [walletWrapper, setWalletWrapper] = useState<WalletWrapper>(
+    props.route.params.data
+  );
 
   return (
     <SafeArea>
@@ -40,7 +43,42 @@ const SingleWallet = (props) => {
                   style={styles.deleteWalletButton}
                   textStyle={styles.deleteWalletButtonText}
                   onPress={() => {
-                    console.log("delete item", index);
+                    const deleteItem = async () => {
+                      await deleteItemFromLocalDB(item.id).catch((err) => {
+                        console.log(err);
+                        throw new Error(
+                          "Deleting wallet address from local DB failed"
+                        );
+                      });
+
+                      const updatetWallets = walletWrapper.wallets.filter(
+                        (e, i) => i !== index
+                      );
+                      if (updatetWallets.length > 0) {
+                        setWalletWrapper(new WalletWrapper(updatetWallets));
+                      } else {
+                        props.navigation.navigate(PathNames.home);
+                      }
+                    };
+
+                    Alert.alert(
+                      "",
+                      "Möchtest du wirklich diese Adresse löschen?",
+                      [
+                        {
+                          text: "Abbrechen",
+                          onPress: () => {},
+                          style: "cancel",
+                        },
+                        {
+                          text: "OK",
+                          onPress: () => {
+                            deleteItem();
+                          },
+                        },
+                      ],
+                      { cancelable: false }
+                    );
                   }}
                   text="Entfernen"
                 ></Button>
