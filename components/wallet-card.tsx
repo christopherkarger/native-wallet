@@ -18,27 +18,15 @@ const WalletCard = (props) => {
           data: props.data,
         });
       }}
-      style={{ ...styles.card, ...props.style }}
+      style={{
+        borderColor: props.data.mainColor,
+        ...styles.card,
+        ...props.style,
+      }}
     >
       <View style={styles.cryptoWrapper}>
         <Image style={styles.logo} source={data.icon.path}></Image>
         <AppText style={styles.cryptoName}>{data.name}</AppText>
-        <AppText
-          style={(() => {
-            return data.percentage >= 0
-              ? {
-                  ...styles.percentage,
-                  ...styles.percentagePos,
-                }
-              : {
-                  ...styles.percentage,
-                  ...styles.percentageNeg,
-                };
-          })()}
-        >
-          {data.percentage > 0 ? "+" : ""}
-          {data.percentage}
-        </AppText>
       </View>
 
       <View style={styles.amountWrapper}>
@@ -61,12 +49,15 @@ const styles = StyleSheet.create({
     height: 130,
     borderRadius: 25,
     backgroundColor: "rgba(255,255,255, .13)",
+    overflow: "hidden",
+    borderWidth: 2,
   },
   amountWrapper: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
     flex: 1,
+    zIndex: 2,
   },
   amount: {
     fontFamily: Fonts.bold,
@@ -80,6 +71,7 @@ const styles = StyleSheet.create({
   cryptoWrapper: {
     flexDirection: "row",
     alignItems: "center",
+    zIndex: 2,
   },
   cryptoName: {
     fontSize: 15,
@@ -90,15 +82,6 @@ const styles = StyleSheet.create({
     width: 36,
     height: 36,
     marginRight: 12,
-  },
-  percentage: {
-    fontSize: 14,
-  },
-  percentagePos: {
-    color: Colors.green,
-  },
-  percentageNeg: {
-    color: Colors.red,
   },
 });
 

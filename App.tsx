@@ -1,7 +1,6 @@
 import AppLoading from "expo-app-loading";
 import * as Font from "expo-font";
 import { StatusBar } from "expo-status-bar";
-import firebase from "firebase/app";
 import React, { useEffect, useState } from "react";
 import { LogBox, StyleSheet } from "react-native";
 import GradientView from "./components/gradient-view";
@@ -14,6 +13,7 @@ import { IConfig } from "./models/config";
 import { AppConfig, defaultConfig, MarketData } from "./models/context";
 import Main from "./pages/main";
 import { fetchMarketData, IMarketData } from "./services/fetch-marketdata";
+import { firebaseDB } from "./services/firebase-init";
 
 LogBox.ignoreLogs(["Setting a timer"]);
 
@@ -27,7 +27,7 @@ const preload = () => {
 };
 
 export default function App() {
-  let dbConnection: firebase.database.Reference | undefined;
+  let dbConnection: firebaseDB | undefined;
   const [appIsReady, setAppIsReady] = useState(false);
   const [loading, setLoading] = useState(false);
   const [loadingError, setLoadingError] = useState(false);

@@ -3,7 +3,6 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import React from "react";
 import GradientView from "~/components/gradient-view";
 import { createLocalDBTable } from "~/db";
-import { initializeFirebaseApp } from "~/services/firebase-init";
 import { Colors, PathNames } from "../constants";
 import AddWalletScreen from "./add-wallet";
 import HomeScreen from "./home-screen";
@@ -15,8 +14,6 @@ createLocalDBTable().catch((err) => {
   console.log(err);
   console.warn("Local DB could no be created");
 });
-
-initializeFirebaseApp();
 
 const AppTheme = {
   ...DefaultTheme,

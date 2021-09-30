@@ -1,4 +1,4 @@
-import firebase from "firebase";
+import firebase, { firebaseDB } from "./firebase-init";
 
 interface IHistoryItem {
   date: number;
@@ -12,7 +12,7 @@ export interface IMarketData {
   };
 }
 export const fetchMarketData = (
-  callback: (data: IMarketData, db: firebase.database.Reference) => void
+  callback: (data: IMarketData, db: firebaseDB) => void
 ) => {
   const db = firebase.database().ref("/marketData");
   return db.on("value", (snapshot) => {

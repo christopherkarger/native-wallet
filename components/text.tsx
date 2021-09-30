@@ -7,9 +7,7 @@ const AppText = (props) => {
     return <Text>Please provide children for AppText!</Text>;
   }
 
-  return (
-    <Text style={{ ...styles.text, ...props.style }}>{props.children}</Text>
-  );
+  return <Text style={[styles.text, props.style]}>{props.children}</Text>;
 };
 
 const styles = StyleSheet.create({

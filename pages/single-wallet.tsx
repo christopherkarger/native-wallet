@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { FlatList, Image, StyleSheet, View } from "react-native";
 import Button from "~/components/button";
 import SafeArea from "~/components/safe-area";
@@ -9,11 +9,6 @@ import AppText from "../components/text";
 
 const SingleWallet = (props) => {
   const [walletWrapper] = useState<WalletWrapper>(props.route.params.data);
-
-  useEffect(() => {
-    // console.log(111111111);
-    // console.log(data);
-  }, []);
 
   return (
     <SafeArea>
@@ -35,13 +30,20 @@ const SingleWallet = (props) => {
           renderItem={({ item, index }) => {
             return (
               <View style={styles.singleWalletWrapper}>
-                {index > 0 && <View style={styles.divider}></View>}
                 <AppText>Adresse:</AppText>
                 <AppText style={styles.address}>{item.address}</AppText>
                 <AppText>Balance:</AppText>
                 <AppText style={styles.balance}>
                   {item.balance} {item.currency}
                 </AppText>
+                <Button
+                  style={styles.deleteWalletButton}
+                  textStyle={styles.deleteWalletButtonText}
+                  onPress={() => {
+                    console.log("delete item", index);
+                  }}
+                  text="Entfernen"
+                ></Button>
               </View>
             );
           }}
@@ -68,6 +70,9 @@ const styles = StyleSheet.create({
   },
   singleWalletWrapper: {
     marginBottom: 20,
+    borderBottomColor: Colors.white,
+    borderBottomWidth: 1,
+    paddingBottom: 20,
   },
   logoWrapper: {
     marginBottom: 20,
@@ -88,11 +93,16 @@ const styles = StyleSheet.create({
     fontFamily: Fonts.bold,
     marginBottom: 20,
   },
-  divider: {
-    width: "100%",
-    height: 1,
-    backgroundColor: Colors.lightWhite,
-    marginBottom: 20,
+  deleteWalletButton: {
+    marginTop: 10,
+    marginBottom: 0,
+    backgroundColor: Colors.transparent,
+    color: Colors.green,
+    width: "auto",
+    paddingLeft: 0,
+  },
+  deleteWalletButtonText: {
+    color: Colors.fadeLight,
   },
 });
 

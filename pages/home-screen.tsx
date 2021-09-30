@@ -38,6 +38,17 @@ const HomeScreen = (props) => {
 
   return (
     <SafeArea>
+      {walletsData.length > 0 && (
+        <View style={styles.addWalletButtonWrapper}>
+          <TouchableOpacity
+            style={styles.addWalletButton}
+            onPress={() => props.navigation.navigate(PathNames.addWallet)}
+          >
+            <MaterialIcons name="add-circle" size={40} color={Colors.green} />
+          </TouchableOpacity>
+        </View>
+      )}
+
       {walletsData.length === 0 && (
         <EmptyWallets navigation={props.navigation}></EmptyWallets>
       )}
@@ -62,17 +73,6 @@ const HomeScreen = (props) => {
       {/* {walletsData.length > 0 && marketData.length > 0 && (
         <Market data={marketData}></Market>
       )} */}
-
-      {walletsData.length > 0 && (
-        <View style={styles.addWalletButtonWrapper}>
-          <TouchableOpacity
-            style={styles.addWalletButton}
-            onPress={() => props.navigation.navigate(PathNames.addWallet)}
-          >
-            <MaterialIcons name="add-circle" size={50} color={Colors.green} />
-          </TouchableOpacity>
-        </View>
-      )}
     </SafeArea>
   );
 };
@@ -83,7 +83,7 @@ const styles = StyleSheet.create({
     marginRight: 20,
   },
   pfHeadline: {
-    fontSize: 40,
+    fontSize: 35,
     lineHeight: 40,
     fontFamily: Fonts.bold,
   },
@@ -101,10 +101,9 @@ const styles = StyleSheet.create({
   },
   addWalletButtonWrapper: {
     position: "absolute",
-    bottom: 10,
-    alignItems: "center",
-    justifyContent: "center",
-    width: "100%",
+    top: 35,
+    right: 10,
+    zIndex: 10,
   },
   addWalletButton: {},
 });

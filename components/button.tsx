@@ -14,7 +14,9 @@ const Button = (props) => {
         ]}
       >
         {props.text && (
-          <AppText style={styles.buttonText}>{props.text}</AppText>
+          <AppText style={[styles.buttonText, props.textStyle]}>
+            {props.text}
+          </AppText>
         )}
         {!props.text && <View> {props.children}</View>}
       </View>
@@ -28,6 +30,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15,
     paddingVertical: 10,
     borderRadius: 20,
+    alignSelf: "flex-start",
   },
   disabled: {
     opacity: 0.5,

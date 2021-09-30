@@ -18,11 +18,19 @@ export const Fonts = {
 export const Colors = {
   transparent: "transparent",
   bgDark: "#070628",
-  fadeLight: "rgba(255,255,255, 0.4)",
+  fadeLight: "rgba(255,255,255, 0.8)",
   white: "#ffffff",
   lightWhite: "rgba(255,255,255, 0.5)",
   green: "#01B670",
   red: "#E8503A",
   btcRGB: "247,147,25",
   text: "#333333",
+  cryptos: {
+    bitcoin: "#F79319",
+    ethereum: "#627EEA",
+    cardano: "#05202E",
+    dogecoin: "#BA9F33",
+    litecoin: "#345D9D",
+    dash: "#008CE7",
+  },
 };
