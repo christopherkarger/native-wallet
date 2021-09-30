@@ -20,7 +20,7 @@ const Modal = (props) => {
           <View style={styles.inner}>{props.children}</View>
           <TouchableOpacity
             style={styles.bg}
-            onPress={props.onClose}
+            onPress={props.onOutsideClick}
           ></TouchableOpacity>
         </View>
       )}

@@ -1,22 +1,14 @@
-import { LinearGradient } from "expo-linear-gradient";
+import { MaterialIcons } from "@expo/vector-icons";
 import React, { useContext, useEffect, useState } from "react";
-import {
-  FlatList,
-  Image,
-  StyleSheet,
-  TextInput,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { StyleSheet, TextInput, TouchableOpacity, View } from "react-native";
+import AddCryptoModal from "~/components/add-crypto-modal";
 import Button from "~/components/button";
 import DismissKeyboard from "~/components/dismiss-keyboard";
-import Modal from "~/components/modal";
 import SafeArea from "~/components/safe-area";
 import AppText from "~/components/text";
-import { Colors, Fonts, PathNames } from "~/constants";
+import { Colors, PathNames } from "~/constants";
 import { insertItemToLocalDB } from "~/db";
 import { AppConfig } from "~/models/context";
-import { CryptoIcon } from "~/models/crypto-icon";
 import { fetchAddress } from "~/services/fetch-address";
 import SubPageHeader from "../components/sub-page-header";
 
@@ -72,92 +64,66 @@ const AddWalletScreen = (props) => {
   };
 
   return (
-    <AppConfig.Consumer>
-      {(config) => (
-        <SafeArea>
-          <DismissKeyboard>
-            <View style={styles.page}>
-              <SubPageHeader navigation={props.navigation}>
-                Neues Wallet anlegen
-              </SubPageHeader>
+    <SafeArea>
+      <DismissKeyboard>
+        <View style={styles.page}>
+          <SubPageHeader navigation={props.navigation}>
+            Neues Wallet anlegen
+          </SubPageHeader>
 
-              <View style={styles.inner}>
-                <TouchableOpacity
+          <View style={styles.inner}>
+            <TouchableOpacity
+              onPress={() => {
+                if (nameChangeAllowed) {
+                  setShowModal(true);
+                }
+              }}
+            >
+              <View style={styles.cryptoInput}>
+                <AppText>{name ? name : "Wähle eine Kryptowährung"}</AppText>
+              </View>
+            </TouchableOpacity>
+            <View>
+              <View style={styles.qrCodeButtonWrapper}>
+                <Button
+                  style={styles.qrCodeButton}
                   onPress={() => {
-                    if (nameChangeAllowed) {
-                      setShowModal(true);
-                    }
+                    console.log("SHOW QR CODE SCANNER");
                   }}
                 >
-                  <View style={styles.cryptoInput}>
-                    <AppText>
-                      {name ? name : "Wähle eine Kryptowährung"}
-                    </AppText>
-                  </View>
-                </TouchableOpacity>
-                <TextInput
-                  style={styles.cryptoInput}
-                  placeholder="Adresse"
-                  placeholderTextColor={Colors.white}
-                  onChangeText={setEnteredAddress}
-                ></TextInput>
-                <Button onPress={() => {}}>
-                  <AppText>QR Code</AppText>
+                  <MaterialIcons name="qr-code" size={24} color="white" />
                 </Button>
-                <Button
-                  onPress={() => {
-                    addWallet();
-                  }}
-                  style={styles.addWallet}
-                  disabled={!name || !address}
-                  text={
-                    fetchingAndSavingAddress ? "Lade Wallet" : "Wallet anlegen"
-                  }
-                ></Button>
               </View>
+              <TextInput
+                style={styles.cryptoInput}
+                placeholder="Adresse"
+                placeholderTextColor={Colors.white}
+                onChangeText={setEnteredAddress}
+              ></TextInput>
             </View>
-          </DismissKeyboard>
-          <Modal
-            show={showModal}
-            onClose={() => {
-              setShowModal(false);
-            }}
-          >
-            <FlatList
-              contentContainerStyle={{ paddingBottom: 40 }}
-              data={config.supported}
-              keyExtractor={(_, index) => index.toString()}
-              renderItem={({ item, index }) => {
-                const icon = new CryptoIcon(item.name);
-                return (
-                  <TouchableOpacity
-                    onPress={() => {
-                      setName(item.name);
-                      setCurrency(item.currency);
-                      setShowModal(false);
-                    }}
-                  >
-                    <View style={styles.addCryptoItemWrapper}>
-                      <Image
-                        style={styles.cryptoIcon}
-                        source={icon.path}
-                      ></Image>
-                      <AppText style={styles.addCryptoModalText}>
-                        {item.name}
-                      </AppText>
-                    </View>
-                  </TouchableOpacity>
-                );
+            <Button
+              onPress={() => {
+                addWallet();
               }}
-            ></FlatList>
-            <LinearGradient
-              colors={[Colors.transparent, Colors.white]}
-              style={styles.gradient}
-            />
-          </Modal>
-        </SafeArea>
-      )}
-    </AppConfig.Consumer>
+              style={styles.addWallet}
+              disabled={!name || !address}
+              text={fetchingAndSavingAddress ? "Lade Wallet" : "Wallet anlegen"}
+            ></Button>
+          </View>
+        </View>
+      </DismissKeyboard>
+      <AddCryptoModal
+        show={showModal}
+        onOutsideClick={() => {
+          setShowModal(false);
+        }}
+        onSelect={(selected: { name: string; currency: string }) => {
+          setName(selected.name);
+          setCurrency(selected.currency);
+          setShowModal(false);
+        }}
+      ></AddCryptoModal>
+    </SafeArea>
   );
 };
 
@@ -168,17 +134,6 @@ const styles = StyleSheet.create({
   page: {
     flex: 1,
   },
-  addCryptoItemWrapper: {
-    paddingVertical: 13,
-    paddingHorizontal: 15,
-    flexDirection: "row",
-    alignItems: "center",
-  },
-  cryptoIcon: {
-    width: 30,
-    height: 30,
-    marginRight: 10,
-  },
   cryptoInput: {
     color: Colors.white,
     borderColor: Colors.fadeLight,
@@ -188,19 +143,19 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15,
     marginBottom: 20,
   },
-  addCryptoModalText: {
-    color: Colors.text,
-    fontFamily: Fonts.bold,
-  },
-  gradient: {
-    width: "100%",
-    height: 50,
-    position: "absolute",
-    bottom: -1,
-    left: 0,
-  },
   addWallet: {
     marginTop: 5,
+  },
+
+  qrCodeButtonWrapper: {
+    position: "absolute",
+    top: 5,
+    right: 0,
+    zIndex: 1,
+  },
+  qrCodeButton: {
+    backgroundColor: Colors.transparent,
+    borderRadius: 0,
   },
 });
 
