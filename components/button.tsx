@@ -13,12 +13,12 @@ const Button = (props) => {
           props.disabled ? styles.disabled : {},
         ]}
       >
-        {props.text && (
+        {!!props.text && (
           <AppText style={[styles.buttonText, props.textStyle]}>
             {props.text}
           </AppText>
         )}
-        {!props.text && <View> {props.children}</View>}
+        {!props.text && !!props.children && <View>{props.children}</View>}
       </View>
     </TouchableOpacity>
   );

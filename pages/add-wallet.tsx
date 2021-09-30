@@ -101,6 +101,9 @@ const AddWalletScreen = (props) => {
                   placeholderTextColor={Colors.white}
                   onChangeText={setEnteredAddress}
                 ></TextInput>
+                <Button onPress={() => {}}>
+                  <AppText>QR Code</AppText>
+                </Button>
                 <Button
                   onPress={() => {
                     addWallet();
