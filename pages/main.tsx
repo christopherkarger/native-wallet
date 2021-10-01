@@ -2,6 +2,7 @@ import { DefaultTheme, NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import React from "react";
 import GradientView from "~/components/gradient-view";
+import QrCodeScanner from "~/components/qr-code-scanner";
 import { createLocalDBTable } from "~/db";
 import { Colors, PathNames } from "../constants";
 import AddWalletScreen from "./add-wallet";
@@ -43,6 +44,7 @@ const Main = () => {
             name={PathNames.singleWallet}
             component={SingleWallet}
           />
+          <Stack.Screen name={PathNames.scanCode} component={QrCodeScanner} />
         </Stack.Navigator>
       </NavigationContainer>
     </GradientView>

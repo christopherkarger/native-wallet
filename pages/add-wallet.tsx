@@ -1,6 +1,12 @@
 import { MaterialIcons } from "@expo/vector-icons";
 import React, { useContext, useEffect, useState } from "react";
-import { StyleSheet, TextInput, TouchableOpacity, View } from "react-native";
+import {
+  Dimensions,
+  StyleSheet,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import AddCryptoModal from "~/components/add-crypto-modal";
 import Button from "~/components/button";
 import DismissKeyboard from "~/components/dismiss-keyboard";
@@ -22,6 +28,12 @@ const AddWalletScreen = (props) => {
   const [fetchingAndSavingAddress, setFetchingAndSavingAddress] =
     useState(false);
   const [connectedToId, setConnectedToId] = useState<number>();
+
+  useEffect(() => {
+    if (props.route.params && props.route.params.address) {
+      setEnteredAddress(props.route.params.address);
+    }
+  }, [props.route.params]);
 
   useEffect(() => {
     if (props.route.params && props.route.params.addToWallet) {
@@ -59,80 +71,91 @@ const AddWalletScreen = (props) => {
       .catch((err) => {
         console.log(err);
         setFetchingAndSavingAddress(false);
-        throw new Error("Insert Wallet into DB failed");
+        console.error("Insert Wallet into DB failed");
       });
   };
 
   return (
-    <SafeArea>
-      <DismissKeyboard>
-        <View style={styles.page}>
-          <SubPageHeader navigation={props.navigation}>
-            Neues Wallet anlegen
-          </SubPageHeader>
+    <View style={styles.container}>
+      <SafeArea>
+        <DismissKeyboard>
+          <View style={styles.page}>
+            <SubPageHeader navigation={props.navigation}>
+              Neues Wallet anlegen
+            </SubPageHeader>
 
-          <View style={styles.inner}>
-            <TouchableOpacity
-              onPress={() => {
-                if (nameChangeAllowed) {
-                  setShowModal(true);
+            <View style={styles.inner}>
+              <TouchableOpacity
+                onPress={() => {
+                  if (nameChangeAllowed) {
+                    setShowModal(true);
+                  }
+                }}
+              >
+                <View style={styles.cryptoInput}>
+                  <AppText>{name ? name : "Wähle eine Kryptowährung"}</AppText>
+                </View>
+              </TouchableOpacity>
+              <View>
+                <View style={styles.qrCodeButtonWrapper}>
+                  <Button
+                    style={styles.qrCodeButton}
+                    onPress={() => {
+                      props.navigation.navigate(PathNames.scanCode);
+                    }}
+                  >
+                    <MaterialIcons name="qr-code" size={24} color="white" />
+                  </Button>
+                </View>
+                <TextInput
+                  style={styles.cryptoInput}
+                  placeholder="Adresse"
+                  placeholderTextColor={Colors.white}
+                  onChangeText={setEnteredAddress}
+                  value={address}
+                ></TextInput>
+              </View>
+
+              <Button
+                onPress={() => {
+                  addWallet();
+                }}
+                style={styles.addWallet}
+                disabled={!name || !address || fetchingAndSavingAddress}
+                text={
+                  fetchingAndSavingAddress ? "Lade Wallet" : "Wallet anlegen"
                 }
-              }}
-            >
-              <View style={styles.cryptoInput}>
-                <AppText>{name ? name : "Wähle eine Kryptowährung"}</AppText>
-              </View>
-            </TouchableOpacity>
-            <View>
-              <View style={styles.qrCodeButtonWrapper}>
-                <Button
-                  style={styles.qrCodeButton}
-                  onPress={() => {
-                    console.log("SHOW QR CODE SCANNER");
-                  }}
-                >
-                  <MaterialIcons name="qr-code" size={24} color="white" />
-                </Button>
-              </View>
-              <TextInput
-                style={styles.cryptoInput}
-                placeholder="Adresse"
-                placeholderTextColor={Colors.white}
-                onChangeText={setEnteredAddress}
-              ></TextInput>
+              ></Button>
             </View>
-            <Button
-              onPress={() => {
-                addWallet();
-              }}
-              style={styles.addWallet}
-              disabled={!name || !address}
-              text={fetchingAndSavingAddress ? "Lade Wallet" : "Wallet anlegen"}
-            ></Button>
           </View>
-        </View>
-      </DismissKeyboard>
-      <AddCryptoModal
-        show={showModal}
-        onOutsideClick={() => {
-          setShowModal(false);
-        }}
-        onSelect={(selected: { name: string; currency: string }) => {
-          setName(selected.name);
-          setCurrency(selected.currency);
-          setShowModal(false);
-        }}
-      ></AddCryptoModal>
-    </SafeArea>
+        </DismissKeyboard>
+        <AddCryptoModal
+          show={showModal}
+          onOutsideClick={() => {
+            setShowModal(false);
+          }}
+          onSelect={(selected: { name: string; currency: string }) => {
+            setName(selected.name);
+            setCurrency(selected.currency);
+            setShowModal(false);
+          }}
+        ></AddCryptoModal>
+      </SafeArea>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
+  container: {
+    height: Dimensions.get("window").height,
+    width: Dimensions.get("window").width,
+  },
   inner: {
     marginHorizontal: 20,
   },
   page: {
     flex: 1,
+    zIndex: 10,
   },
   cryptoInput: {
     color: Colors.white,

@@ -23,7 +23,7 @@ const AddCryptoModal = (props) => {
       }}
     >
       <FlatList
-        contentContainerStyle={{ paddingBottom: 40 }}
+        contentContainerStyle={{ paddingBottom: 30 }}
         data={appConfig.supported}
         keyExtractor={(_, index) => index.toString()}
         renderItem={({ item, index }) => {
@@ -46,6 +46,7 @@ const AddCryptoModal = (props) => {
         }}
       ></FlatList>
       <LinearGradient
+        pointerEvents="none"
         colors={[Colors.transparent, Colors.white]}
         style={styles.gradient}
       />
@@ -72,7 +73,7 @@ const styles = StyleSheet.create({
   },
   gradient: {
     width: "100%",
-    height: 50,
+    height: 100,
     position: "absolute",
     bottom: -1,
     left: 0,

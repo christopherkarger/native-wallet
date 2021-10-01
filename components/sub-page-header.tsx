@@ -11,7 +11,9 @@ const SubPageHeader = (props) => {
         style={styles.backButton}
         onPress={() => props.navigation.goBack()}
       >
-        <MaterialIcons name="arrow-back-ios" size={22} color={Colors.white} />
+        <View style={styles.backButtonIcon}>
+          <MaterialIcons name="arrow-back-ios" size={22} color={Colors.white} />
+        </View>
       </TouchableOpacity>
       <AppText style={styles.headline}>{props.children}</AppText>
     </View>
@@ -27,10 +29,18 @@ const styles = StyleSheet.create({
   },
   backButton: {
     position: "absolute",
-    left: 20,
+    top: -5,
+    left: 0,
+    width: 55,
+    height: 40,
   },
   headline: {
     fontSize: 20,
+  },
+  backButtonIcon: {
+    position: "absolute",
+    top: 7,
+    left: 20,
   },
 });
 

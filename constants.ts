@@ -6,6 +6,7 @@ export const PathNames = {
   home: "home",
   addWallet: "add-wallet",
   singleWallet: "single-wallet",
+  scanCode: "scan-code",
 };
 
 export const Fonts = {
