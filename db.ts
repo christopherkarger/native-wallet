@@ -1,5 +1,7 @@
 import * as SQLite from "expo-sqlite";
 import { CryptoIcon } from "./models/crypto-icon";
+import { Wallet } from "./models/wallet";
+import { WalletWrapper } from "./models/wallet-wrapper";
 
 const dbName = "wallets";
 
@@ -103,7 +105,7 @@ export const dropLocalDBTable = () => {
   });
 };
 
-export const updateItemToLocalDB = (id: number, balance: number) => {
+export const updateItemBalanceToLocalDB = (id: number, balance: number) => {
   return new Promise<SQLite.SQLResultSet>((resolve, reject) => {
     db.transaction((tx) => {
       tx.executeSql(
@@ -121,7 +123,29 @@ export const updateItemToLocalDB = (id: number, balance: number) => {
   });
 };
 
-export const deleteItemFromLocalDB = (id: number) => {
+export const updateItemConnectedToIdToLocalDB = (
+  id: number,
+  newId?: number
+) => {
+  return new Promise<SQLite.SQLResultSet>((resolve, reject) => {
+    db.transaction((tx) => {
+      tx.executeSql(
+        `UPDATE ${dbName} SET connectedToId = ? WHERE id = ?`,
+        [newId, id],
+        (_, result) => {
+          resolve(result);
+        },
+        (_, error) => {
+          reject(error);
+          return true;
+        }
+      );
+    });
+  });
+};
+
+export const deleteSingleItemFromLocalDB = (id: number) => {
+  console.log(id);
   return new Promise<SQLite.SQLResultSet>((resolve, reject) => {
     db.transaction((tx) => {
       tx.executeSql(
@@ -137,4 +161,66 @@ export const deleteItemFromLocalDB = (id: number) => {
       );
     });
   });
+};
+
+export const deleteMainItemFromLocalDB = (
+  item: Wallet,
+  walletWrapper: WalletWrapper
+) => {
+  return new Promise<SQLite.SQLResultSet>(async (resolve, reject) => {
+    const secondWalletID = walletWrapper.wallets[1].id;
+    const wallets = walletWrapper.wallets
+      .slice()
+      .filter((e) => e.connectedToId)
+      .map((w) => {
+        return new Wallet(
+          w.id,
+          w.name,
+          w.currency,
+          w.address,
+          w.balance,
+          w.fetchedDate,
+          w.connectedToId
+        );
+      });
+
+    // Update new main wallet address
+    await updateItemConnectedToIdToLocalDB(wallets[0].id).catch(() => {
+      reject("failed to update first item");
+    });
+
+    // Delete first one
+    wallets.shift();
+
+    // update all other wallet address
+    for (const w of wallets) {
+      if (w.connectedToId) {
+        await updateItemConnectedToIdToLocalDB(w.id, secondWalletID).catch(
+          () => {
+            reject("failed to update item");
+          }
+        );
+      }
+    }
+
+    // Delete main wallet address
+    await deleteSingleItemFromLocalDB(item.id)
+      .then((res) => {
+        resolve(res);
+      })
+      .catch(() => {
+        reject("failed to delete main item");
+      });
+  });
+};
+
+export const deleteItemFromLocalDB = (
+  item: Wallet,
+  walletWrapper: WalletWrapper
+) => {
+  if (item.connectedToId || walletWrapper.wallets.length == 1) {
+    return deleteSingleItemFromLocalDB(item.id);
+  } else {
+    return deleteMainItemFromLocalDB(item, walletWrapper);
+  }
 };

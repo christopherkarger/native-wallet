@@ -29,7 +29,7 @@ export const getWalletWrapper = (localWalletsArr: ILocalWallet[]) => {
           w.balance,
           w.fetchedDate
         ),
-        ...connectedWallets.filter((e) => e.connectedToIndex === w.id),
+        ...connectedWallets.filter((e) => e.connectedToId === w.id),
       ]);
     });
 };

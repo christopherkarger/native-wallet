@@ -5,6 +5,7 @@ import SafeArea from "~/components/safe-area";
 import SubPageHeader from "~/components/sub-page-header";
 import { Colors, Fonts, PathNames } from "~/constants";
 import { deleteItemFromLocalDB } from "~/db";
+import { Wallet } from "~/models/wallet";
 import { WalletWrapper } from "~/models/wallet-wrapper";
 import AppText from "../components/text";
 
@@ -12,6 +13,20 @@ const SingleWallet = (props) => {
   const [walletWrapper, setWalletWrapper] = useState<WalletWrapper>(
     props.route.params.data
   );
+
+  const deleteItem = async (item: Wallet, index: number) => {
+    await deleteItemFromLocalDB(item, walletWrapper).catch((err) => {
+      console.log(err);
+      throw new Error("Deleting wallet address from local DB failed");
+    });
+
+    const updatetWallets = walletWrapper.wallets.filter((e, i) => i !== index);
+    if (updatetWallets.length > 0) {
+      setWalletWrapper(new WalletWrapper(updatetWallets));
+    } else {
+      props.navigation.navigate(PathNames.home);
+    }
+  };
 
   return (
     <SafeArea>
@@ -26,7 +41,8 @@ const SingleWallet = (props) => {
           ></Image>
         </View>
         <FlatList
-          contentContainerStyle={{}}
+          style={styles.flatList}
+          scrollEnabled={true}
           keyboardShouldPersistTaps="handled"
           data={walletWrapper.wallets}
           keyExtractor={(_, index) => index.toString()}
@@ -43,24 +59,6 @@ const SingleWallet = (props) => {
                   style={styles.deleteWalletButton}
                   textStyle={styles.deleteWalletButtonText}
                   onPress={() => {
-                    const deleteItem = async () => {
-                      await deleteItemFromLocalDB(item.id).catch((err) => {
-                        console.log(err);
-                        throw new Error(
-                          "Deleting wallet address from local DB failed"
-                        );
-                      });
-
-                      const updatetWallets = walletWrapper.wallets.filter(
-                        (e, i) => i !== index
-                      );
-                      if (updatetWallets.length > 0) {
-                        setWalletWrapper(new WalletWrapper(updatetWallets));
-                      } else {
-                        props.navigation.navigate(PathNames.home);
-                      }
-                    };
-
                     Alert.alert(
                       "",
                       "Möchtest du wirklich diese Adresse löschen?",
@@ -73,7 +71,7 @@ const SingleWallet = (props) => {
                         {
                           text: "OK",
                           onPress: () => {
-                            deleteItem();
+                            deleteItem(item, index);
                           },
                         },
                       ],
@@ -85,18 +83,20 @@ const SingleWallet = (props) => {
               </View>
             );
           }}
+          ListFooterComponent={
+            <Button
+              onPress={() => {
+                props.navigation.navigate(PathNames.addWallet, {
+                  addToWallet: true,
+                  currency: walletWrapper.wallets[0].currency,
+                  name: walletWrapper.wallets[0].name,
+                  id: walletWrapper.wallets[0].id,
+                });
+              }}
+              text="Addresse zu diesem Wallet hinzufügen"
+            ></Button>
+          }
         ></FlatList>
-        <Button
-          onPress={() => {
-            props.navigation.navigate(PathNames.addWallet, {
-              addToWallet: true,
-              currency: walletWrapper.wallets[0].currency,
-              name: walletWrapper.wallets[0].name,
-              id: walletWrapper.wallets[0].id,
-            });
-          }}
-          text="Addresse zu diesem Wallet hinzufügen"
-        ></Button>
       </View>
     </SafeArea>
   );
@@ -105,6 +105,10 @@ const SingleWallet = (props) => {
 const styles = StyleSheet.create({
   inner: {
     marginHorizontal: 20,
+    flex: 1,
+  },
+  flatList: {
+    flex: 1,
   },
   singleWalletWrapper: {
     marginBottom: 20,

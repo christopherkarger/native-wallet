@@ -1,5 +1,5 @@
 import { useContext, useEffect } from "react";
-import { selectLocalDBTable, updateItemToLocalDB } from "~/db";
+import { selectLocalDBTable, updateItemBalanceToLocalDB } from "~/db";
 import { AppConfig } from "~/models/context";
 import { getWalletWrapper } from "~/services/getWalletWrapper";
 import { fetchAddress } from "../services/fetch-address";
@@ -23,7 +23,7 @@ export const useUpdateLocalWalletBalances = async () => {
               wallet.name,
               appConfig
             );
-            updateItemToLocalDB(wallet.id, balance);
+            updateItemBalanceToLocalDB(wallet.id, balance);
           } catch (err) {
             console.log(err);
           }
