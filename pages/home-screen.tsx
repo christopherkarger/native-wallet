@@ -23,8 +23,6 @@ const HomeScreen = (props) => {
     const routeListener = props.navigation.addListener("focus", async () => {
       const localWallets = await selectLocalDBTable().catch(() => {});
       if (localWallets && localWallets.rows.length) {
-        console.log(".........");
-        console.log(localWallets.rows._array);
         setWalletsData(getWalletWrapper(localWallets.rows._array));
       } else {
         setWalletsData([]);

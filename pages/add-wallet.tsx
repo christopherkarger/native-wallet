@@ -86,6 +86,7 @@ const AddWalletScreen = (props) => {
 
             <View style={styles.inner}>
               <TouchableOpacity
+                disabled={!nameChangeAllowed}
                 onPress={() => {
                   if (nameChangeAllowed) {
                     setShowModal(true);

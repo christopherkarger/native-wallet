@@ -172,17 +172,7 @@ export const deleteMainItemFromLocalDB = (
     const wallets = walletWrapper.wallets
       .slice()
       .filter((e) => e.connectedToId)
-      .map((w) => {
-        return new Wallet(
-          w.id,
-          w.name,
-          w.currency,
-          w.address,
-          w.balance,
-          w.fetchedDate,
-          w.connectedToId
-        );
-      });
+      .map((w) => w.clone());
 
     // Update new main wallet address
     await updateItemConnectedToIdToLocalDB(wallets[0].id).catch(() => {

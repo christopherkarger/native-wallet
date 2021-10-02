@@ -15,4 +15,16 @@ export class Wallet {
   ) {
     this.icon = new CryptoIcon(name);
   }
+
+  clone(): Wallet {
+    return new Wallet(
+      this.id,
+      this.name,
+      this.currency,
+      this.address,
+      this.balance,
+      this.fetchedDate,
+      this.connectedToId
+    );
+  }
 }
