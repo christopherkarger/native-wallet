@@ -12,7 +12,7 @@ export const formatNumber = (num: number): string => {
   const hasDecimal = !Number.isInteger(num);
   let number = hasDecimal ? num.toFixed(2) : num.toString();
 
-  if (num >= 1000 && num < 1000000000) {
+  if (num >= 1000 && num < 1000000000000) {
     let pos = [1];
 
     if (num >= 10000 && num < 100000) {
@@ -33,6 +33,18 @@ export const formatNumber = (num: number): string => {
 
     if (num >= 100000000) {
       pos = [3, 7];
+    }
+
+    if (num >= 1000000000) {
+      pos = [1, 5, 9];
+    }
+
+    if (num >= 10000000000) {
+      pos = [2, 6, 10];
+    }
+
+    if (num >= 100000000000) {
+      pos = [3, 7, 11];
     }
 
     const m = number.split("");

@@ -1,11 +1,10 @@
 import { WalletWrapper } from "../models/wallet-wrapper";
 import { IMarketData } from "./fetch-marketdata";
-import { formatNumber } from "./helper";
 
 export const calcTotalBalance = (
   marketData: IMarketData,
   walletWrapper: WalletWrapper[]
-): string => {
+): number => {
   let balance = 0;
   walletWrapper.forEach((wrapper) => {
     wrapper.wallets.forEach((wallet) => {
@@ -15,5 +14,5 @@ export const calcTotalBalance = (
       }
     });
   });
-  return formatNumber(balance);
+  return balance;
 };
