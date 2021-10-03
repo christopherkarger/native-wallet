@@ -175,9 +175,11 @@ export const deleteMainItemFromLocalDB = (
       .map((w) => w.clone());
 
     // Update new main wallet address
-    await updateItemConnectedToIdToLocalDB(wallets[0].id).catch(() => {
-      reject("failed to update first item");
-    });
+    try {
+      await updateItemConnectedToIdToLocalDB(wallets[0].id);
+    } catch {
+      reject("deleteMainItemFromLocalDB - failed to update first item");
+    }
 
     // Delete first one
     wallets.shift();
@@ -185,22 +187,21 @@ export const deleteMainItemFromLocalDB = (
     // update all other wallet address
     for (const w of wallets) {
       if (w.connectedToId) {
-        await updateItemConnectedToIdToLocalDB(w.id, secondWalletID).catch(
-          () => {
-            reject("failed to update item");
-          }
-        );
+        try {
+          await updateItemConnectedToIdToLocalDB(w.id, secondWalletID);
+        } catch {
+          reject("deleteMainItemFromLocalDB - failed to update item");
+        }
       }
     }
 
     // Delete main wallet address
-    await deleteSingleItemFromLocalDB(item.id)
-      .then((res) => {
-        resolve(res);
-      })
-      .catch(() => {
-        reject("failed to delete main item");
-      });
+    try {
+      const deletedItem = await deleteSingleItemFromLocalDB(item.id);
+      resolve(deletedItem);
+    } catch {
+      reject("deleteMainItemFromLocalDB - failed to delete main item");
+    }
   });
 };
 

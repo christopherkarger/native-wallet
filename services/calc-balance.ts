@@ -1,5 +1,6 @@
 import { WalletWrapper } from "../models/wallet-wrapper";
 import { IMarketData } from "./fetch-marketdata";
+import { formatNumber } from "./helper";
 
 export const calcTotalBalance = (
   marketData: IMarketData,
@@ -14,5 +15,5 @@ export const calcTotalBalance = (
       }
     });
   });
-  return balance.toFixed(2);
+  return formatNumber(10000.343);
 };

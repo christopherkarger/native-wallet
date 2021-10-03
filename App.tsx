@@ -3,11 +3,12 @@ import * as Font from "expo-font";
 import { StatusBar } from "expo-status-bar";
 import React, { useEffect, useState } from "react";
 import { LogBox, StyleSheet } from "react-native";
+import ApiNotSupported from "./components/api-not-supported";
 import GradientView from "./components/gradient-view";
 import SafeArea from "./components/safe-area";
 import AppText from "./components/text";
 import { config } from "./config";
-import { Fonts } from "./constants";
+import { apiVersion, Fonts } from "./constants";
 import useAppStatus from "./hooks/handle-app-state";
 import { IConfig } from "./models/config";
 import { AppConfig, defaultConfig, MarketData } from "./models/context";
@@ -28,9 +29,11 @@ const preload = () => {
 
 export default function App() {
   let dbConnection: firebaseDB | undefined;
+  const statusBarStyle = "light";
   const [appIsReady, setAppIsReady] = useState(false);
   const [loading, setLoading] = useState(false);
   const [loadingError, setLoadingError] = useState(false);
+  const [apiSupported, setApiSupported] = useState(false);
   const [fetchedConfig, setFetchedConfig] = useState(defaultConfig);
   const [marketData, setMarketData] = useState<IMarketData>({});
   const appStatus = useAppStatus();
@@ -38,9 +41,22 @@ export default function App() {
   useEffect(() => {
     setLoading(true);
 
-    fetch(`${config.configUrl}?v5`)
+    const configFectchHeader = new Headers();
+    configFectchHeader.append("pragma", "no-cache");
+    configFectchHeader.append("cache-control", "no-cache");
+    const fetchInit = {
+      method: "GET",
+      headers: configFectchHeader,
+    };
+
+    fetch(`${config.configUrl}`, fetchInit)
       .then((response) => response.json())
-      .then((res: IConfig) => setFetchedConfig(res))
+      .then((res: IConfig) => {
+        if (res.apiVersion === apiVersion) {
+          setApiSupported(true);
+          setFetchedConfig(res);
+        }
+      })
       .catch((err) => {
         console.log(err);
         setLoadingError(true);
@@ -75,8 +91,8 @@ export default function App() {
   if (loading || loadingError) {
     return (
       <GradientView>
-        <StatusBar style="light" />
-        <SafeArea style={styles.configLoadingArea}>
+        <StatusBar style={statusBarStyle} />
+        <SafeArea style={styles.loadingContainer}>
           <AppText style={styles.configLoadingText}>
             {loading && <>Lade...</>}
             {loadingError && <>Da ist wohl was schief gegangen!...</>}
@@ -86,10 +102,14 @@ export default function App() {
     );
   }
 
+  if (!apiSupported) {
+    return <ApiNotSupported statusBarStyle={statusBarStyle}></ApiNotSupported>;
+  }
+
   return (
     <AppConfig.Provider value={fetchedConfig}>
       <MarketData.Provider value={marketData}>
-        <StatusBar style="light" />
+        <StatusBar style={statusBarStyle} />
         <Main />
       </MarketData.Provider>
     </AppConfig.Provider>
@@ -97,7 +117,7 @@ export default function App() {
 }
 
 const styles = StyleSheet.create({
-  configLoadingArea: {
+  loadingContainer: {
     flex: 1,
     width: "100%",
     height: "100%",

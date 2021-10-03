@@ -8,6 +8,7 @@ interface ICryptoUrls {
 }
 
 export interface IConfig {
+  apiVersion: number;
   supported: ICrypto[];
   urls: ICryptoUrls;
 }

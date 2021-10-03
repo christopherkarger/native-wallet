@@ -1,5 +1,7 @@
 import { Platform } from "react-native";
 
+export const apiVersion = 1;
+
 export const isAndroid = Platform.OS === "android";
 
 export const PathNames = {
