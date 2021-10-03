@@ -15,5 +15,5 @@ export const calcTotalBalance = (
       }
     });
   });
-  return formatNumber(10000.343);
+  return formatNumber(balance);
 };
