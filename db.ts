@@ -145,7 +145,6 @@ export const updateItemConnectedToIdToLocalDB = (
 };
 
 export const deleteSingleItemFromLocalDB = (id: number) => {
-  console.log(id);
   return new Promise<SQLite.SQLResultSet>((resolve, reject) => {
     db.transaction((tx) => {
       tx.executeSql(

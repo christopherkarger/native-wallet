@@ -6,11 +6,11 @@ export const waitTime = (time: number) => {
   });
 };
 
-export const formatNumber = (num: number): string => {
+export const formatNumber = (num: number, decimal = 2): string => {
   const separator = ".";
   const comma = ",";
   const hasDecimal = !Number.isInteger(num);
-  let number = hasDecimal ? num.toFixed(2) : num.toString();
+  let number = hasDecimal ? num.toFixed(decimal) : num.toString();
 
   if (num >= 1000 && num < 1000000000000) {
     let pos = [1];
@@ -24,7 +24,7 @@ export const formatNumber = (num: number): string => {
     }
 
     if (num >= 1000000) {
-      pos = [1, 4];
+      pos = [1, 5];
     }
 
     if (num >= 10000000) {

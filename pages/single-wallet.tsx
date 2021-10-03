@@ -7,6 +7,7 @@ import { Colors, Fonts, PathNames } from "~/constants";
 import { deleteItemFromLocalDB } from "~/db";
 import { Wallet } from "~/models/wallet";
 import { WalletWrapper } from "~/models/wallet-wrapper";
+import { formatNumber } from "~/services/helper";
 import AppText from "../components/text";
 
 const SingleWallet = (props) => {
@@ -53,7 +54,7 @@ const SingleWallet = (props) => {
                 <AppText style={styles.address}>{item.address}</AppText>
                 <AppText>Balance:</AppText>
                 <AppText style={styles.balance}>
-                  {item.balance} {item.currency}
+                  {formatNumber(item.balance, 6)} {item.currency}
                 </AppText>
                 <Button
                   style={styles.deleteWalletButton}

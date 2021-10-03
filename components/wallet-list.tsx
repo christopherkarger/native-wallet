@@ -1,11 +1,28 @@
 import React, { useMemo } from "react";
 import { FlatList, StyleSheet } from "react-native";
+import { waitTime } from "~/services/helper";
 import WalletCard from "./wallet-card";
 
 const Wallets = (props) => {
+  let flatListRef: FlatList<any> | null;
+
+  const scrollToStart = async () => {
+    if (flatListRef) {
+      try {
+        await waitTime(500);
+        flatListRef.scrollToOffset({ animated: false, offset: 0 });
+      } catch {
+        console.error("could not scroll to start");
+      }
+    }
+  };
+
   const List = useMemo(() => {
     return (
       <FlatList
+        ref={(ref) => {
+          flatListRef = ref;
+        }}
         style={styles.wallets}
         horizontal={true}
         contentContainerStyle={{ paddingRight: 20, paddingLeft: 20 }}
@@ -18,6 +35,7 @@ const Wallets = (props) => {
               navigation={props.navigation}
               data={item}
               style={index > 0 ? { marginLeft: 20 } : {}}
+              onCardClicked={scrollToStart}
             ></WalletCard>
           );
         }}
