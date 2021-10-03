@@ -8,6 +8,7 @@ import { MarketData } from "~/models/context";
 import { WalletWrapper } from "~/models/wallet-wrapper";
 import { calcTotalBalance } from "~/services/calc-balance";
 import { getWalletWrapper } from "~/services/getWalletWrapper";
+import { formatNumber } from "~/services/helper";
 import EmptyWallets from "../components/empty-wallets";
 import AppText from "../components/text";
 import WalletList from "../components/wallet-list";
@@ -35,7 +36,7 @@ const HomeScreen = (props) => {
   }, []);
 
   useEffect(() => {
-    setTotalBalance(calcTotalBalance(marketData, walletsData));
+    setTotalBalance(formatNumber(calcTotalBalance(marketData, walletsData)));
   }, [marketData, walletsData]);
 
   return (
