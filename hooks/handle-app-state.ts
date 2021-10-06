@@ -1,17 +1,22 @@
 import { useEffect, useRef, useState } from "react";
 import { AppState, AppStateStatus } from "react-native";
 
+export enum AppStaus {
+  Active = "active",
+  Inactive = "inactive",
+}
+
 const useAppStatus = () => {
   const appState = useRef(AppState.currentState);
-  const [status, setStatus] = useState("active");
+  const [status, setStatus] = useState(AppStaus.Active);
   const _handleAppStateChange = (nextAppState: AppStateStatus) => {
     if (
       appState.current.match(/inactive|background/) &&
-      nextAppState === "active"
+      nextAppState === AppStaus.Active
     ) {
-      setStatus("active");
+      setStatus(AppStaus.Active);
     } else {
-      setStatus("inactive");
+      setStatus(AppStaus.Inactive);
     }
 
     appState.current = nextAppState;

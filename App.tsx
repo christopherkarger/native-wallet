@@ -9,7 +9,7 @@ import SafeArea from "./components/safe-area";
 import AppText from "./components/text";
 import { config } from "./config";
 import { apiVersion, Fonts } from "./constants";
-import useAppStatus from "./hooks/handle-app-state";
+import useAppStatus, { AppStaus } from "./hooks/handle-app-state";
 import { IConfig } from "./models/config";
 import { AppConfig, defaultConfig, MarketData } from "./models/context";
 import Main from "./pages/main";
@@ -65,7 +65,7 @@ export default function App() {
   }, []);
 
   useEffect(() => {
-    if (appStatus === "active") {
+    if (appStatus === AppStaus.Active) {
       fetchMarketData((data, db) => {
         if (dbConnection === undefined) {
           dbConnection = db;

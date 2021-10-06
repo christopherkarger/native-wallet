@@ -4,7 +4,7 @@ import { AppConfig } from "~/models/context";
 import { getWalletWrapper } from "~/services/getWalletWrapper";
 import { fetchAddress } from "../services/fetch-address";
 import { waitTime } from "../services/helper";
-import useAppStatus from "./handle-app-state";
+import useAppStatus, { AppStaus } from "./handle-app-state";
 
 export const useUpdateLocalWalletBalances = async () => {
   const appConfig = useContext(AppConfig);
@@ -33,7 +33,7 @@ export const useUpdateLocalWalletBalances = async () => {
   };
 
   useEffect(() => {
-    if (appStatus === "active") {
+    if (appStatus === AppStaus.Active) {
       update();
     }
   }, [appStatus]);
