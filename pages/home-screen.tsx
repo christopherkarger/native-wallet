@@ -38,7 +38,7 @@ const HomeScreen = (props) => {
   }, []);
 
   useEffect(() => {
-    setTotalBalance(formatNumber(calcTotalBalance(marketData, walletsData)));
+    setTotalBalance(formatNumber(calcTotalBalance(marketData, walletsData), 2));
   }, [marketData, walletsData]);
 
   return (

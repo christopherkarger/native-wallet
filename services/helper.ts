@@ -6,20 +6,16 @@ export const waitTime = (time: number) => {
   });
 };
 
-export const formatNumber = (
-  num: number,
-  decimal = 2,
-  autoDecimal = false
-): string => {
+export const formatNumber = (num: number, decimal?: number): string => {
   let number;
   const separator = ".";
   const comma = ",";
   const hasDecimal = !Number.isInteger(num);
 
-  if (autoDecimal) {
-    number = num < 1 ? num.toFixed(4) : num.toFixed(2);
-  } else {
+  if (decimal) {
     number = hasDecimal ? num.toFixed(decimal) : num.toString();
+  } else {
+    number = num < 1 ? num.toFixed(4) : num.toFixed(2);
   }
 
   if (num >= 1000 && num < 1000000000000) {

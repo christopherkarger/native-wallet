@@ -69,7 +69,7 @@ const Market = (props) => {
 
               <View style={styles.priceWrapper}>
                 <AppText style={styles.price}>
-                  {formatNumber(item.data.price, undefined, true)} €
+                  {formatNumber(item.data.price)} €
                 </AppText>
               </View>
             </View>
