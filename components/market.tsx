@@ -1,31 +1,61 @@
-import React from "react";
-import { Dimensions, FlatList, Image, StyleSheet, View } from "react-native";
+import React, { useEffect, useState } from "react";
+import { FlatList, Image, StyleSheet, View } from "react-native";
+import { CryptoIcon } from "~/models/crypto-icon";
+import { IMarketDataItem } from "~/services/fetch-marketdata";
+import { formatNumber } from "~/services/helper";
 import { Colors, Fonts } from "../constants";
-import GraphLine from "./graph-line";
 import AppText from "./text";
 
+interface IMarketData {
+  name: string;
+  data: IMarketDataItem;
+}
+
 const Market = (props) => {
+  const [marketData, setMarketData] = useState<IMarketData[]>([]);
+
+  useEffect(() => {
+    setMarketData(
+      Object.keys(props.data)
+        .map((key) => {
+          return {
+            name: key,
+            data: props.data[key],
+          };
+        })
+        .sort((a, b) => {
+          return a.data.rank - b.data.rank;
+        })
+    );
+  }, [props.data]);
   return (
     <View style={styles.inner}>
       <AppText style={styles.marketHeadline}>Krypto Markt</AppText>
 
       <FlatList
-        data={props.data}
+        style={styles.flatList}
+        data={marketData}
+        scrollEnabled={true}
         keyExtractor={(_, index) => index.toString()}
         keyboardShouldPersistTaps="handled"
         renderItem={({ item, index }) => {
+          const icon = new CryptoIcon(item.name);
           return (
-            <View style={styles.yourCoinsWrapper}>
-              <Image
-                style={styles.yourCoinLogo}
-                source={require("~/node_modules/cryptocurrency-icons/128/color/btc.png")}
-              ></Image>
+            <View
+              style={[
+                styles.itemWrapper,
+                index === marketData.length - 1 ? styles.lastItemWrapper : {},
+              ]}
+            >
+              <Image style={styles.yourCoinLogo} source={icon.path}></Image>
 
               <View>
-                <AppText style={styles.yourCoin}>Bitcoin</AppText>
-                <AppText style={styles.yourCoinShort}>BTC</AppText>
+                <AppText style={styles.yourCoin}>{item.name}</AppText>
+                <AppText style={styles.yourCoinShort}>
+                  {item.data.currency}
+                </AppText>
               </View>
-              {Dimensions.get("window").width >= 400 && (
+              {/* {Dimensions.get("window").width >= 400 && (
                 <View style={styles.graph}>
                   <GraphLine
                     data={[10, 12, 14, 12, 13]}
@@ -35,10 +65,12 @@ const Market = (props) => {
                     strokeWidth={2}
                   ></GraphLine>
                 </View>
-              )}
+              )} */}
 
               <View style={styles.priceWrapper}>
-                <AppText style={styles.price}>51.234 €</AppText>
+                <AppText style={styles.price}>
+                  {formatNumber(item.data.price, undefined, true)} €
+                </AppText>
               </View>
             </View>
           );
@@ -49,21 +81,27 @@ const Market = (props) => {
 };
 const styles = StyleSheet.create({
   inner: {
-    marginLeft: 20,
-    marginRight: 20,
+    flex: 1,
   },
   marketHeadline: {
     fontSize: 25,
     fontFamily: Fonts.bold,
-    marginBottom: 15,
+    borderBottomWidth: 1,
+    borderBottomColor: Colors.lightWhite,
+    paddingBottom: 12,
+    marginLeft: 20,
+    marginRight: 20,
   },
-  yourCoinsWrapper: {
+  itemWrapper: {
     flexDirection: "row",
     alignItems: "center",
-    marginBottom: 10,
-    borderTopWidth: 1,
-    borderColor: "rgba(255,255,255, 0.1)",
-    paddingTop: 12,
+    paddingTop: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: Colors.lightWhite,
+    paddingBottom: 12,
+  },
+  lastItemWrapper: {
+    borderBottomWidth: 0,
   },
   yourCoinLogo: {
     width: 36,
@@ -88,6 +126,11 @@ const styles = StyleSheet.create({
   graph: {
     marginLeft: 23,
     transform: [{ translateY: 5 }],
+  },
+  flatList: {
+    flex: 1,
+    paddingLeft: 20,
+    paddingRight: 20,
   },
 });
 export default Market;

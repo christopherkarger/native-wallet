@@ -113,7 +113,7 @@ const styles = StyleSheet.create({
   },
   singleWalletWrapper: {
     marginBottom: 20,
-    borderBottomColor: Colors.white,
+    borderBottomColor: Colors.lightWhite,
     borderBottomWidth: 1,
     paddingBottom: 20,
   },

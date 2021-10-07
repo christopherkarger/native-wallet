@@ -1,6 +1,7 @@
 import { MaterialIcons } from "@expo/vector-icons";
 import React, { useContext, useEffect, useState } from "react";
 import { StyleSheet, TouchableOpacity, View } from "react-native";
+import Market from "~/components/market";
 import SafeArea from "~/components/safe-area";
 import { selectLocalDBTable } from "~/db";
 import { useUpdateLocalWalletBalances } from "~/hooks/update-local-wallet-balances";
@@ -18,6 +19,7 @@ const HomeScreen = (props) => {
   const [walletsData, setWalletsData] = useState<WalletWrapper[]>([]);
   const [totalBalance, setTotalBalance] = useState("0");
   const marketData = useContext(MarketData);
+
   useUpdateLocalWalletBalances();
 
   useEffect(() => {
@@ -73,9 +75,9 @@ const HomeScreen = (props) => {
         </View>
       )}
 
-      {/* {walletsData.length > 0 && marketData.length > 0 && (
+      {walletsData.length > 0 && Object.keys(marketData).length > 0 && (
         <Market data={marketData}></Market>
-      )} */}
+      )}
     </SafeArea>
   );
 };

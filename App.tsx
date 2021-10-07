@@ -70,7 +70,9 @@ export default function App() {
         if (dbConnection === undefined) {
           dbConnection = db;
         }
-        setMarketData(data);
+        if (data) {
+          setMarketData(data);
+        }
       });
     } else {
       dbConnection?.off();
