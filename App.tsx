@@ -11,9 +11,10 @@ import { config } from "./config";
 import { apiVersion, Fonts } from "./constants";
 import useAppStatus, { AppStaus } from "./hooks/handle-app-state";
 import { IConfig } from "./models/config";
-import { AppConfig, defaultConfig, MarketData } from "./models/context";
+import { AppConfig, defaultConfig, MarketDataContext } from "./models/context";
+import { MarketData } from "./models/market-data";
 import Main from "./pages/main";
-import { fetchMarketData, IMarketData } from "./services/fetch-marketdata";
+import { fetchMarketData } from "./services/fetch-marketdata";
 import { firebaseDB } from "./services/firebase-init";
 
 LogBox.ignoreLogs(["Setting a timer"]);
@@ -35,7 +36,7 @@ export default function App() {
   const [loadingError, setLoadingError] = useState(false);
   const [apiSupported, setApiSupported] = useState(false);
   const [fetchedConfig, setFetchedConfig] = useState(defaultConfig);
-  const [marketData, setMarketData] = useState<IMarketData>({});
+  const [marketData, setMarketData] = useState<MarketData>(new MarketData([]));
   const appStatus = useAppStatus();
 
   useEffect(() => {
@@ -110,10 +111,10 @@ export default function App() {
 
   return (
     <AppConfig.Provider value={fetchedConfig}>
-      <MarketData.Provider value={marketData}>
+      <MarketDataContext.Provider value={marketData}>
         <StatusBar style={statusBarStyle} />
         <Main />
-      </MarketData.Provider>
+      </MarketDataContext.Provider>
     </AppConfig.Provider>
   );
 }

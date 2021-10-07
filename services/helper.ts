@@ -6,50 +6,57 @@ export const waitTime = (time: number) => {
   });
 };
 
-export const formatNumber = (num: number, decimal?: number): string => {
-  let number;
+export interface IFormatNumber {
+  number: number;
+  decimal?: number;
+  beautifulDecimal?: boolean;
+}
+
+export const formatNumber = (x: IFormatNumber): string => {
   const separator = ".";
   const comma = ",";
-  const hasDecimal = !Number.isInteger(num);
+  const hasDecimal = !Number.isInteger(x.number);
 
-  if (decimal) {
-    number = hasDecimal ? num.toFixed(decimal) : num.toString();
-  } else {
-    number = num < 1 ? num.toFixed(4) : num.toFixed(2);
+  let number = x.number.toString();
+
+  if (x.decimal) {
+    number = hasDecimal ? x.number.toFixed(x.decimal) : x.number.toString();
+  } else if (x.beautifulDecimal) {
+    number = getMinDecimalNumber(x.number).toString();
   }
 
-  if (num >= 1000 && num < 1000000000000) {
+  if (x.number >= 1000 && x.number < 1000000000000) {
     let pos = [1];
 
-    if (num >= 10000 && num < 100000) {
+    if (x.number >= 10000 && x.number < 100000) {
       pos = [2];
     }
 
-    if (num >= 100000) {
+    if (x.number >= 100000) {
       pos = [3];
     }
 
-    if (num >= 1000000) {
+    if (x.number >= 1000000) {
       pos = [1, 5];
     }
 
-    if (num >= 10000000) {
+    if (x.number >= 10000000) {
       pos = [2, 6];
     }
 
-    if (num >= 100000000) {
+    if (x.number >= 100000000) {
       pos = [3, 7];
     }
 
-    if (num >= 1000000000) {
+    if (x.number >= 1000000000) {
       pos = [1, 5, 9];
     }
 
-    if (num >= 10000000000) {
+    if (x.number >= 10000000000) {
       pos = [2, 6, 10];
     }
 
-    if (num >= 100000000000) {
+    if (x.number >= 100000000000) {
       pos = [3, 7, 11];
     }
 
@@ -75,4 +82,33 @@ export const formatNumber = (num: number, decimal?: number): string => {
   }
 
   return number;
+};
+
+const getMinDecimalNumber = (num: number): number => {
+  // If number has no decimals
+  if (Number.isInteger(num)) {
+    return num;
+  }
+
+  // If number is bigger than 1
+  if (num > 1) {
+    return +num.toFixed(2);
+  }
+
+  const decArr: string[] = [];
+  let counter = 0;
+  const decimals = num.toString().split(".")[1].split("");
+  let foundPosDec = false;
+  decimals.forEach((d) => {
+    if (+d > 0) {
+      foundPosDec = true;
+    }
+    if (foundPosDec) {
+      counter += 1;
+    }
+    if (counter <= 4) {
+      decArr.push(d);
+    }
+  });
+  return Math.floor(num) + +`0.${decArr.join("")}`;
 };

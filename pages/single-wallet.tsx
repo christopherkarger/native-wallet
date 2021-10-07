@@ -54,7 +54,11 @@ const SingleWallet = (props) => {
                 <AppText style={styles.address}>{item.address}</AppText>
                 <AppText>Balance:</AppText>
                 <AppText style={styles.balance}>
-                  {formatNumber(item.balance, 6)} {item.currency}
+                  {formatNumber({
+                    number: item.balance,
+                    decimal: 6,
+                  })}{" "}
+                  {item.currency}
                 </AppText>
                 <Button
                   style={styles.deleteWalletButton}

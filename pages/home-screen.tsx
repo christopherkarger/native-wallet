@@ -5,7 +5,8 @@ import Market from "~/components/market";
 import SafeArea from "~/components/safe-area";
 import { selectLocalDBTable } from "~/db";
 import { useUpdateLocalWalletBalances } from "~/hooks/update-local-wallet-balances";
-import { MarketData } from "~/models/context";
+import { MarketDataContext } from "~/models/context";
+import { MarketData } from "~/models/market-data";
 import { WalletWrapper } from "~/models/wallet-wrapper";
 import { calcTotalBalance } from "~/services/calc-balance";
 import { getWalletWrapper } from "~/services/getWalletWrapper";
@@ -18,7 +19,7 @@ import { Colors, Fonts, PathNames } from "../constants";
 const HomeScreen = (props) => {
   const [walletsData, setWalletsData] = useState<WalletWrapper[]>([]);
   const [totalBalance, setTotalBalance] = useState("0");
-  const marketData = useContext(MarketData);
+  const marketData: MarketData = useContext(MarketDataContext);
 
   useUpdateLocalWalletBalances();
 
@@ -38,7 +39,12 @@ const HomeScreen = (props) => {
   }, []);
 
   useEffect(() => {
-    setTotalBalance(formatNumber(calcTotalBalance(marketData, walletsData), 2));
+    setTotalBalance(
+      formatNumber({
+        number: calcTotalBalance(marketData, walletsData),
+        decimal: 2,
+      })
+    );
   }, [marketData, walletsData]);
 
   return (

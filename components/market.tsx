@@ -1,32 +1,16 @@
 import React, { useEffect, useState } from "react";
 import { FlatList, Image, StyleSheet, View } from "react-native";
 import { CryptoIcon } from "~/models/crypto-icon";
-import { IMarketDataItem } from "~/services/fetch-marketdata";
+import { MarketData } from "~/models/market-data";
 import { formatNumber } from "~/services/helper";
 import { Colors, Fonts } from "../constants";
 import AppText from "./text";
 
-interface IMarketData {
-  name: string;
-  data: IMarketDataItem;
-}
-
 const Market = (props) => {
-  const [marketData, setMarketData] = useState<IMarketData[]>([]);
+  const [marketData, setMarketData] = useState<MarketData>();
 
   useEffect(() => {
-    setMarketData(
-      Object.keys(props.data)
-        .map((key) => {
-          return {
-            name: key,
-            data: props.data[key],
-          };
-        })
-        .sort((a, b) => {
-          return a.data.rank - b.data.rank;
-        })
-    );
+    setMarketData(props.data);
   }, [props.data]);
   return (
     <View style={styles.inner}>
@@ -34,7 +18,7 @@ const Market = (props) => {
 
       <FlatList
         style={styles.flatList}
-        data={marketData}
+        data={marketData?.itemsByMarketCap}
         scrollEnabled={true}
         keyExtractor={(_, index) => index.toString()}
         keyboardShouldPersistTaps="handled"
@@ -44,7 +28,9 @@ const Market = (props) => {
             <View
               style={[
                 styles.itemWrapper,
-                index === marketData.length - 1 ? styles.lastItemWrapper : {},
+                marketData?.items && index === marketData.items.length - 1
+                  ? styles.lastItemWrapper
+                  : {},
               ]}
             >
               <Image style={styles.yourCoinLogo} source={icon.path}></Image>
@@ -69,7 +55,11 @@ const Market = (props) => {
 
               <View style={styles.priceWrapper}>
                 <AppText style={styles.price}>
-                  {formatNumber(item.data.price)} €
+                  {formatNumber({
+                    number: item.data.price,
+                    beautifulDecimal: true,
+                  })}{" "}
+                  €
                 </AppText>
               </View>
             </View>
