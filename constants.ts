@@ -24,7 +24,7 @@ export const Colors = {
   fadeLight: "rgba(255,255,255, 0.8)",
   white: "#ffffff",
   lightWhite: "rgba(255,255,255, 0.5)",
-  green: "#01B670",
+  green: "#2BCD70",
   red: "#E8503A",
   btcRGB: "247,147,25",
   text: "#333333",
