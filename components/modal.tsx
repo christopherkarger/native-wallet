@@ -35,8 +35,8 @@ const styles = StyleSheet.create({
     zIndex: 999,
     position: "absolute",
     top: 0,
-    width: Dimensions.get("window").width,
-    height: Dimensions.get("window").height,
+    width: "100%",
+    height: Dimensions.get("screen").height,
   },
   bg: {
     backgroundColor: "rgba(0,0,0,0.6)",
