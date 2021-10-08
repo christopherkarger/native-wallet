@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "native-wallet",
-    "slug": "native-wallet",
+    "name": "ledgy",
+    "slug": "crypto-wallet",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
