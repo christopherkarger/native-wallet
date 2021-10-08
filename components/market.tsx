@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { FlatList, Image, StyleSheet, View } from "react-native";
+import { Dimensions, FlatList, Image, StyleSheet, View } from "react-native";
+import { LineChart } from "react-native-svg-charts";
 import { CryptoIcon } from "~/models/crypto-icon";
 import { MarketData } from "~/models/market-data";
 import { formatNumber } from "~/services/helper";
@@ -24,6 +25,13 @@ const Market = (props) => {
         keyboardShouldPersistTaps="handled"
         renderItem={({ item, index }) => {
           const icon = new CryptoIcon(item.name);
+          const chartData = item.data.history.slice(-7).map((h) => h.price);
+          const positiveTrend = chartData[0] < chartData[chartData.length - 1];
+          const trendColor = positiveTrend ? Colors.green : Colors.red;
+          const percentage =
+            ((chartData[chartData.length - 1] - chartData[0]) / chartData[0]) *
+            100;
+
           return (
             <View
               style={[
@@ -33,25 +41,24 @@ const Market = (props) => {
                   : {},
               ]}
             >
-              <Image style={styles.yourCoinLogo} source={icon.path}></Image>
-
-              <View>
-                <AppText style={styles.yourCoin}>{item.name}</AppText>
-                <AppText style={styles.yourCoinShort}>
-                  {item.data.currency}
-                </AppText>
-              </View>
-              {/* {Dimensions.get("window").width >= 400 && (
-                <View style={styles.graph}>
-                  <GraphLine
-                    data={[10, 12, 14, 12, 13]}
-                    width={200}
-                    height={58}
-                    lineColor={Colors.green}
-                    strokeWidth={2}
-                  ></GraphLine>
+              <View style={styles.coinWrapper}>
+                <Image style={styles.coinLogo} source={icon.path}></Image>
+                <View>
+                  <AppText style={styles.name}>{item.name}</AppText>
+                  <AppText style={styles.currency}>
+                    {item.data.currency}
+                  </AppText>
                 </View>
-              )} */}
+              </View>
+
+              {Dimensions.get("window").width >= 350 && (
+                <LineChart
+                  style={styles.chart}
+                  data={chartData}
+                  svg={{ stroke: trendColor }}
+                  contentInset={{ top: 0, bottom: 0 }}
+                ></LineChart>
+              )}
 
               <View style={styles.priceWrapper}>
                 <AppText style={styles.price}>
@@ -60,6 +67,14 @@ const Market = (props) => {
                     beautifulDecimal: true,
                   })}{" "}
                   €
+                </AppText>
+                <AppText
+                  style={
+                    positiveTrend ? styles.positveTrend : styles.negativeTrend
+                  }
+                >
+                  {percentage > 0 ? "+" : ""}
+                  {percentage.toFixed(2)}%
                 </AppText>
               </View>
             </View>
@@ -74,7 +89,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   marketHeadline: {
-    fontSize: 25,
+    fontSize: 20,
     fontFamily: Fonts.bold,
     borderBottomWidth: 1,
     borderBottomColor: Colors.lightWhite,
@@ -85,6 +100,7 @@ const styles = StyleSheet.create({
   itemWrapper: {
     flexDirection: "row",
     alignItems: "center",
+    justifyContent: "space-between",
     paddingTop: 10,
     borderBottomWidth: 1,
     borderBottomColor: Colors.lightWhite,
@@ -93,34 +109,46 @@ const styles = StyleSheet.create({
   lastItemWrapper: {
     borderBottomWidth: 0,
   },
-  yourCoinLogo: {
+  coinWrapper: {
+    flexDirection: "row",
+    minWidth: 130,
+  },
+  coinLogo: {
     width: 36,
     height: 36,
   },
-  yourCoin: {
+  name: {
     fontSize: 16,
     marginLeft: 12,
   },
-  yourCoinShort: {
+  currency: {
     fontSize: 14,
     marginLeft: 12,
     color: Colors.lightWhite,
   },
   priceWrapper: {
-    marginLeft: "auto",
+    alignItems: "flex-end",
+
+    minWidth: 110,
   },
   price: {
     fontFamily: Fonts.bold,
-    fontSize: 20,
+    fontSize: 17,
   },
-  graph: {
-    marginLeft: 23,
-    transform: [{ translateY: 5 }],
+  chart: {
+    width: 65,
+    height: 20,
   },
   flatList: {
     flex: 1,
     paddingLeft: 20,
     paddingRight: 20,
+  },
+  positveTrend: {
+    color: Colors.green,
+  },
+  negativeTrend: {
+    color: Colors.red,
   },
 });
 export default Market;
