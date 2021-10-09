@@ -36,7 +36,7 @@ const styles = StyleSheet.create({
   },
 
   addWallet: {
-    marginTop: 25,
+    marginTop: 40,
   },
 });
 

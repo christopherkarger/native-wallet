@@ -25,9 +25,12 @@ export const Colors = {
   white: "#ffffff",
   lightWhite: "rgba(255,255,255, 0.5)",
   green: "#2BCD70",
+  lightGreen: "#67ea9d",
   red: "#E8503A",
   btcRGB: "247,147,25",
   text: "#333333",
+  purple: "#a96af7",
+  lightBlue: "#38aae2",
   cryptos: {
     bitcoin: "#F79319",
     ethereum: "#627EEA",

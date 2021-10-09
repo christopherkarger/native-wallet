@@ -1,3 +1,4 @@
+import { BlurView } from "expo-blur";
 import React, { useEffect } from "react";
 import {
   Dimensions,
@@ -16,30 +17,29 @@ const Modal = (props) => {
   return (
     <>
       {props.show && (
-        <View style={styles.wrapper}>
+        <BlurView intensity={80} tint="dark" style={styles.blurView}>
           <View style={styles.inner}>{props.children}</View>
           <TouchableOpacity
             style={styles.bg}
             onPress={props.onOutsideClick}
           ></TouchableOpacity>
-        </View>
+        </BlurView>
       )}
     </>
   );
 };
 
 const styles = StyleSheet.create({
-  wrapper: {
+  blurView: {
     flex: 1,
-    justifyContent: "center",
-    zIndex: 999,
     position: "absolute",
     top: 0,
     width: "100%",
+    zIndex: 999,
     height: Dimensions.get("screen").height,
+    justifyContent: "center",
   },
   bg: {
-    backgroundColor: "rgba(0,0,0,0.6)",
     width: "100%",
     height: "100%",
     position: "absolute",

@@ -21,7 +21,7 @@ const QrCodeScanner = (props) => {
     })();
   }, []);
 
-  const handleBarCodeScanned = ({ type, data }) => {
+  const handleBarCodeScanned = ({ data }) => {
     if (data) {
       setScanned(true);
       props.navigation.navigate(PathNames.addWallet, {
@@ -32,23 +32,25 @@ const QrCodeScanner = (props) => {
 
   return (
     <View style={styles.container}>
-      <BarCodeScanner
-        onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
-        style={[StyleSheet.absoluteFill, styles.scanner]}
-      >
-        <SafeArea>
-          <View style={styles.overlay}></View>
-          <TouchableOpacity
-            style={styles.closeButton}
-            disabled={props.disabled}
-            onPress={() => {
-              props.navigation.goBack();
-            }}
-          >
-            <MaterialIcons name="close" size={40} color="white" />
-          </TouchableOpacity>
-        </SafeArea>
-      </BarCodeScanner>
+      {hasPermission && (
+        <BarCodeScanner
+          onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
+          style={[StyleSheet.absoluteFill, styles.scanner]}
+        >
+          <SafeArea>
+            <View style={styles.overlay}></View>
+            <TouchableOpacity
+              style={styles.closeButton}
+              disabled={props.disabled}
+              onPress={() => {
+                props.navigation.goBack();
+              }}
+            >
+              <MaterialIcons name="close" size={40} color="white" />
+            </TouchableOpacity>
+          </SafeArea>
+        </BarCodeScanner>
+      )}
     </View>
   );
 };

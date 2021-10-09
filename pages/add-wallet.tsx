@@ -99,14 +99,15 @@ const AddWalletScreen = (props) => {
               </TouchableOpacity>
               <View>
                 <View style={styles.qrCodeButtonWrapper}>
-                  <Button
+                  <TouchableOpacity
+                    disabled={props.disabled}
+                    onPress={() =>
+                      props.navigation.navigate(PathNames.scanCode)
+                    }
                     style={styles.qrCodeButton}
-                    onPress={() => {
-                      props.navigation.navigate(PathNames.scanCode);
-                    }}
                   >
                     <MaterialIcons name="qr-code" size={24} color="white" />
-                  </Button>
+                  </TouchableOpacity>
                 </View>
                 <TextInput
                   style={styles.cryptoInput}
@@ -178,8 +179,8 @@ const styles = StyleSheet.create({
     zIndex: 1,
   },
   qrCodeButton: {
-    backgroundColor: Colors.transparent,
     borderRadius: 0,
+    padding: 10,
   },
 });
 

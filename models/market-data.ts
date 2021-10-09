@@ -3,16 +3,18 @@ export interface IMarketDataItem {
   data: IMarketDataItemData;
 }
 
-interface IHistoryItem {
+export interface IHistoryItem {
   date: number;
   price: number;
 }
 
 export interface IMarketDataItemData {
   history: IHistoryItem[];
+  lastDayHistory: IHistoryItem[];
   price: number;
   currency: string;
   rank: number;
+  lastFetched: number;
 }
 
 export class MarketData {

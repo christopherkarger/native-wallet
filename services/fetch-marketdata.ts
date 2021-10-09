@@ -1,4 +1,8 @@
-import { IMarketDataItemData, MarketData } from "~/models/market-data";
+import {
+  IHistoryItem,
+  IMarketDataItemData,
+  MarketData,
+} from "~/models/market-data";
 import firebase, { firebaseDB } from "./firebase-init";
 
 interface IResponse {
@@ -17,13 +21,20 @@ export const fetchMarketData = (
         return {
           name: key,
           data: {
+            lastFetched: data[key].lastFetched,
             price: data[key].price,
             rank: data[key].rank,
             currency: data[key].currency,
             history: data[key].history
-              ? data[key].history.map((h: any) => ({
-                  date: h.date,
-                  price: h.price,
+              ? data[key].history.map((item: IHistoryItem) => ({
+                  date: item.date,
+                  price: item.price,
+                }))
+              : [],
+            lastDayHistory: data[key].lastDayHistory
+              ? data[key].lastDayHistory.map((item: IHistoryItem) => ({
+                  date: item.date,
+                  price: item.price,
                 }))
               : [],
           },
