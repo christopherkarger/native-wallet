@@ -59,7 +59,7 @@ export default function App() {
         }
       })
       .catch((err) => {
-        console.log(err);
+        console.error(err);
         setLoadingError(true);
       })
       .finally(() => setLoading(false));
@@ -98,7 +98,7 @@ export default function App() {
         <SafeArea style={styles.loadingContainer}>
           <AppText style={styles.configLoadingText}>
             {loading && <>Lade...</>}
-            {loadingError && <>Da ist wohl was schief gegangen!...</>}
+            {loadingError && <>Da ist wohl was schief gegangen!</>}
           </AppText>
         </SafeArea>
       </GradientView>

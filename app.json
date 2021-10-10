@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "ledgy",
+    "name": "Ledgi",
     "slug": "crypto-wallet",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -21,10 +21,6 @@
       "supportsTablet": true
     },
     "android": {
-      "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#FFFFFF"
-      },
       "package": "com.christopherk1986.nativewallet"
     },
     "web": {

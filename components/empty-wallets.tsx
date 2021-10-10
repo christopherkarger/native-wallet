@@ -7,7 +7,10 @@ const EmptyWallets = (props) => {
   return (
     <View style={styles.wrapper}>
       <View style={styles.innerWrapper}>
-        <Image source={require("../assets/wallet.png")}></Image>
+        <Image
+          style={styles.wallet}
+          source={require("../assets/wallet.png")}
+        ></Image>
         <View style={styles.addWalletWrapper}>
           <Button
             style={styles.addWallet}
@@ -36,7 +39,12 @@ const styles = StyleSheet.create({
   },
 
   addWallet: {
-    marginTop: 40,
+    marginTop: 20,
+  },
+  wallet: {
+    width: 250,
+    height: 200,
+    resizeMode: "contain",
   },
 });
 
