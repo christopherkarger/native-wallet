@@ -51,7 +51,7 @@ const Market = (props) => {
                 </View>
               </View>
               {Dimensions.get("window").width >= 300 && (
-                <View>
+                <View style={styles.chartWrapper}>
                   <LineChart
                     style={styles.chart}
                     data={chartData}
@@ -136,8 +136,13 @@ const styles = StyleSheet.create({
     fontFamily: Fonts.bold,
     fontSize: 17,
   },
-  chart: {
+  chartWrapper: {
     width: 60,
+    height: 30,
+  },
+  chart: {
+    width: "100%",
+    height: "100%",
   },
   flatList: {
     flex: 1,

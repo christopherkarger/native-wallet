@@ -11,35 +11,26 @@ const Button = (props) => {
         disabled={props.disabled}
         onPress={() => props.onPress()}
       >
-        <View
+        <LinearGradient
+          colors={[
+            props.gradientStartColor ? props.gradientStartColor : Colors.purple,
+            props.gradientEndColor ? props.gradientEndColor : Colors.lightBlue,
+          ]}
           style={[
             styles.button,
             props.style,
             props.disabled ? styles.disabled : {},
           ]}
+          start={[1, 0]}
+          end={[0, 1]}
         >
-          <View style={styles.textWrapper}>
-            {!!props.text && (
-              <AppText style={[styles.buttonText, props.textStyle]}>
-                {props.text}
-              </AppText>
-            )}
-            {!props.text && !!props.children && <View>{props.children}</View>}
-          </View>
-          <LinearGradient
-            colors={[
-              props.gradientStartColor
-                ? props.gradientStartColor
-                : Colors.purple,
-              props.gradientEndColor
-                ? props.gradientEndColor
-                : Colors.lightBlue,
-            ]}
-            style={styles.gradient}
-            start={[1, 0]}
-            end={[0, 1]}
-          />
-        </View>
+          {!!props.text && (
+            <AppText style={[styles.buttonText, props.textStyle]}>
+              {props.text}
+            </AppText>
+          )}
+          {!props.text && !!props.children && <View>{props.children}</View>}
+        </LinearGradient>
       </TouchableOpacity>
     </View>
   );
@@ -64,17 +55,6 @@ const styles = StyleSheet.create({
     textAlign: "center",
     alignItems: "center",
     fontFamily: Fonts.bold,
-  },
-  textWrapper: {
-    zIndex: 2,
-  },
-  gradient: {
-    position: "absolute",
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    zIndex: 1,
   },
 });
 
