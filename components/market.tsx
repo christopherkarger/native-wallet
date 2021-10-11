@@ -136,8 +136,7 @@ const styles = StyleSheet.create({
     fontSize: 17,
   },
   chart: {
-    width: 65,
-    height: 20,
+    height: 36,
   },
   flatList: {
     flex: 1,

@@ -1,6 +1,7 @@
 import { MaterialIcons } from "@expo/vector-icons";
 import React, { useContext, useEffect, useState } from "react";
 import {
+  Alert,
   Dimensions,
   StyleSheet,
   TextInput,
@@ -52,8 +53,19 @@ const AddWalletScreen = (props) => {
     try {
       setFetchingAndSavingAddress(true);
       balance = await fetchAddress(address, name, appConfig);
-    } catch {
+    } catch (err) {
       setFetchingAndSavingAddress(false);
+      Alert.alert(
+        "Wallet konnte nicht angelegt werden!",
+        "Korregiere die Adresse oder versuche es bitte erneut.",
+        [
+          {
+            text: "OK",
+            onPress: () => {},
+          },
+        ],
+        { cancelable: false }
+      );
       return;
     }
 

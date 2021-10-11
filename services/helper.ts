@@ -15,14 +15,14 @@ export interface IFormatNumber {
 export const formatNumber = (x: IFormatNumber): string => {
   const separator = ".";
   const comma = ",";
-  const hasDecimal = !Number.isInteger(x.number);
-
+  let hasDecimal = !Number.isInteger(x.number);
   let number = x.number.toString();
 
   if (x.decimal) {
     number = hasDecimal ? x.number.toFixed(x.decimal) : x.number.toString();
   } else if (x.beautifulDecimal) {
     number = getMinDecimalNumber(x.number).toString();
+    hasDecimal = !Number.isInteger(+number);
   }
 
   if (x.number >= 1000 && x.number < 1000000000000) {

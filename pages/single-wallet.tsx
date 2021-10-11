@@ -1,5 +1,12 @@
 import React, { useState } from "react";
-import { Alert, FlatList, Image, StyleSheet, View } from "react-native";
+import {
+  Alert,
+  FlatList,
+  Image,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import Button from "~/components/button";
 import SafeArea from "~/components/safe-area";
 import SubPageHeader from "~/components/sub-page-header";
@@ -60,9 +67,8 @@ const SingleWallet = (props) => {
                   })}{" "}
                   {item.currency}
                 </AppText>
-                <Button
+                <TouchableOpacity
                   style={styles.deleteWalletButton}
-                  textStyle={styles.deleteWalletButtonText}
                   onPress={() => {
                     Alert.alert(
                       "",
@@ -83,8 +89,9 @@ const SingleWallet = (props) => {
                       { cancelable: false }
                     );
                   }}
-                  text="Entfernen"
-                ></Button>
+                >
+                  <AppText>Entfernen</AppText>
+                </TouchableOpacity>
               </View>
             );
           }}
@@ -150,6 +157,7 @@ const styles = StyleSheet.create({
   },
   deleteWalletButtonText: {
     color: Colors.fadeLight,
+    fontFamily: Fonts.regular,
   },
 });
 
