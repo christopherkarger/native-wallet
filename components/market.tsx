@@ -50,14 +50,15 @@ const Market = (props) => {
                   </AppText>
                 </View>
               </View>
-
-              {Dimensions.get("window").width >= 350 && (
-                <LineChart
-                  style={styles.chart}
-                  data={chartData}
-                  svg={{ stroke: trendColor }}
-                  contentInset={{ top: 0, bottom: 0 }}
-                ></LineChart>
+              {Dimensions.get("window").width >= 300 && (
+                <View>
+                  <LineChart
+                    style={styles.chart}
+                    data={chartData}
+                    svg={{ stroke: trendColor }}
+                    contentInset={{ top: 0, bottom: 0, left: 0, right: 0 }}
+                  ></LineChart>
+                </View>
               )}
 
               <View style={styles.priceWrapper}>
@@ -136,7 +137,7 @@ const styles = StyleSheet.create({
     fontSize: 17,
   },
   chart: {
-    height: 36,
+    width: 60,
   },
   flatList: {
     flex: 1,

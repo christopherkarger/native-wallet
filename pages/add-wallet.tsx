@@ -52,7 +52,7 @@ const AddWalletScreen = (props) => {
     let balance = 0;
     try {
       setFetchingAndSavingAddress(true);
-      balance = await fetchAddress(address, name, appConfig);
+      balance = await fetchAddress(address.trim(), name.trim(), appConfig);
     } catch (err) {
       setFetchingAndSavingAddress(false);
       Alert.alert(
@@ -70,9 +70,9 @@ const AddWalletScreen = (props) => {
     }
 
     insertItemToLocalDB(
-      name,
+      name.trim(),
       currency,
-      address,
+      address.trim(),
       balance,
       new Date().getTime(),
       connectedToId
@@ -81,9 +81,9 @@ const AddWalletScreen = (props) => {
         props.navigation.navigate(PathNames.home);
       })
       .catch((err) => {
-        console.log(err);
         setFetchingAndSavingAddress(false);
         console.error("Insert Wallet into DB failed");
+        console.error(err);
       });
   };
 
