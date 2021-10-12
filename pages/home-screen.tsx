@@ -1,6 +1,7 @@
 import { MaterialIcons } from "@expo/vector-icons";
 import React, { useContext, useEffect, useState } from "react";
 import { StyleSheet, TouchableOpacity, View } from "react-native";
+import GradientView from "~/components/gradient-view";
 import Market from "~/components/market";
 import SafeArea from "~/components/safe-area";
 import { selectLocalDBTable } from "~/db";
@@ -48,43 +49,45 @@ const HomeScreen = (props) => {
   }, [marketData, walletsData]);
 
   return (
-    <SafeArea>
-      {walletsData.length > 0 && (
-        <View style={styles.addWalletButtonWrapper}>
-          <TouchableOpacity
-            style={styles.addWalletButton}
-            onPress={() => props.navigation.navigate(PathNames.addWallet)}
-          >
-            <MaterialIcons name="add-circle" size={40} color={Colors.green} />
-          </TouchableOpacity>
-        </View>
-      )}
+    <GradientView>
+      <SafeArea>
+        {walletsData.length > 0 && (
+          <View style={styles.addWalletButtonWrapper}>
+            <TouchableOpacity
+              style={styles.addWalletButton}
+              onPress={() => props.navigation.navigate(PathNames.addWallet)}
+            >
+              <MaterialIcons name="add-circle" size={40} color={Colors.green} />
+            </TouchableOpacity>
+          </View>
+        )}
 
-      {walletsData.length === 0 && (
-        <EmptyWallets navigation={props.navigation}></EmptyWallets>
-      )}
-      {walletsData.length > 0 && (
-        <View style={styles.inner}>
-          <AppText style={styles.pfHeadline}>Portfolio</AppText>
-          <AppText style={styles.pfSubheadline}>Guthaben</AppText>
-          <AppText style={styles.balance}>{totalBalance} €</AppText>
-        </View>
-      )}
+        {walletsData.length === 0 && (
+          <EmptyWallets navigation={props.navigation}></EmptyWallets>
+        )}
+        {walletsData.length > 0 && (
+          <View style={styles.inner}>
+            <AppText style={styles.pfHeadline}>Portfolio</AppText>
+            <AppText style={styles.pfSubheadline}>Guthaben</AppText>
+            <AppText style={styles.balance}>{totalBalance} €</AppText>
+          </View>
+        )}
 
-      {walletsData.length > 0 && (
-        <View>
-          <WalletList
-            data={walletsData}
-            navigation={props.navigation}
-          ></WalletList>
-          <View style={styles.inner}></View>
-        </View>
-      )}
+        {walletsData.length > 0 && (
+          <View>
+            <WalletList
+              data={walletsData}
+              navigation={props.navigation}
+            ></WalletList>
+            <View style={styles.inner}></View>
+          </View>
+        )}
 
-      {walletsData.length > 0 && Object.keys(marketData).length > 0 && (
-        <Market navigation={props.navigation} data={marketData}></Market>
-      )}
-    </SafeArea>
+        {walletsData.length > 0 && Object.keys(marketData).length > 0 && (
+          <Market navigation={props.navigation} data={marketData}></Market>
+        )}
+      </SafeArea>
+    </GradientView>
   );
 };
 

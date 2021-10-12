@@ -1,5 +1,8 @@
 import { DefaultTheme, NavigationContainer } from "@react-navigation/native";
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import {
+  createStackNavigator,
+  TransitionPresets,
+} from "@react-navigation/stack";
 import React from "react";
 import GradientView from "~/components/gradient-view";
 import QrCodeScanner from "~/components/qr-code-scanner";
@@ -10,7 +13,7 @@ import HomeScreen from "./home-screen";
 import MarketdataItem from "./market-data-item";
 import SingleWallet from "./single-wallet";
 
-const Stack = createNativeStackNavigator();
+const Stack = createStackNavigator();
 
 createLocalDBTable().catch((err) => {
   console.log(err);
@@ -33,7 +36,8 @@ const Main = () => {
           initialRouteName={PathNames.home}
           screenOptions={{
             headerShown: false,
-            animation: "slide_from_right",
+            gestureEnabled: true,
+            ...TransitionPresets.SlideFromRightIOS,
           }}
         >
           <Stack.Screen name={PathNames.home} component={HomeScreen} />

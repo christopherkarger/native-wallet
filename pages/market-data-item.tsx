@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Dimensions, Image, StyleSheet, View } from "react-native";
 import { LineChart } from "react-native-svg-charts";
+import GradientView from "~/components/gradient-view";
 import SafeArea from "~/components/safe-area";
 import SubPageHeader from "~/components/sub-page-header";
 import { Colors } from "~/constants";
@@ -28,20 +29,25 @@ const MarketdataItem = (props) => {
   }, []);
 
   return (
-    <SafeArea>
-      <SubPageHeader navigation={props.navigation}>{name}</SubPageHeader>
-      <View style={styles.logoWrapper}>
-        <Image style={styles.logo} source={props.route.params.iconPath}></Image>
-      </View>
-      <View style={styles.chartWrapper}>
-        <LineChart
-          style={styles.chart}
-          data={chartData}
-          svg={{ stroke: Colors.green }}
-          contentInset={{ top: 0, bottom: 0, left: 0, right: 0 }}
-        ></LineChart>
-      </View>
-    </SafeArea>
+    <GradientView>
+      <SafeArea>
+        <SubPageHeader navigation={props.navigation}>{name}</SubPageHeader>
+        <View style={styles.logoWrapper}>
+          <Image
+            style={styles.logo}
+            source={props.route.params.iconPath}
+          ></Image>
+        </View>
+        <View style={styles.chartWrapper}>
+          <LineChart
+            style={styles.chart}
+            data={chartData}
+            svg={{ stroke: Colors.green }}
+            contentInset={{ top: 0, bottom: 0, left: 0, right: 0 }}
+          ></LineChart>
+        </View>
+      </SafeArea>
+    </GradientView>
   );
 };
 const styles = StyleSheet.create({

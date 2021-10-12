@@ -8,6 +8,7 @@ import {
   View,
 } from "react-native";
 import Button from "~/components/button";
+import GradientView from "~/components/gradient-view";
 import SafeArea from "~/components/safe-area";
 import SubPageHeader from "~/components/sub-page-header";
 import { Colors, Fonts, PathNames } from "~/constants";
@@ -37,80 +38,82 @@ const SingleWallet = (props) => {
   };
 
   return (
-    <SafeArea>
-      <SubPageHeader navigation={props.navigation}>
-        {walletWrapper.wallets[0].name}
-      </SubPageHeader>
-      <View style={styles.inner}>
-        <View style={{ ...styles.center, ...styles.logoWrapper }}>
-          <Image
-            style={styles.logo}
-            source={walletWrapper.wallets[0].icon.path}
-          ></Image>
-        </View>
-        <FlatList
-          style={styles.flatList}
-          scrollEnabled={true}
-          keyboardShouldPersistTaps="handled"
-          data={walletWrapper.wallets}
-          keyExtractor={(_, index) => index.toString()}
-          renderItem={({ item, index }) => {
-            return (
-              <View style={styles.singleWalletWrapper}>
-                <AppText>Adresse:</AppText>
-                <AppText style={styles.address}>{item.address}</AppText>
-                <AppText>Balance:</AppText>
-                <AppText style={styles.balance}>
-                  {formatNumber({
-                    number: item.balance,
-                    decimal: 6,
-                  })}{" "}
-                  {item.currency}
-                </AppText>
-                <TouchableOpacity
-                  style={styles.deleteWalletButton}
-                  onPress={() => {
-                    Alert.alert(
-                      "",
-                      "Möchtest du wirklich diese Adresse löschen?",
-                      [
-                        {
-                          text: "Abbrechen",
-                          onPress: () => {},
-                          style: "cancel",
-                        },
-                        {
-                          text: "OK",
-                          onPress: () => {
-                            deleteItem(item, index);
+    <GradientView>
+      <SafeArea>
+        <SubPageHeader navigation={props.navigation}>
+          {walletWrapper.wallets[0].name}
+        </SubPageHeader>
+        <View style={styles.inner}>
+          <View style={{ ...styles.center, ...styles.logoWrapper }}>
+            <Image
+              style={styles.logo}
+              source={walletWrapper.wallets[0].icon.path}
+            ></Image>
+          </View>
+          <FlatList
+            style={styles.flatList}
+            scrollEnabled={true}
+            keyboardShouldPersistTaps="handled"
+            data={walletWrapper.wallets}
+            keyExtractor={(_, index) => index.toString()}
+            renderItem={({ item, index }) => {
+              return (
+                <View style={styles.singleWalletWrapper}>
+                  <AppText>Adresse:</AppText>
+                  <AppText style={styles.address}>{item.address}</AppText>
+                  <AppText>Balance:</AppText>
+                  <AppText style={styles.balance}>
+                    {formatNumber({
+                      number: item.balance,
+                      decimal: 6,
+                    })}{" "}
+                    {item.currency}
+                  </AppText>
+                  <TouchableOpacity
+                    style={styles.deleteWalletButton}
+                    onPress={() => {
+                      Alert.alert(
+                        "",
+                        "Möchtest du wirklich diese Adresse löschen?",
+                        [
+                          {
+                            text: "Abbrechen",
+                            onPress: () => {},
+                            style: "cancel",
                           },
-                        },
-                      ],
-                      { cancelable: false }
-                    );
-                  }}
-                >
-                  <AppText>Entfernen</AppText>
-                </TouchableOpacity>
-              </View>
-            );
-          }}
-          ListFooterComponent={
-            <Button
-              onPress={() => {
-                props.navigation.navigate(PathNames.addWallet, {
-                  addToWallet: true,
-                  currency: walletWrapper.wallets[0].currency,
-                  name: walletWrapper.wallets[0].name,
-                  id: walletWrapper.wallets[0].id,
-                });
-              }}
-              text="Addresse zu diesem Wallet hinzufügen"
-            ></Button>
-          }
-        ></FlatList>
-      </View>
-    </SafeArea>
+                          {
+                            text: "OK",
+                            onPress: () => {
+                              deleteItem(item, index);
+                            },
+                          },
+                        ],
+                        { cancelable: false }
+                      );
+                    }}
+                  >
+                    <AppText>Entfernen</AppText>
+                  </TouchableOpacity>
+                </View>
+              );
+            }}
+            ListFooterComponent={
+              <Button
+                onPress={() => {
+                  props.navigation.navigate(PathNames.addWallet, {
+                    addToWallet: true,
+                    currency: walletWrapper.wallets[0].currency,
+                    name: walletWrapper.wallets[0].name,
+                    id: walletWrapper.wallets[0].id,
+                  });
+                }}
+                text="Addresse zu diesem Wallet hinzufügen"
+              ></Button>
+            }
+          ></FlatList>
+        </View>
+      </SafeArea>
+    </GradientView>
   );
 };
 

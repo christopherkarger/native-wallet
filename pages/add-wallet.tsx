@@ -10,6 +10,7 @@ import {
 import AddCryptoModal from "~/components/add-crypto-modal";
 import Button from "~/components/button";
 import DismissKeyboard from "~/components/dismiss-keyboard";
+import GradientView from "~/components/gradient-view";
 import SafeArea from "~/components/safe-area";
 import AppText from "~/components/text";
 import { Colors, PathNames } from "~/constants";
@@ -87,68 +88,74 @@ const AddWalletScreen = (props) => {
   };
 
   return (
-    <SafeArea>
-      <DismissKeyboard>
-        <View style={styles.page}>
-          <SubPageHeader navigation={props.navigation}>
-            Neues Wallet anlegen
-          </SubPageHeader>
+    <GradientView>
+      <SafeArea>
+        <DismissKeyboard>
+          <View style={styles.page}>
+            <SubPageHeader navigation={props.navigation}>
+              Neues Wallet anlegen
+            </SubPageHeader>
 
-          <View style={styles.inner}>
-            <TouchableOpacity
-              disabled={!nameChangeAllowed}
-              onPress={() => {
-                if (nameChangeAllowed) {
-                  setShowModal(true);
+            <View style={styles.inner}>
+              <TouchableOpacity
+                disabled={!nameChangeAllowed}
+                onPress={() => {
+                  if (nameChangeAllowed) {
+                    setShowModal(true);
+                  }
+                }}
+              >
+                <View style={styles.cryptoInput}>
+                  <AppText>{name ? name : "Wähle eine Kryptowährung"}</AppText>
+                </View>
+              </TouchableOpacity>
+              <View>
+                <View style={styles.qrCodeButtonWrapper}>
+                  <TouchableOpacity
+                    disabled={props.disabled}
+                    onPress={() =>
+                      props.navigation.navigate(PathNames.scanCode)
+                    }
+                    style={styles.qrCodeButton}
+                  >
+                    <MaterialIcons name="qr-code" size={24} color="white" />
+                  </TouchableOpacity>
+                </View>
+                <TextInput
+                  style={styles.cryptoInput}
+                  placeholder="Adresse"
+                  placeholderTextColor={Colors.white}
+                  onChangeText={setEnteredAddress}
+                  value={address}
+                ></TextInput>
+              </View>
+
+              <Button
+                onPress={() => {
+                  addWallet();
+                }}
+                style={styles.addWallet}
+                disabled={!name || !address || fetchingAndSavingAddress}
+                text={
+                  fetchingAndSavingAddress ? "Lade Wallet" : "Wallet anlegen"
                 }
-              }}
-            >
-              <View style={styles.cryptoInput}>
-                <AppText>{name ? name : "Wähle eine Kryptowährung"}</AppText>
-              </View>
-            </TouchableOpacity>
-            <View>
-              <View style={styles.qrCodeButtonWrapper}>
-                <TouchableOpacity
-                  disabled={props.disabled}
-                  onPress={() => props.navigation.navigate(PathNames.scanCode)}
-                  style={styles.qrCodeButton}
-                >
-                  <MaterialIcons name="qr-code" size={24} color="white" />
-                </TouchableOpacity>
-              </View>
-              <TextInput
-                style={styles.cryptoInput}
-                placeholder="Adresse"
-                placeholderTextColor={Colors.white}
-                onChangeText={setEnteredAddress}
-                value={address}
-              ></TextInput>
+              ></Button>
             </View>
-
-            <Button
-              onPress={() => {
-                addWallet();
-              }}
-              style={styles.addWallet}
-              disabled={!name || !address || fetchingAndSavingAddress}
-              text={fetchingAndSavingAddress ? "Lade Wallet" : "Wallet anlegen"}
-            ></Button>
           </View>
-        </View>
-      </DismissKeyboard>
-      <AddCryptoModal
-        show={showModal}
-        onOutsideClick={() => {
-          setShowModal(false);
-        }}
-        onSelect={(selected: { name: string; currency: string }) => {
-          setName(selected.name);
-          setCurrency(selected.currency);
-          setShowModal(false);
-        }}
-      ></AddCryptoModal>
-    </SafeArea>
+        </DismissKeyboard>
+        <AddCryptoModal
+          show={showModal}
+          onOutsideClick={() => {
+            setShowModal(false);
+          }}
+          onSelect={(selected: { name: string; currency: string }) => {
+            setName(selected.name);
+            setCurrency(selected.currency);
+            setShowModal(false);
+          }}
+        ></AddCryptoModal>
+      </SafeArea>
+    </GradientView>
   );
 };
 
