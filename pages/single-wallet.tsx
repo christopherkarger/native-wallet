@@ -14,7 +14,7 @@ import { Colors, Fonts, PathNames } from "~/constants";
 import { deleteItemFromLocalDB } from "~/db";
 import { Wallet } from "~/models/wallet";
 import { WalletWrapper } from "~/models/wallet-wrapper";
-import { formatNumber } from "~/services/helper";
+import { formatNumber } from "~/services/format-number";
 import AppText from "../components/text";
 
 const SingleWallet = (props) => {

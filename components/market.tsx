@@ -3,7 +3,7 @@ import { Dimensions, FlatList, Image, StyleSheet, View } from "react-native";
 import { LineChart } from "react-native-svg-charts";
 import { CryptoIcon } from "~/models/crypto-icon";
 import { MarketData } from "~/models/market-data";
-import { formatNumber } from "~/services/helper";
+import { formatNumber } from "~/services/format-number";
 import { Colors, Fonts } from "../constants";
 import AppText from "./text";
 
