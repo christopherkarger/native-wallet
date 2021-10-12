@@ -9,6 +9,7 @@ export const PathNames = {
   addWallet: "add-wallet",
   singleWallet: "single-wallet",
   scanCode: "scan-code",
+  marketDataItem: "market-data-item",
 };
 
 export const Fonts = {

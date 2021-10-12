@@ -1,10 +1,17 @@
 import React, { useEffect, useState } from "react";
-import { Dimensions, FlatList, Image, StyleSheet, View } from "react-native";
+import {
+  Dimensions,
+  FlatList,
+  Image,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import { LineChart } from "react-native-svg-charts";
 import { CryptoIcon } from "~/models/crypto-icon";
 import { MarketData } from "~/models/market-data";
 import { formatNumber } from "~/services/format-number";
-import { Colors, Fonts } from "../constants";
+import { Colors, Fonts, PathNames } from "../constants";
 import AppText from "./text";
 
 const Market = (props) => {
@@ -41,43 +48,53 @@ const Market = (props) => {
                   : {},
               ]}
             >
-              <View style={styles.coinWrapper}>
-                <Image style={styles.coinLogo} source={icon.path}></Image>
-                <View>
-                  <AppText style={styles.name}>{item.name}</AppText>
-                  <AppText style={styles.currency}>
-                    {item.data.currency}
+              <TouchableOpacity
+                onPress={() => {
+                  props.navigation.navigate(PathNames.marketDataItem, {
+                    item: item,
+                    iconPath: icon.path,
+                  });
+                }}
+                style={styles.itemTouchWrapper}
+              >
+                <View style={styles.coinWrapper}>
+                  <Image style={styles.coinLogo} source={icon.path}></Image>
+                  <View>
+                    <AppText style={styles.name}>{item.name}</AppText>
+                    <AppText style={styles.currency}>
+                      {item.data.currency}
+                    </AppText>
+                  </View>
+                </View>
+                {Dimensions.get("window").width >= 300 && (
+                  <View style={styles.chartWrapper}>
+                    <LineChart
+                      style={styles.chart}
+                      data={chartData}
+                      svg={{ stroke: trendColor }}
+                      contentInset={{ top: 0, bottom: 0, left: 0, right: 0 }}
+                    ></LineChart>
+                  </View>
+                )}
+
+                <View style={styles.priceWrapper}>
+                  <AppText style={styles.price}>
+                    {formatNumber({
+                      number: item.data.price,
+                      beautifulDecimal: true,
+                    })}{" "}
+                    €
+                  </AppText>
+                  <AppText
+                    style={
+                      positiveTrend ? styles.positveTrend : styles.negativeTrend
+                    }
+                  >
+                    {percentage > 0 ? "+" : ""}
+                    {percentage.toFixed(2)}%
                   </AppText>
                 </View>
-              </View>
-              {Dimensions.get("window").width >= 300 && (
-                <View style={styles.chartWrapper}>
-                  <LineChart
-                    style={styles.chart}
-                    data={chartData}
-                    svg={{ stroke: trendColor }}
-                    contentInset={{ top: 0, bottom: 0, left: 0, right: 0 }}
-                  ></LineChart>
-                </View>
-              )}
-
-              <View style={styles.priceWrapper}>
-                <AppText style={styles.price}>
-                  {formatNumber({
-                    number: item.data.price,
-                    beautifulDecimal: true,
-                  })}{" "}
-                  €
-                </AppText>
-                <AppText
-                  style={
-                    positiveTrend ? styles.positveTrend : styles.negativeTrend
-                  }
-                >
-                  {percentage > 0 ? "+" : ""}
-                  {percentage.toFixed(2)}%
-                </AppText>
-              </View>
+              </TouchableOpacity>
             </View>
           );
         }}
@@ -98,14 +115,16 @@ const styles = StyleSheet.create({
     marginLeft: 20,
     marginRight: 20,
   },
-  itemWrapper: {
+  itemTouchWrapper: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
     paddingTop: 10,
+    paddingBottom: 12,
+  },
+  itemWrapper: {
     borderBottomWidth: 1,
     borderBottomColor: Colors.lightWhite,
-    paddingBottom: 12,
   },
   lastItemWrapper: {
     borderBottomWidth: 0,

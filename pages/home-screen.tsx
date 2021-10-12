@@ -82,7 +82,7 @@ const HomeScreen = (props) => {
       )}
 
       {walletsData.length > 0 && Object.keys(marketData).length > 0 && (
-        <Market data={marketData}></Market>
+        <Market navigation={props.navigation} data={marketData}></Market>
       )}
     </SafeArea>
   );

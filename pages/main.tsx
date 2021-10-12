@@ -7,6 +7,7 @@ import { createLocalDBTable } from "~/db";
 import { Colors, PathNames } from "../constants";
 import AddWalletScreen from "./add-wallet";
 import HomeScreen from "./home-screen";
+import MarketdataItem from "./market-data-item";
 import SingleWallet from "./single-wallet";
 
 const Stack = createNativeStackNavigator();
@@ -41,9 +42,14 @@ const Main = () => {
             component={AddWalletScreen}
           />
           <Stack.Screen
+            name={PathNames.marketDataItem}
+            component={MarketdataItem}
+          />
+          <Stack.Screen
             name={PathNames.singleWallet}
             component={SingleWallet}
           />
+
           <Stack.Screen name={PathNames.scanCode} component={QrCodeScanner} />
         </Stack.Navigator>
       </NavigationContainer>
