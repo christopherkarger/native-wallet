@@ -2,7 +2,7 @@ import firebase from "firebase";
 
 export type firebaseDB = firebase.database.Reference;
 
-firebase.initializeApp({
+const fire = firebase.initializeApp({
   apiKey: "AIzaSyCpn1RAXi6VWQvGUNrk5dpl_KUANGpw-2M",
   authDomain: "crypto-wallet-98f66.firebaseapp.com",
   databaseURL:
@@ -13,4 +13,4 @@ firebase.initializeApp({
   appId: "1:423385014326:web:511e78569e566945517897",
 });
 
-export default firebase;
+export default fire;
