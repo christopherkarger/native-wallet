@@ -1,3 +1,4 @@
+import * as shape from "d3-shape";
 import React, { useEffect, useState } from "react";
 import { Dimensions, Image, StyleSheet, View } from "react-native";
 import { LineChart } from "react-native-svg-charts";
@@ -43,7 +44,8 @@ const MarketdataItem = (props) => {
             style={styles.chart}
             data={chartData}
             svg={{ stroke: trendColor }}
-            contentInset={{ top: 0, bottom: 0, left: 0, right: 0 }}
+            curve={shape.curveNatural}
+            contentInset={{ top: 10, bottom: 10, left: 0, right: 0 }}
           ></LineChart>
         </View>
       </SafeArea>
@@ -62,7 +64,7 @@ const styles = StyleSheet.create({
 
   chartWrapper: {
     width: Dimensions.get("window").width,
-    height: 150,
+    height: 180,
   },
   chart: {
     position: "absolute",

@@ -1,10 +1,8 @@
 import React from "react";
-import { apiVersion } from "~/constants";
 import { IConfig } from "../models/config";
 import { MarketData } from "./market-data";
 
 export const defaultConfig: IConfig = {
-  apiVersion: apiVersion,
   supported: [],
   urls: {},
 };

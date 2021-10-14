@@ -1,3 +1,4 @@
+import * as shape from "d3-shape";
 import React, { useEffect, useState } from "react";
 import {
   Dimensions,
@@ -72,7 +73,8 @@ const Market = (props) => {
                       style={styles.chart}
                       data={chartData}
                       svg={{ stroke: trendColor }}
-                      contentInset={{ top: 0, bottom: 0, left: 0, right: 0 }}
+                      curve={shape.curveNatural}
+                      contentInset={{ top: 5, bottom: 5, left: 0, right: 0 }}
                     ></LineChart>
                   </View>
                 )}

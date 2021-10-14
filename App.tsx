@@ -3,15 +3,10 @@ import * as Font from "expo-font";
 import { StatusBar } from "expo-status-bar";
 import React, { useEffect, useState } from "react";
 import { LogBox, StyleSheet } from "react-native";
-import ApiNotSupported from "./components/api-not-supported";
-import GradientView from "./components/gradient-view";
-import SafeArea from "./components/safe-area";
-import AppText from "./components/text";
-import { config } from "./config";
-import { apiVersion, Fonts } from "./constants";
+import { Config } from "./config";
+import { Fonts } from "./constants";
 import useAppStatus, { AppStaus } from "./hooks/handle-app-state";
-import { IConfig } from "./models/config";
-import { AppConfig, defaultConfig, MarketDataContext } from "./models/context";
+import { AppConfig, MarketDataContext } from "./models/context";
 import { MarketData } from "./models/market-data";
 import Main from "./pages/main";
 import { fetchMarketData } from "./services/fetch-marketdata";
@@ -32,38 +27,8 @@ export default function App() {
   let dbConnection: firebaseDB | undefined;
   const statusBarStyle = "light";
   const [appIsReady, setAppIsReady] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [loadingError, setLoadingError] = useState(false);
-  const [apiSupported, setApiSupported] = useState(false);
-  const [fetchedConfig, setFetchedConfig] = useState(defaultConfig);
   const [marketData, setMarketData] = useState<MarketData>(new MarketData([]));
   const appStatus = useAppStatus();
-
-  useEffect(() => {
-    setLoading(true);
-
-    const configFectchHeader = new Headers();
-    configFectchHeader.append("pragma", "no-cache");
-    configFectchHeader.append("cache-control", "no-cache");
-    const fetchInit = {
-      method: "GET",
-      headers: configFectchHeader,
-    };
-
-    fetch(`${config.configUrl}`, fetchInit)
-      .then((response) => response.json())
-      .then((res: IConfig) => {
-        if (res.apiVersion === apiVersion) {
-          setApiSupported(true);
-          setFetchedConfig(res);
-        }
-      })
-      .catch((err) => {
-        console.error(err);
-        setLoadingError(true);
-      })
-      .finally(() => setLoading(false));
-  }, []);
 
   useEffect(() => {
     if (appStatus === AppStaus.Active) {
@@ -91,26 +56,8 @@ export default function App() {
     );
   }
 
-  if (loading || loadingError) {
-    return (
-      <GradientView>
-        <StatusBar style={statusBarStyle} />
-        <SafeArea style={styles.loadingContainer}>
-          <AppText style={styles.configLoadingText}>
-            {loading && <>Lade...</>}
-            {loadingError && <>Da ist wohl was schief gegangen!</>}
-          </AppText>
-        </SafeArea>
-      </GradientView>
-    );
-  }
-
-  if (!apiSupported) {
-    return <ApiNotSupported statusBarStyle={statusBarStyle}></ApiNotSupported>;
-  }
-
   return (
-    <AppConfig.Provider value={fetchedConfig}>
+    <AppConfig.Provider value={Config}>
       <MarketDataContext.Provider value={marketData}>
         <StatusBar style={statusBarStyle} />
         <Main />
