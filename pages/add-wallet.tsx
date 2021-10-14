@@ -1,5 +1,5 @@
 import { MaterialIcons } from "@expo/vector-icons";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import {
   Alert,
   StyleSheet,
@@ -20,6 +20,7 @@ import { fetchAddress } from "~/services/fetch-address";
 import SubPageHeader from "../components/sub-page-header";
 
 const AddWalletScreen = (props) => {
+  const mounted = useRef(false);
   const appConfig = useContext(AppConfig);
   const [nameChangeAllowed, setNameChangeAllowed] = useState(true);
   const [name, setName] = useState("");
@@ -37,12 +38,18 @@ const AddWalletScreen = (props) => {
   }, [props.route.params]);
 
   useEffect(() => {
+    mounted.current = true;
+
     if (props.route.params && props.route.params.addToWallet) {
       setConnectedToId(props.route.params.id);
       setName(props.route.params.name);
       setCurrency(props.route.params.currency);
       setNameChangeAllowed(false);
     }
+
+    return () => {
+      mounted.current = false;
+    };
   }, []);
 
   const addWallet = async () => {
@@ -69,22 +76,24 @@ const AddWalletScreen = (props) => {
       return;
     }
 
-    insertItemToLocalDB(
-      name.trim(),
-      currency,
-      address.trim(),
-      balance,
-      new Date().getTime(),
-      connectedToId
-    )
-      .then(() => {
-        props.navigation.navigate(PathNames.home);
-      })
-      .catch((err) => {
-        setFetchingAndSavingAddress(false);
-        console.error("Insert Wallet into DB failed");
-        console.error(err);
-      });
+    if (mounted.current) {
+      insertItemToLocalDB(
+        name.trim(),
+        currency,
+        address.trim(),
+        balance,
+        new Date().getTime(),
+        connectedToId
+      )
+        .then(() => {
+          props.navigation.navigate(PathNames.home);
+        })
+        .catch((err) => {
+          setFetchingAndSavingAddress(false);
+          console.error("Insert Wallet into DB failed");
+          console.error(err);
+        });
+    }
   };
 
   return (
