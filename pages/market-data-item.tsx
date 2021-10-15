@@ -7,8 +7,10 @@ import GradientView from "~/components/gradient-view";
 import SafeArea from "~/components/safe-area";
 import SubPageHeader from "~/components/sub-page-header";
 import AppText from "~/components/text";
-import { Colors } from "~/constants";
+import { Colors, Fonts } from "~/constants";
 import { IMarketDataItem, IMarketDataItemData } from "~/models/market-data";
+import { formatNumber } from "~/services/format-number";
+import { calcPercentage } from "~/services/helper";
 
 enum ChartView {
   hours,
@@ -25,10 +27,15 @@ const MarketdataItem = (props) => {
   const [trendColor, setTrendColor] = useState(Colors.green);
   const [marketData, setMarketData] = useState<IMarketDataItemData>();
   const [chartView, setChartView] = useState<ChartView>();
+  const [percentage, setPercentage] = useState(0);
+  const [price, setPrice] = useState(0);
 
-  const changeView = (view: ChartView, data: IMarketDataItemData): void => {
+  const changeView = (view: ChartView): void => {
+    if (!marketData) {
+      return;
+    }
     const viewData =
-      view === ChartView.hours ? data.lastDayHistory : data.history;
+      view === ChartView.hours ? marketData.lastDayHistory : marketData.history;
     let m = viewData.map((h) => h.price);
 
     if (view === ChartView.week) {
@@ -44,20 +51,50 @@ const MarketdataItem = (props) => {
 
   useEffect(() => {
     const { name, data } = props.route.params.item as IMarketDataItem;
-    setMarketData(data);
     setName(name);
-    changeView(ChartView.week, data);
+    setMarketData(data);
   }, []);
+
+  useEffect(() => {
+    setPercentage(
+      calcPercentage(chartData[0], chartData[chartData.length - 1])
+    );
+  }, [chartData]);
+
+  useEffect(() => {
+    changeView(ChartView.week);
+    if (marketData) {
+      setPrice(marketData.price);
+    }
+  }, [marketData]);
 
   return (
     <GradientView>
       <SafeArea>
         <SubPageHeader navigation={props.navigation}>{name}</SubPageHeader>
-        <View style={styles.logoWrapper}>
+        <View style={styles.header}>
           <Image
             style={styles.logo}
             source={props.route.params.iconPath}
           ></Image>
+          <View style={styles.headerPriceWrapper}>
+            <AppText style={styles.headerPrice}>
+              {formatNumber({
+                number: price,
+                beautifulDecimal: true,
+              })}
+              {" €"}
+            </AppText>
+            <AppText
+              style={[
+                styles.headerPercentage,
+                percentage > 0 ? styles.positveTrend : styles.negativeTrend,
+              ]}
+            >
+              {percentage > 0 ? "+" : ""}
+              {percentage.toFixed(2)}%
+            </AppText>
+          </View>
         </View>
         <View style={styles.chartWrapper}>
           <LineChart
@@ -75,11 +112,7 @@ const MarketdataItem = (props) => {
               styles.chartButton,
               chartView === ChartView.hours ? styles.activeChartButton : {},
             ]}
-            onPress={() => {
-              if (marketData) {
-                changeView(ChartView.hours, marketData);
-              }
-            }}
+            onPress={() => changeView(ChartView.hours)}
           >
             <AppText>24 Std.</AppText>
           </TouchableOpacity>
@@ -89,11 +122,7 @@ const MarketdataItem = (props) => {
               styles.chartButton,
               chartView === ChartView.week ? styles.activeChartButton : {},
             ]}
-            onPress={() => {
-              if (marketData) {
-                changeView(ChartView.week, marketData);
-              }
-            }}
+            onPress={() => changeView(ChartView.week)}
           >
             <AppText>7 Tage</AppText>
           </TouchableOpacity>
@@ -103,11 +132,7 @@ const MarketdataItem = (props) => {
               styles.chartButton,
               chartView === ChartView.month ? styles.activeChartButton : {},
             ]}
-            onPress={() => {
-              if (marketData) {
-                changeView(ChartView.month, marketData);
-              }
-            }}
+            onPress={() => changeView(ChartView.month)}
           >
             <AppText>30 Tage</AppText>
           </TouchableOpacity>
@@ -117,40 +142,51 @@ const MarketdataItem = (props) => {
   );
 };
 const styles = StyleSheet.create({
-  logoWrapper: {
-    alignItems: "center",
+  header: {
     marginBottom: 30,
+    flexDirection: "row",
   },
+  headerPriceWrapper: {
+    justifyContent: "center",
+  },
+  headerPrice: {
+    fontFamily: Fonts.bold,
+    fontSize: 25,
+  },
+  headerPercentage: {},
   logo: {
     width: 70,
     height: 70,
+    marginRight: 20,
+    marginLeft: 20,
   },
-
   chartWrapper: {
     width: Dimensions.get("window").width,
     height: 190,
   },
-
   chart: {
     width: "100%",
     height: "100%",
   },
-
   chartButtonWraper: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
     paddingTop: 20,
   },
-
   chartButton: {
     marginHorizontal: 15,
     padding: 15,
   },
-
   activeChartButton: {
     borderBottomWidth: 1,
     borderColor: Colors.white,
+  },
+  positveTrend: {
+    color: Colors.green,
+  },
+  negativeTrend: {
+    color: Colors.red,
   },
 });
 
