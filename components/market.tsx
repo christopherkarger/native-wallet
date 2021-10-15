@@ -12,6 +12,7 @@ import { LineChart } from "react-native-svg-charts";
 import { CryptoIcon } from "~/models/crypto-icon";
 import { MarketData } from "~/models/market-data";
 import { formatNumber } from "~/services/format-number";
+import { calcPercentage } from "~/services/helper";
 import { Colors, Fonts, PathNames } from "../constants";
 import AppText from "./text";
 
@@ -36,9 +37,10 @@ const Market = (props) => {
           const chartData = item.data.history.slice(-7).map((h) => h.price);
           const positiveTrend = chartData[0] < chartData[chartData.length - 1];
           const trendColor = positiveTrend ? Colors.green : Colors.red;
-          const percentage =
-            ((chartData[chartData.length - 1] - chartData[0]) / chartData[0]) *
-            100;
+          const percentage = calcPercentage(
+            chartData[0],
+            chartData[chartData.length - 1]
+          );
 
           return (
             <View

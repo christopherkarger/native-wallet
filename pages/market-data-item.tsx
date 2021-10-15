@@ -65,7 +65,7 @@ const MarketdataItem = (props) => {
             data={chartData}
             svg={{ stroke: trendColor }}
             curve={shape.curveNatural}
-            contentInset={{ top: 10, bottom: 10, left: 0, right: 0 }}
+            contentInset={{ top: 20, bottom: 20, left: 0, right: 0 }}
             animate={true}
           ></LineChart>
         </View>
@@ -128,12 +128,10 @@ const styles = StyleSheet.create({
 
   chartWrapper: {
     width: Dimensions.get("window").width,
-    height: 180,
+    height: 190,
   },
+
   chart: {
-    position: "absolute",
-    top: 0,
-    left: 0,
     width: "100%",
     height: "100%",
   },
@@ -147,7 +145,6 @@ const styles = StyleSheet.create({
 
   chartButton: {
     marginHorizontal: 15,
-
     padding: 15,
   },
 

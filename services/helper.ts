@@ -5,3 +5,7 @@ export const waitTime = (time: number) => {
     }, time);
   });
 };
+
+export const calcPercentage = (prev: number, current: number): number => {
+  return ((current - prev) / prev) * 100;
+};
