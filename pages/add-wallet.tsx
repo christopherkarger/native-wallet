@@ -182,13 +182,13 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     borderWidth: 1,
     paddingVertical: 12,
-    paddingHorizontal: 15,
+    paddingLeft: 12,
+    paddingRight: 50,
     marginBottom: 20,
   },
   addWallet: {
     marginTop: 5,
   },
-
   qrCodeButtonWrapper: {
     position: "absolute",
     top: 5,
