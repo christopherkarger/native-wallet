@@ -1,4 +1,5 @@
 import { MaterialIcons } from "@expo/vector-icons";
+import { LinearGradient } from "expo-linear-gradient";
 import React, { useContext, useEffect, useState } from "react";
 import { StyleSheet, TouchableOpacity, View } from "react-native";
 import GradientView from "~/components/gradient-view";
@@ -54,10 +55,19 @@ const HomeScreen = (props) => {
         {walletsData.length > 0 && (
           <View style={styles.addWalletButtonWrapper}>
             <TouchableOpacity
-              style={styles.addWalletButton}
               onPress={() => props.navigation.navigate(PathNames.addWallet)}
             >
-              <MaterialIcons name="add-circle" size={40} color={Colors.green} />
+              <LinearGradient
+                style={styles.addWalletButtonGradient}
+                colors={[Colors.lightBlue, Colors.purple]}
+              >
+                <MaterialIcons
+                  style={styles.addWalletButtonIcon}
+                  name="add"
+                  size={30}
+                  color={Colors.white}
+                />
+              </LinearGradient>
             </TouchableOpacity>
           </View>
         )}
@@ -118,8 +128,20 @@ const styles = StyleSheet.create({
     top: 35,
     right: 20,
     zIndex: 10,
+    overflow: "hidden",
+    borderRadius: 20,
+    width: 40,
+    height: 40,
   },
-  addWalletButton: {},
+  addWalletButtonGradient: {
+    width: "100%",
+    height: "100%",
+  },
+  addWalletButtonIcon: {
+    position: "absolute",
+    top: 4,
+    left: 5,
+  },
 });
 
 export default HomeScreen;
