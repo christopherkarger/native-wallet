@@ -41,12 +41,9 @@ const MarketdataItem = (props) => {
     if (view === ChartView.week) {
       m = m.slice(-7);
     }
-
     setChartData(m);
+    setTrendColor(m[0] < m[m.length - 1] ? Colors.green : Colors.red);
     setChartView(view);
-    if (viewData[0].price > viewData[viewData.length - 1].price) {
-      setTrendColor(Colors.red);
-    }
   };
 
   useEffect(() => {
@@ -56,6 +53,7 @@ const MarketdataItem = (props) => {
   }, []);
 
   useEffect(() => {
+    const p = calcPercentage(chartData[0], chartData[chartData.length - 1]);
     setPercentage(
       calcPercentage(chartData[0], chartData[chartData.length - 1])
     );
