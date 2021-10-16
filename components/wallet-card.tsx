@@ -41,21 +41,14 @@ const WalletCard = (props) => {
         ...props.style,
       }}
     >
-      <View style={styles.cryptoWrapper}>
-        <Image style={styles.logo} source={data.icon.path}></Image>
-        <AppText style={styles.cryptoName}>{data.name}</AppText>
-      </View>
-
       <View style={styles.amountWrapper}>
         <AppText style={styles.amount}>
           {props.data.niceBalance(amount)}
         </AppText>
-
         <AppText style={styles.amountShort}>{data.currency}</AppText>
       </View>
-      <View style={styles.walletBalanceWrapper}>
-        <AppText style={styles.walletBalance}>{walletBalance} €</AppText>
-      </View>
+      <AppText style={styles.walletBalance}>{walletBalance} €</AppText>
+      <Image style={styles.logo} source={data.icon.path}></Image>
     </TouchableOpacity>
   );
 };
@@ -74,10 +67,8 @@ const styles = StyleSheet.create({
   amountWrapper: {
     flexDirection: "row",
     alignItems: "center",
-    justifyContent: "center",
-    zIndex: 2,
-    paddingTop: 5,
-    paddingBottom: 8,
+    paddingTop: 8,
+    marginBottom: 5,
   },
   amount: {
     fontFamily: Fonts.bold,
@@ -88,18 +79,11 @@ const styles = StyleSheet.create({
     marginLeft: 10,
     color: Colors.lightWhite,
   },
-  walletBalanceWrapper: {
-    alignItems: "center",
-    justifyContent: "center",
-    zIndex: 2,
-  },
   walletBalance: {
     fontFamily: Fonts.bold,
   },
   cryptoWrapper: {
     flexDirection: "row",
-    alignItems: "center",
-    zIndex: 2,
   },
   cryptoName: {
     fontSize: 15,
@@ -107,9 +91,12 @@ const styles = StyleSheet.create({
     marginRight: "auto",
   },
   logo: {
+    position: "absolute",
+    bottom: 10,
+    right: 10,
     width: 36,
     height: 36,
-    marginRight: 12,
+    //marginRight: 12,
   },
 });
 
