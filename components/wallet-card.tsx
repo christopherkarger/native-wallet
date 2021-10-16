@@ -1,16 +1,32 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Image, StyleSheet, TouchableOpacity, View } from "react-native";
+import { MarketDataContext } from "~/models/context";
+import { MarketData } from "~/models/market-data";
+import { calcTotalBalance } from "~/services/calc-balance";
+import { formatNumber } from "~/services/format-number";
 import { Colors, Fonts, PathNames } from "../constants";
 import AppText from "./text";
 
 const WalletCard = (props) => {
   const data = props.data.wallets[0];
   const [amount, setAmount] = useState(props.data.totalBalance);
+  const marketData: MarketData = useContext(MarketDataContext);
+  const getWalletBalance = () => {
+    return formatNumber({
+      number: calcTotalBalance(marketData, [props.data]),
+      decimal: 2,
+    });
+  };
+  const [walletBalance, setWalletBalance] = useState(getWalletBalance());
 
   useEffect(() => {
     setAmount(props.data.totalBalance);
+    setWalletBalance(getWalletBalance());
   }, [props.data.wallets]);
 
+  useEffect(() => {
+    setWalletBalance(getWalletBalance());
+  }, [marketData]);
   return (
     <TouchableOpacity
       onPress={() => {
@@ -34,9 +50,11 @@ const WalletCard = (props) => {
         <AppText style={styles.amount}>
           {props.data.niceBalance(amount)}
         </AppText>
-        {!!data.currency && (
-          <AppText style={styles.amountShort}>{data.currency}</AppText>
-        )}
+
+        <AppText style={styles.amountShort}>{data.currency}</AppText>
+      </View>
+      <View style={styles.walletBalanceWrapper}>
+        <AppText style={styles.walletBalance}>{walletBalance} €</AppText>
       </View>
     </TouchableOpacity>
   );
@@ -57,8 +75,9 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
-    flex: 1,
     zIndex: 2,
+    paddingTop: 5,
+    paddingBottom: 8,
   },
   amount: {
     fontFamily: Fonts.bold,
@@ -68,6 +87,14 @@ const styles = StyleSheet.create({
     fontSize: 15,
     marginLeft: 10,
     color: Colors.lightWhite,
+  },
+  walletBalanceWrapper: {
+    alignItems: "center",
+    justifyContent: "center",
+    zIndex: 2,
+  },
+  walletBalance: {
+    fontFamily: Fonts.bold,
   },
   cryptoWrapper: {
     flexDirection: "row",
