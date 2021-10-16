@@ -5,7 +5,8 @@ import { StyleSheet, TouchableOpacity, View } from "react-native";
 import GradientView from "~/components/gradient-view";
 import Market from "~/components/market";
 import SafeArea from "~/components/safe-area";
-import { selectLocalDBTable } from "~/db";
+import { TextButton } from "~/components/text-button";
+import { resetLocalDb, selectLocalDBTable } from "~/db";
 import { useUpdateLocalWalletBalances } from "~/hooks/update-local-wallet-balances";
 import { MarketDataContext } from "~/models/context";
 import { MarketData } from "~/models/market-data";
@@ -22,19 +23,39 @@ const HomeScreen = (props) => {
   const [walletsData, setWalletsData] = useState<WalletWrapper[]>([]);
   const [totalBalance, setTotalBalance] = useState("0");
   const marketData: MarketData = useContext(MarketDataContext);
+  const [isDemoAccount, setIsDemoAccount] = useState(false);
+  const [isDeletingDemoAccount, setIsDeletingDemoAccount] = useState(false);
+
+  const deleteDemo = async () => {
+    if (isDeletingDemoAccount) {
+      return;
+    }
+    setIsDeletingDemoAccount(true);
+    try {
+      await resetLocalDb();
+      updateWallets();
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setIsDeletingDemoAccount(false);
+    }
+  };
+
+  const updateWallets = async () => {
+    const localWallets = await selectLocalDBTable().catch(() => {});
+    if (localWallets && localWallets.rows.length) {
+      setWalletsData(getWalletWrapper(localWallets.rows._array));
+      setIsDemoAccount(localWallets.rows._array.some((x) => x.demoAddress));
+    } else {
+      setWalletsData([]);
+      setIsDemoAccount(false);
+    }
+  };
 
   useUpdateLocalWalletBalances();
 
   useEffect(() => {
-    const routeListener = props.navigation.addListener("focus", async () => {
-      const localWallets = await selectLocalDBTable().catch(() => {});
-      if (localWallets && localWallets.rows.length) {
-        setWalletsData(getWalletWrapper(localWallets.rows._array));
-      } else {
-        setWalletsData([]);
-      }
-    });
-
+    const routeListener = props.navigation.addListener("focus", updateWallets);
     return () => {
       routeListener();
     };
@@ -53,27 +74,38 @@ const HomeScreen = (props) => {
     <GradientView>
       <SafeArea>
         {walletsData.length > 0 && (
-          <View style={styles.addWalletButtonWrapper}>
-            <TouchableOpacity
-              onPress={() => props.navigation.navigate(PathNames.addWallet)}
-            >
-              <LinearGradient
-                style={styles.addWalletButtonGradient}
-                colors={[Colors.lightBlue, Colors.purple]}
+          <View style={styles.actionButtonWrapper}>
+            {isDemoAccount && (
+              <TextButton
+                text="Demo löschen"
+                onPress={() => deleteDemo()}
+              ></TextButton>
+            )}
+            <View style={styles.addWalletButtonWrapper}>
+              <TouchableOpacity
+                onPress={() => props.navigation.navigate(PathNames.addWallet)}
               >
-                <MaterialIcons
-                  style={styles.addWalletButtonIcon}
-                  name="add"
-                  size={30}
-                  color={Colors.white}
-                />
-              </LinearGradient>
-            </TouchableOpacity>
+                <LinearGradient
+                  style={styles.addWalletButtonGradient}
+                  colors={[Colors.lightBlue, Colors.purple]}
+                >
+                  <MaterialIcons
+                    style={styles.addWalletButtonIcon}
+                    name="add"
+                    size={30}
+                    color={Colors.white}
+                  />
+                </LinearGradient>
+              </TouchableOpacity>
+            </View>
           </View>
         )}
 
         {walletsData.length === 0 && (
-          <EmptyWallets navigation={props.navigation}></EmptyWallets>
+          <EmptyWallets
+            navigation={props.navigation}
+            onDemoCreated={() => updateWallets()}
+          ></EmptyWallets>
         )}
         {walletsData.length > 0 && (
           <View style={styles.inner}>
@@ -123,15 +155,20 @@ const styles = StyleSheet.create({
     top: -5,
     marginBottom: 15,
   },
-  addWalletButtonWrapper: {
+  actionButtonWrapper: {
+    flexDirection: "row",
     position: "absolute",
     top: 35,
     right: 20,
+    alignItems: "center",
     zIndex: 10,
+  },
+  addWalletButtonWrapper: {
     overflow: "hidden",
     borderRadius: 20,
     width: 40,
     height: 40,
+    marginLeft: 20,
   },
   addWalletButtonGradient: {
     width: "100%",

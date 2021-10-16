@@ -13,7 +13,8 @@ export const getWalletWrapper = (localWalletsArr: ILocalWallet[]) => {
         w.address,
         w.balance,
         w.fetchedDate,
-        w.connectedToId
+        w.connectedToId,
+        w.demoAddress
       );
     });
 
@@ -27,7 +28,9 @@ export const getWalletWrapper = (localWalletsArr: ILocalWallet[]) => {
           w.currency,
           w.address,
           w.balance,
-          w.fetchedDate
+          w.fetchedDate,
+          w.connectedToId,
+          w.demoAddress
         ),
         ...connectedWallets.filter((e) => e.connectedToId === w.id),
       ]);

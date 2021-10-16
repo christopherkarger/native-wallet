@@ -16,6 +16,7 @@ export interface ILocalWallet {
   id: number;
   icon: CryptoIcon;
   connectedToId?: number;
+  demoAddress?: number;
 }
 
 interface ISQLResult extends SQLite.SQLResultSet {
@@ -26,11 +27,16 @@ interface ISQLResult extends SQLite.SQLResultSet {
   };
 }
 
+export const resetLocalDb = async () => {
+  await dropLocalDBTable();
+  await createLocalDBTable();
+};
+
 export const createLocalDBTable = () => {
   return new Promise<ISQLResult>((resolve, reject) => {
     db.transaction((tx) => {
       tx.executeSql(
-        `CREATE TABLE IF NOT EXISTS ${dbName} (id INTEGER PRIMARY KEY NOT NULL, name TEXT NOT NULL, currency TEXT NOT NULL, address TEXT NOT NULL, balance INTEGER NOT NULL, fetchedDate INTEGER NOT NULL, connectedToId INTEGER);`,
+        `CREATE TABLE IF NOT EXISTS ${dbName} (id INTEGER PRIMARY KEY NOT NULL, name TEXT NOT NULL, currency TEXT NOT NULL, address TEXT NOT NULL, balance INTEGER NOT NULL, fetchedDate INTEGER NOT NULL, connectedToId INTEGER, demoAddress INTEGER);`,
         [],
         (_, result) => {
           resolve(<ISQLResult>result);
@@ -50,13 +56,22 @@ export const insertItemToLocalDB = (
   address: string,
   balance: number,
   fetchedDate: number,
-  connectedToId?: number
+  connectedToId?: number,
+  demoAddress?: number
 ) => {
   return new Promise<ISQLResult>((resolve, reject) => {
     db.transaction((tx) => {
       tx.executeSql(
-        `INSERT INTO ${dbName} (name, currency, address, balance, fetchedDate, connectedToId) VALUES (?,?,?,?,?,?);`,
-        [name, currency, address, balance, fetchedDate, connectedToId],
+        `INSERT INTO ${dbName} (name, currency, address, balance, fetchedDate, connectedToId, demoAddress) VALUES (?,?,?,?,?,?,?);`,
+        [
+          name,
+          currency,
+          address,
+          balance,
+          fetchedDate,
+          connectedToId,
+          demoAddress,
+        ],
         (_, result) => {
           resolve(<ISQLResult>result);
         },

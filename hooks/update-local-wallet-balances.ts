@@ -17,13 +17,15 @@ export const useUpdateLocalWalletBalances = async () => {
       for (const data of walletsData) {
         for (const wallet of data.wallets) {
           try {
-            await waitTime(1000);
-            const balance = await fetchAddress(
-              wallet.address,
-              wallet.name,
-              appConfig
-            );
-            updateItemBalanceToLocalDB(wallet.id, balance);
+            if (!wallet.demoAddress) {
+              await waitTime(1000);
+              const balance = await fetchAddress(
+                wallet.address,
+                wallet.name,
+                appConfig
+              );
+              updateItemBalanceToLocalDB(wallet.id, balance);
+            }
           } catch (err) {
             console.log(err);
           }

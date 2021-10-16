@@ -11,7 +11,8 @@ export class Wallet {
     readonly address: string,
     readonly balance: number,
     readonly fetchedDate: number,
-    readonly connectedToId?: number
+    readonly connectedToId?: number,
+    readonly demoAddress?: number
   ) {
     this.icon = new CryptoIcon(name);
   }
@@ -24,7 +25,8 @@ export class Wallet {
       this.address,
       this.balance,
       this.fetchedDate,
-      this.connectedToId
+      this.connectedToId,
+      this.demoAddress
     );
   }
 }
