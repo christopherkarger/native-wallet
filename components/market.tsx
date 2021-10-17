@@ -12,7 +12,7 @@ import { LineChart } from "react-native-svg-charts";
 import { CryptoIcon } from "~/models/crypto-icon";
 import { MarketData } from "~/models/market-data";
 import { formatNumber } from "~/services/format-number";
-import { calcPercentage } from "~/services/helper";
+import { calcPercentage, randomString } from "~/services/helper";
 import { Colors, Fonts, PathNames } from "../constants";
 import AppText from "./text";
 
@@ -30,7 +30,7 @@ const Market = (props) => {
         style={styles.flatList}
         data={marketData?.itemsByMarketCap}
         scrollEnabled={true}
-        keyExtractor={(_, index) => index.toString()}
+        keyExtractor={(_, index) => randomString() + index.toString()}
         keyboardShouldPersistTaps="handled"
         renderItem={({ item, index }) => {
           const icon = new CryptoIcon(item.name);

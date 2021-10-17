@@ -55,7 +55,9 @@ const HomeScreen = (props) => {
   useUpdateLocalWalletBalances();
 
   useEffect(() => {
-    const routeListener = props.navigation.addListener("focus", updateWallets);
+    const routeListener = props.navigation.addListener("focus", () => {
+      updateWallets();
+    });
     return () => {
       routeListener();
     };

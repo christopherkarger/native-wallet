@@ -30,7 +30,6 @@ const WalletCard = (props) => {
   return (
     <TouchableOpacity
       onPress={() => {
-        props.onCardClicked();
         props.navigation.navigate(PathNames.singleWallet, {
           data: props.data,
         });

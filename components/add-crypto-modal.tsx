@@ -12,6 +12,7 @@ import AppText from "~/components/text";
 import { Colors, Fonts } from "~/constants";
 import { AppConfig } from "~/models/context";
 import { CryptoIcon } from "~/models/crypto-icon";
+import { randomString } from "~/services/helper";
 
 const AddCryptoModal = (props) => {
   const appConfig = useContext(AppConfig);
@@ -25,7 +26,7 @@ const AddCryptoModal = (props) => {
       <FlatList
         contentContainerStyle={{ paddingBottom: 30 }}
         data={appConfig.supported}
-        keyExtractor={(_, index) => index.toString()}
+        keyExtractor={(_, index) => randomString() + index.toString()}
         renderItem={({ item, index }) => {
           const icon = new CryptoIcon(item.name);
           return (
