@@ -33,9 +33,9 @@ export const Colors = {
   cryptos: {
     bitcoin: "#F79319",
     ethereum: "#627EEA",
-    cardano: "#05202E",
-    dogecoin: "#BA9F33",
-    litecoin: "#345D9D",
+    cardano: "#0E1E30",
+    dogecoin: "#C3A634",
+    litecoin: "#BFBBBB",
     dash: "#008CE7",
   },
 };
