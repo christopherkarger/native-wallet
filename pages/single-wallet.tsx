@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   Alert,
   FlatList,
@@ -13,8 +13,11 @@ import SafeArea from "~/components/safe-area";
 import SubPageHeader from "~/components/sub-page-header";
 import { Colors, Fonts, PathNames } from "~/constants";
 import { deleteItemFromLocalDB } from "~/db";
+import { MarketDataContext } from "~/models/context";
+import { MarketData } from "~/models/market-data";
 import { Wallet } from "~/models/wallet";
 import { WalletWrapper } from "~/models/wallet-wrapper";
+import { calcTotalBalance } from "~/services/calc-balance";
 import { formatNumber } from "~/services/format-number";
 import AppText from "../components/text";
 
@@ -22,6 +25,17 @@ const SingleWallet = (props) => {
   const [walletWrapper, setWalletWrapper] = useState<WalletWrapper>(
     props.route.params.data
   );
+  const [balance, setBalance] = useState("0");
+  const marketData: MarketData = useContext(MarketDataContext);
+
+  useEffect(() => {
+    setBalance(
+      formatNumber({
+        number: calcTotalBalance(marketData, [props.route.params.data]),
+        decimal: 2,
+      })
+    );
+  }, [marketData]);
 
   const deleteItem = async (item: Wallet, index: number) => {
     await deleteItemFromLocalDB(item, walletWrapper).catch((err) => {
@@ -41,14 +55,18 @@ const SingleWallet = (props) => {
     <GradientView>
       <SafeArea>
         <SubPageHeader navigation={props.navigation}>
-          {walletWrapper.wallets[0].name}
+          {walletWrapper.wallets[0].name} Wallet
         </SubPageHeader>
         <View style={styles.inner}>
-          <View style={{ ...styles.center, ...styles.logoWrapper }}>
+          <View style={styles.header}>
             <Image
               style={styles.logo}
               source={walletWrapper.wallets[0].icon.path}
             ></Image>
+
+            <View style={styles.headerPriceWrapper}>
+              <AppText style={styles.headerPrice}>{balance} €</AppText>
+            </View>
           </View>
           <FlatList
             style={styles.flatList}
@@ -131,8 +149,18 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     paddingBottom: 20,
   },
-  logoWrapper: {
+  header: {
     marginBottom: 20,
+    alignItems: "center",
+    flexDirection: "row",
+  },
+  headerPriceWrapper: {
+    justifyContent: "center",
+    marginLeft: 20,
+  },
+  headerPrice: {
+    fontFamily: Fonts.bold,
+    fontSize: 25,
   },
   logo: {
     width: 70,

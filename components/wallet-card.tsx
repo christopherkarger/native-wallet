@@ -32,6 +32,7 @@ const WalletCard = (props) => {
       onPress={() => {
         props.navigation.navigate(PathNames.singleWallet, {
           data: props.data,
+          formatedBalance: walletBalance,
         });
       }}
       style={{

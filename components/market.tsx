@@ -1,5 +1,5 @@
 import * as shape from "d3-shape";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import {
   Dimensions,
   FlatList,
@@ -22,86 +22,87 @@ const Market = (props) => {
   useEffect(() => {
     setMarketData(props.data);
   }, [props.data]);
+
+  const renderedMarketItem = (listProps) => {
+    const icon = new CryptoIcon(listProps.item.name);
+    const chartData = listProps.item.data.history.slice(-7).map((h) => h.price);
+    const positiveTrend = chartData[0] < chartData[chartData.length - 1];
+    const trendColor = positiveTrend ? Colors.green : Colors.red;
+    const percentage = calcPercentage(
+      chartData[0],
+      chartData[chartData.length - 1]
+    );
+
+    return (
+      <View
+        style={[
+          styles.itemWrapper,
+          marketData?.items && listProps.index === marketData.items.length - 1
+            ? styles.lastItemWrapper
+            : {},
+        ]}
+      >
+        <TouchableOpacity
+          onPress={() => {
+            props.navigation.navigate(PathNames.marketDataItem, {
+              item: listProps.item,
+              iconPath: icon.path,
+            });
+          }}
+          style={styles.itemTouchWrapper}
+        >
+          <View style={styles.coinWrapper}>
+            <Image style={styles.coinLogo} source={icon.path}></Image>
+            <View>
+              <AppText style={styles.name}>{listProps.item.name}</AppText>
+              <AppText style={styles.currency}>
+                {listProps.item.data.currency}
+              </AppText>
+            </View>
+          </View>
+          {Dimensions.get("window").width >= 300 && (
+            <View style={styles.chartWrapper}>
+              <LineChart
+                style={styles.chart}
+                data={chartData}
+                svg={{ stroke: trendColor }}
+                curve={shape.curveNatural}
+                contentInset={{ top: 5, bottom: 5, left: 0, right: 0 }}
+              ></LineChart>
+            </View>
+          )}
+
+          <View style={styles.priceWrapper}>
+            <AppText style={styles.price}>
+              {formatNumber({
+                number: listProps.item.data.price,
+                beautifulDecimal: true,
+              })}{" "}
+              €
+            </AppText>
+            <AppText
+              style={positiveTrend ? styles.positveTrend : styles.negativeTrend}
+            >
+              {percentage > 0 ? "+" : ""}
+              {percentage.toFixed(2)}%
+            </AppText>
+          </View>
+        </TouchableOpacity>
+      </View>
+    );
+  };
+  const memoizedListItem = useMemo(() => renderedMarketItem, [props.data]);
+
   return (
     <View style={styles.inner}>
       <AppText style={styles.marketHeadline}>Krypto Markt</AppText>
-
       <FlatList
         style={styles.flatList}
         data={marketData?.itemsByMarketCap}
         scrollEnabled={true}
-        keyExtractor={(_, index) => randomString() + index.toString()}
+        keyExtractor={(_, index) => randomString(index)}
         keyboardShouldPersistTaps="handled"
-        renderItem={({ item, index }) => {
-          const icon = new CryptoIcon(item.name);
-          const chartData = item.data.history.slice(-7).map((h) => h.price);
-          const positiveTrend = chartData[0] < chartData[chartData.length - 1];
-          const trendColor = positiveTrend ? Colors.green : Colors.red;
-          const percentage = calcPercentage(
-            chartData[0],
-            chartData[chartData.length - 1]
-          );
-
-          return (
-            <View
-              style={[
-                styles.itemWrapper,
-                marketData?.items && index === marketData.items.length - 1
-                  ? styles.lastItemWrapper
-                  : {},
-              ]}
-            >
-              <TouchableOpacity
-                onPress={() => {
-                  props.navigation.navigate(PathNames.marketDataItem, {
-                    item: item,
-                    iconPath: icon.path,
-                  });
-                }}
-                style={styles.itemTouchWrapper}
-              >
-                <View style={styles.coinWrapper}>
-                  <Image style={styles.coinLogo} source={icon.path}></Image>
-                  <View>
-                    <AppText style={styles.name}>{item.name}</AppText>
-                    <AppText style={styles.currency}>
-                      {item.data.currency}
-                    </AppText>
-                  </View>
-                </View>
-                {Dimensions.get("window").width >= 300 && (
-                  <View style={styles.chartWrapper}>
-                    <LineChart
-                      style={styles.chart}
-                      data={chartData}
-                      svg={{ stroke: trendColor }}
-                      curve={shape.curveNatural}
-                      contentInset={{ top: 5, bottom: 5, left: 0, right: 0 }}
-                    ></LineChart>
-                  </View>
-                )}
-
-                <View style={styles.priceWrapper}>
-                  <AppText style={styles.price}>
-                    {formatNumber({
-                      number: item.data.price,
-                      beautifulDecimal: true,
-                    })}{" "}
-                    €
-                  </AppText>
-                  <AppText
-                    style={
-                      positiveTrend ? styles.positveTrend : styles.negativeTrend
-                    }
-                  >
-                    {percentage > 0 ? "+" : ""}
-                    {percentage.toFixed(2)}%
-                  </AppText>
-                </View>
-              </TouchableOpacity>
-            </View>
-          );
-        }}
+        renderItem={memoizedListItem}
       ></FlatList>
     </View>
   );

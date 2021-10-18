@@ -10,6 +10,6 @@ export const calcPercentage = (prev: number, current: number): number => {
   return ((current - prev) / prev) * 100;
 };
 
-export const randomString = () => {
-  return Math.random().toString(36).substr(2, 5);
+export const randomString = (index = 0) => {
+  return Math.random().toString(36).substr(2, 5) + index.toString();
 };

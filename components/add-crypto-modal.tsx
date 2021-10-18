@@ -26,7 +26,7 @@ const AddCryptoModal = (props) => {
       <FlatList
         contentContainerStyle={{ paddingBottom: 30 }}
         data={appConfig.supported}
-        keyExtractor={(_, index) => randomString() + index.toString()}
+        keyExtractor={(_, index) => randomString(index)}
         renderItem={({ item, index }) => {
           const icon = new CryptoIcon(item.name);
           return (

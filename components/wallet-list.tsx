@@ -21,7 +21,7 @@ const Wallets = (props) => {
       contentContainerStyle={{ paddingRight: 20, paddingLeft: 20 }}
       keyboardShouldPersistTaps="handled"
       data={props.data}
-      keyExtractor={(_, index) => randomString() + index.toString()}
+      keyExtractor={(_, index) => randomString(index)}
       renderItem={memoizedListItem}
     ></FlatList>
   );
