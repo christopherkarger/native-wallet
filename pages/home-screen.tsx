@@ -6,7 +6,12 @@ import GradientView from "~/components/gradient-view";
 import Market from "~/components/market";
 import SafeArea from "~/components/safe-area";
 import { TextButton } from "~/components/text-button";
-import { resetLocalDb, selectLocalDBTable } from "~/db";
+import {
+  dbHasChanged,
+  ILocalWallet,
+  resetLocalDb,
+  selectLocalDBTable,
+} from "~/db";
 import { useUpdateLocalWalletBalances } from "~/hooks/update-local-wallet-balances";
 import { MarketDataContext } from "~/models/context";
 import { MarketData } from "~/models/market-data";
@@ -20,6 +25,7 @@ import WalletList from "../components/wallet-list";
 import { Colors, Fonts, PathNames } from "../constants";
 
 const HomeScreen = (props) => {
+  let rawLocalDbData: ILocalWallet[] = [];
   const [walletsData, setWalletsData] = useState<WalletWrapper[]>([]);
   const [totalBalance, setTotalBalance] = useState("0");
   const marketData: MarketData = useContext(MarketDataContext);
@@ -44,8 +50,11 @@ const HomeScreen = (props) => {
   const updateWallets = async () => {
     const localWallets = await selectLocalDBTable().catch(() => {});
     if (localWallets && localWallets.rows.length) {
-      setWalletsData(getWalletWrapper(localWallets.rows._array));
-      setIsDemoAccount(localWallets.rows._array.some((x) => x.demoAddress));
+      if (dbHasChanged(localWallets.rows._array, rawLocalDbData)) {
+        setWalletsData(getWalletWrapper(localWallets.rows._array));
+        setIsDemoAccount(localWallets.rows._array.some((x) => x.demoAddress));
+        rawLocalDbData = localWallets.rows._array;
+      }
     } else {
       setWalletsData([]);
       setIsDemoAccount(false);

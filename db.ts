@@ -1,5 +1,4 @@
 import * as SQLite from "expo-sqlite";
-import { CryptoIcon } from "./models/crypto-icon";
 import { Wallet } from "./models/wallet";
 import { WalletWrapper } from "./models/wallet-wrapper";
 
@@ -14,10 +13,28 @@ export interface ILocalWallet {
   balance: number;
   fetchedDate: number;
   id: number;
-  icon: CryptoIcon;
   connectedToId?: number;
   demoAddress?: number;
 }
+
+export const dbHasChanged = (dbNew: ILocalWallet[], dbOld: ILocalWallet[]) => {
+  if (dbNew.length !== dbOld.length) {
+    return true;
+  }
+  return !dbNew.every((n, i) => {
+    const o = dbOld[i];
+    return (
+      n.name === o.name &&
+      n.address === o.address &&
+      n.balance === o.balance &&
+      n.connectedToId === o.connectedToId &&
+      n.currency === o.currency &&
+      n.demoAddress === o.demoAddress &&
+      n.fetchedDate === o.fetchedDate &&
+      n.id === o.id
+    );
+  });
+};
 
 interface ISQLResult extends SQLite.SQLResultSet {
   rows: {

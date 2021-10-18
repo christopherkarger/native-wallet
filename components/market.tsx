@@ -46,6 +46,7 @@ const Market = (props) => {
           onPress={() => {
             props.navigation.navigate(PathNames.marketDataItem, {
               item: listProps.item,
+              name: listProps.item.name,
               iconPath: icon.path,
             });
           }}

@@ -1,16 +1,22 @@
 import * as shape from "d3-shape";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useMemo, useState } from "react";
 import { Dimensions, Image, StyleSheet, View } from "react-native";
-import { TouchableOpacity } from "react-native-gesture-handler";
+import { FlatList, TouchableOpacity } from "react-native-gesture-handler";
 import { LineChart } from "react-native-svg-charts";
+import { DateTime } from "~/components/date-time";
 import GradientView from "~/components/gradient-view";
 import SafeArea from "~/components/safe-area";
 import SubPageHeader from "~/components/sub-page-header";
 import AppText from "~/components/text";
 import { Colors, Fonts } from "~/constants";
-import { IMarketDataItem, IMarketDataItemData } from "~/models/market-data";
+import { MarketDataContext } from "~/models/context";
+import {
+  IHistoryItem,
+  IMarketDataItemData,
+  MarketData,
+} from "~/models/market-data";
 import { formatNumber } from "~/services/format-number";
-import { calcPercentage } from "~/services/helper";
+import { calcPercentage, randomString } from "~/services/helper";
 
 enum ChartView {
   hours,
@@ -22,54 +28,80 @@ const MarketdataItem = (props) => {
   if (!props.route?.params?.item) {
     throw new Error("maket data item not provied");
   }
-  const [name, setName] = useState("");
+  const marketData: MarketData = useContext(MarketDataContext);
   const [chartData, setChartData] = useState<number[]>([]);
+  const [listData, setListData] = useState<IHistoryItem[]>([]);
   const [trendColor, setTrendColor] = useState(Colors.green);
-  const [marketData, setMarketData] = useState<IMarketDataItemData>();
+  const [coinMarketData, setcoinMarketData] = useState<IMarketDataItemData>();
   const [chartView, setChartView] = useState<ChartView>();
   const [percentage, setPercentage] = useState(0);
   const [price, setPrice] = useState(0);
 
-  const changeView = (view: ChartView): void => {
-    if (!marketData) {
-      return;
-    }
-    const viewData =
-      view === ChartView.hours ? marketData.lastDayHistory : marketData.history;
-    let m = viewData.map((h) => h.price);
+  const changeView = (view: ChartView, data: IMarketDataItemData): void => {
+    let viewData =
+      view === ChartView.hours ? data.lastDayHistory : data.history;
+
+    const cloneViewData = (d: IHistoryItem[]) =>
+      d.map((c) => ({
+        date: c.date,
+        price: c.price,
+      }));
 
     if (view === ChartView.week) {
-      m = m.slice(-7);
+      viewData = cloneViewData(viewData).slice(-7);
     }
-    setChartData(m);
-    setTrendColor(m[0] < m[m.length - 1] ? Colors.green : Colors.red);
+
+    setChartData(cloneViewData(viewData).map((h) => h.price));
+    setListData(cloneViewData(viewData).reverse());
+    setTrendColor(
+      viewData[0].price < viewData[viewData.length - 1].price
+        ? Colors.green
+        : Colors.red
+    );
     setChartView(view);
+
+    if (viewData.length > 0) {
+      setPercentage(
+        calcPercentage(viewData[0].price, viewData[viewData.length - 1].price)
+      );
+    }
   };
 
   useEffect(() => {
-    const { name, data } = props.route.params.item as IMarketDataItem;
-    setName(name);
-    setMarketData(data);
-  }, []);
-
-  useEffect(() => {
-    const p = calcPercentage(chartData[0], chartData[chartData.length - 1]);
-    setPercentage(
-      calcPercentage(chartData[0], chartData[chartData.length - 1])
-    );
-  }, [chartData]);
-
-  useEffect(() => {
-    changeView(ChartView.week);
-    if (marketData) {
-      setPrice(marketData.price);
+    const coin = marketData.findItemByName(props.route.params.name);
+    if (coin) {
+      setcoinMarketData(coin.data);
+      setPrice(coin.data.price);
+      changeView(chartView ?? ChartView.week, coin.data);
     }
   }, [marketData]);
+
+  const renderItem = (listProps) => {
+    return (
+      <View style={styles.chartDataListItem}>
+        <DateTime
+          date={listProps.item.date}
+          hourView={chartView === ChartView.hours}
+        ></DateTime>
+        <AppText>
+          {formatNumber({
+            number: listProps.item.price,
+            decimal: 2,
+          })}
+          {" €"}
+        </AppText>
+      </View>
+    );
+  };
+
+  const memoizedListItem = useMemo(() => renderItem, [chartView]);
 
   return (
     <GradientView>
       <SafeArea>
-        <SubPageHeader navigation={props.navigation}>{name}</SubPageHeader>
+        <SubPageHeader navigation={props.navigation}>
+          {props.route.params.name}
+        </SubPageHeader>
         <View style={styles.header}>
           <Image
             style={styles.logo}
@@ -79,7 +111,7 @@ const MarketdataItem = (props) => {
             <AppText style={styles.headerPrice}>
               {formatNumber({
                 number: price,
-                beautifulDecimal: true,
+                decimal: 2,
               })}
               {" €"}
             </AppText>
@@ -106,35 +138,58 @@ const MarketdataItem = (props) => {
         </View>
         <View style={styles.chartButtonWraper}>
           <TouchableOpacity
+            disabled={chartView === ChartView.hours}
             style={[
               styles.chartButton,
               chartView === ChartView.hours ? styles.activeChartButton : {},
             ]}
-            onPress={() => changeView(ChartView.hours)}
+            onPress={() => {
+              if (coinMarketData) {
+                changeView(ChartView.hours, coinMarketData);
+              }
+            }}
           >
             <AppText>24 Std.</AppText>
           </TouchableOpacity>
 
           <TouchableOpacity
+            disabled={chartView === ChartView.week}
             style={[
               styles.chartButton,
               chartView === ChartView.week ? styles.activeChartButton : {},
             ]}
-            onPress={() => changeView(ChartView.week)}
+            onPress={() => {
+              if (coinMarketData) {
+                changeView(ChartView.week, coinMarketData);
+              }
+            }}
           >
             <AppText>7 Tage</AppText>
           </TouchableOpacity>
 
           <TouchableOpacity
+            disabled={chartView === ChartView.month}
             style={[
               styles.chartButton,
               chartView === ChartView.month ? styles.activeChartButton : {},
             ]}
-            onPress={() => changeView(ChartView.month)}
+            onPress={() => {
+              if (coinMarketData) {
+                changeView(ChartView.month, coinMarketData);
+              }
+            }}
           >
             <AppText>30 Tage</AppText>
           </TouchableOpacity>
         </View>
+        <FlatList
+          style={styles.chartDataList}
+          contentContainerStyle={{ paddingRight: 20, paddingLeft: 20 }}
+          keyboardShouldPersistTaps="handled"
+          data={listData}
+          keyExtractor={(_, index) => randomString(index)}
+          renderItem={memoizedListItem}
+        ></FlatList>
       </SafeArea>
     </GradientView>
   );
@@ -171,6 +226,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     paddingTop: 20,
+    marginBottom: 20,
   },
   chartButton: {
     marginHorizontal: 15,
@@ -185,6 +241,15 @@ const styles = StyleSheet.create({
   },
   negativeTrend: {
     color: Colors.red,
+  },
+  chartDataList: {},
+  chartDataListItem: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    borderTopColor: Colors.lightWhite,
+    borderTopWidth: 1,
+    paddingTop: 8,
+    paddingBottom: 8,
   },
 });
 
