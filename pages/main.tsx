@@ -6,7 +6,7 @@ import {
 import React from "react";
 import GradientView from "~/components/gradient-view";
 import QrCodeScanner from "~/components/qr-code-scanner";
-import { createLocalDBTable } from "~/db";
+import { createLocalDBTableWallets } from "~/db";
 import { Colors, PathNames } from "../constants";
 import AddWalletScreen from "./add-wallet";
 import HomeScreen from "./home-screen";
@@ -15,7 +15,7 @@ import SingleWallet from "./single-wallet";
 
 const Stack = createStackNavigator();
 
-createLocalDBTable().catch((err) => {
+createLocalDBTableWallets().catch((err) => {
   console.log(err);
   console.warn("Local DB could no be created");
 });

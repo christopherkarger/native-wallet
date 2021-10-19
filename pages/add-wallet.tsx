@@ -14,7 +14,7 @@ import GradientView from "~/components/gradient-view";
 import SafeArea from "~/components/safe-area";
 import AppText from "~/components/text";
 import { Colors, PathNames } from "~/constants";
-import { insertItemToLocalDB } from "~/db";
+import { insertItemToLocalDBTableWallets } from "~/db";
 import { AppConfig } from "~/models/context";
 import { fetchAddress } from "~/services/fetch-address";
 import SubPageHeader from "../components/sub-page-header";
@@ -77,7 +77,7 @@ const AddWalletScreen = (props) => {
     }
 
     if (mounted.current) {
-      insertItemToLocalDB(
+      insertItemToLocalDBTableWallets(
         name.trim(),
         currency,
         address.trim(),

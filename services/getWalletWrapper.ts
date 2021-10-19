@@ -1,4 +1,4 @@
-import { ILocalWallet } from "~/db";
+import { ILocalWallet } from "~/db/wallets";
 import { Wallet } from "~/models/wallet";
 import { WalletWrapper } from "~/models/wallet-wrapper";
 

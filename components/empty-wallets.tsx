@@ -1,6 +1,6 @@
 import React, { useContext, useState } from "react";
 import { Image, StyleSheet, View } from "react-native";
-import { insertItemToLocalDB } from "~/db";
+import { insertItemToLocalDBTableWallets } from "~/db";
 import { AppConfig } from "~/models/context";
 import { Colors, PathNames } from "../constants";
 import Button from "./button";
@@ -18,7 +18,7 @@ const EmptyWallets = (props) => {
     setCreatingDemo(true);
     for (const coin of appConfig.supported) {
       try {
-        await insertItemToLocalDB(
+        await insertItemToLocalDBTableWallets(
           coin.name,
           coin.currency,
           `gfde43dFFxb7hdmddsa7767d`,

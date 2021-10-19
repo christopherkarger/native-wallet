@@ -1,28 +1,38 @@
 import * as SQLite from "expo-sqlite";
-import { Wallet } from "./models/wallet";
-import { WalletWrapper } from "./models/wallet-wrapper";
+import { Wallet } from "../models/wallet";
+import { WalletWrapper } from "../models/wallet-wrapper";
+import { db } from "./db";
 
-const dbName = "wallets";
-
-const db = SQLite.openDatabase(`${dbName}.db`);
+const tableWallets = "wallets";
 
 export interface ILocalWallet {
-  address: string;
+  id: number;
   name: string;
+  address: string;
   currency: string;
   balance: number;
   fetchedDate: number;
-  id: number;
   connectedToId?: number;
   demoAddress?: number;
 }
 
-export const dbHasChanged = (dbNew: ILocalWallet[], dbOld: ILocalWallet[]) => {
-  if (dbNew.length !== dbOld.length) {
+interface ISQLResult extends SQLite.SQLResultSet {
+  rows: {
+    _array: ILocalWallet[];
+    length: number;
+    item(index: number): any;
+  };
+}
+
+const localDBTableWalletsHasChanged = (
+  tableNew: ILocalWallet[],
+  tableOld: ILocalWallet[]
+) => {
+  if (tableNew.length !== tableOld.length) {
     return true;
   }
-  return !dbNew.every((n, i) => {
-    const o = dbOld[i];
+  return !tableNew.every((n, i) => {
+    const o = tableOld[i];
     return (
       n.name === o.name &&
       n.address === o.address &&
@@ -36,24 +46,16 @@ export const dbHasChanged = (dbNew: ILocalWallet[], dbOld: ILocalWallet[]) => {
   });
 };
 
-interface ISQLResult extends SQLite.SQLResultSet {
-  rows: {
-    _array: ILocalWallet[];
-    length: number;
-    item(index: number): any;
-  };
-}
-
-export const resetLocalDb = async () => {
-  await dropLocalDBTable();
-  await createLocalDBTable();
+const resetLocalDbWallets = async () => {
+  await dropLocalDBTableWallets();
+  await createLocalDBTableWallets();
 };
 
-export const createLocalDBTable = () => {
+const createLocalDBTableWallets = () => {
   return new Promise<ISQLResult>((resolve, reject) => {
     db.transaction((tx) => {
       tx.executeSql(
-        `CREATE TABLE IF NOT EXISTS ${dbName} (id INTEGER PRIMARY KEY NOT NULL, name TEXT NOT NULL, currency TEXT NOT NULL, address TEXT NOT NULL, balance INTEGER NOT NULL, fetchedDate INTEGER NOT NULL, connectedToId INTEGER, demoAddress INTEGER);`,
+        `CREATE TABLE IF NOT EXISTS ${tableWallets} (id INTEGER PRIMARY KEY NOT NULL, name TEXT NOT NULL, currency TEXT NOT NULL, address TEXT NOT NULL, balance INTEGER NOT NULL, fetchedDate INTEGER NOT NULL, connectedToId INTEGER, demoAddress INTEGER);`,
         [],
         (_, result) => {
           resolve(<ISQLResult>result);
@@ -67,7 +69,7 @@ export const createLocalDBTable = () => {
   });
 };
 
-export const insertItemToLocalDB = (
+const insertItemToLocalDBTableWallets = (
   name: string,
   currency: string,
   address: string,
@@ -79,7 +81,7 @@ export const insertItemToLocalDB = (
   return new Promise<ISQLResult>((resolve, reject) => {
     db.transaction((tx) => {
       tx.executeSql(
-        `INSERT INTO ${dbName} (name, currency, address, balance, fetchedDate, connectedToId, demoAddress) VALUES (?,?,?,?,?,?,?);`,
+        `INSERT INTO ${tableWallets} (name, currency, address, balance, fetchedDate, connectedToId, demoAddress) VALUES (?,?,?,?,?,?,?);`,
         [
           name,
           currency,
@@ -101,11 +103,11 @@ export const insertItemToLocalDB = (
   });
 };
 
-export const selectLocalDBTable = () => {
+const selectLocalDBTableWallets = () => {
   return new Promise<ISQLResult>((resolve, reject) => {
     db.transaction((tx) => {
       tx.executeSql(
-        `SELECT * FROM ${dbName}`,
+        `SELECT * FROM ${tableWallets}`,
         [],
         (_, result) => {
           resolve(<ISQLResult>result);
@@ -119,11 +121,11 @@ export const selectLocalDBTable = () => {
   });
 };
 
-export const dropLocalDBTable = () => {
+const dropLocalDBTableWallets = () => {
   return new Promise<ISQLResult>((resolve, reject) => {
     db.transaction((tx) => {
       tx.executeSql(
-        `DROP TABLE IF EXISTS ${dbName}`,
+        `DROP TABLE IF EXISTS ${tableWallets}`,
         [],
         (_, result) => {
           resolve(<ISQLResult>result);
@@ -137,11 +139,14 @@ export const dropLocalDBTable = () => {
   });
 };
 
-export const updateItemBalanceToLocalDB = (id: number, balance: number) => {
+const updateItemBalanceToLocalDBTableWallets = (
+  id: number,
+  balance: number
+) => {
   return new Promise<SQLite.SQLResultSet>((resolve, reject) => {
     db.transaction((tx) => {
       tx.executeSql(
-        `UPDATE ${dbName} SET balance = ? WHERE id = ?`,
+        `UPDATE ${tableWallets} SET balance = ? WHERE id = ?`,
         [balance, id],
         (_, result) => {
           resolve(result);
@@ -155,14 +160,14 @@ export const updateItemBalanceToLocalDB = (id: number, balance: number) => {
   });
 };
 
-export const updateItemConnectedToIdToLocalDB = (
+const updateItemConnectedToIdToLocalDBTableWallets = (
   id: number,
   newId?: number
 ) => {
   return new Promise<SQLite.SQLResultSet>((resolve, reject) => {
     db.transaction((tx) => {
       tx.executeSql(
-        `UPDATE ${dbName} SET connectedToId = ? WHERE id = ?`,
+        `UPDATE ${tableWallets} SET connectedToId = ? WHERE id = ?`,
         [newId, id],
         (_, result) => {
           resolve(result);
@@ -176,11 +181,11 @@ export const updateItemConnectedToIdToLocalDB = (
   });
 };
 
-export const deleteSingleItemFromLocalDB = (id: number) => {
+const deleteSingleItemFromLocalDBTableWallets = (id: number) => {
   return new Promise<SQLite.SQLResultSet>((resolve, reject) => {
     db.transaction((tx) => {
       tx.executeSql(
-        `DELETE FROM ${dbName} WHERE id = ?`,
+        `DELETE FROM ${tableWallets} WHERE id = ?`,
         [id],
         (_, result) => {
           resolve(result);
@@ -194,7 +199,7 @@ export const deleteSingleItemFromLocalDB = (id: number) => {
   });
 };
 
-export const deleteMainItemFromLocalDB = (
+const deleteMainItemFromLocalDBTableWallets = (
   item: Wallet,
   walletWrapper: WalletWrapper
 ) => {
@@ -207,9 +212,11 @@ export const deleteMainItemFromLocalDB = (
 
     // Update new main wallet address
     try {
-      await updateItemConnectedToIdToLocalDB(wallets[0].id);
+      await updateItemConnectedToIdToLocalDBTableWallets(wallets[0].id);
     } catch {
-      reject("deleteMainItemFromLocalDB - failed to update first item");
+      reject(
+        "deleteMainItemFromLocalDBTableWallets - failed to update first item"
+      );
     }
 
     // Delete first one
@@ -219,30 +226,53 @@ export const deleteMainItemFromLocalDB = (
     for (const w of wallets) {
       if (w.connectedToId) {
         try {
-          await updateItemConnectedToIdToLocalDB(w.id, secondWalletID);
+          await updateItemConnectedToIdToLocalDBTableWallets(
+            w.id,
+            secondWalletID
+          );
         } catch {
-          reject("deleteMainItemFromLocalDB - failed to update item");
+          reject(
+            "deleteMainItemFromLocalDBTableWallets - failed to update item"
+          );
         }
       }
     }
 
     // Delete main wallet address
     try {
-      const deletedItem = await deleteSingleItemFromLocalDB(item.id);
+      const deletedItem = await deleteSingleItemFromLocalDBTableWallets(
+        item.id
+      );
       resolve(deletedItem);
     } catch {
-      reject("deleteMainItemFromLocalDB - failed to delete main item");
+      reject(
+        "deleteMainItemFromLocalDBTableWallets - failed to delete main item"
+      );
     }
   });
 };
 
-export const deleteItemFromLocalDB = (
+const deleteItemFromLocalDBTableWallets = (
   item: Wallet,
   walletWrapper: WalletWrapper
 ) => {
   if (item.connectedToId || walletWrapper.wallets.length == 1) {
-    return deleteSingleItemFromLocalDB(item.id);
+    return deleteSingleItemFromLocalDBTableWallets(item.id);
   } else {
-    return deleteMainItemFromLocalDB(item, walletWrapper);
+    return deleteMainItemFromLocalDBTableWallets(item, walletWrapper);
   }
+};
+
+export {
+  createLocalDBTableWallets,
+  deleteItemFromLocalDBTableWallets,
+  deleteMainItemFromLocalDBTableWallets,
+  deleteSingleItemFromLocalDBTableWallets,
+  dropLocalDBTableWallets,
+  insertItemToLocalDBTableWallets,
+  localDBTableWalletsHasChanged,
+  resetLocalDbWallets,
+  selectLocalDBTableWallets,
+  updateItemBalanceToLocalDBTableWallets,
+  updateItemConnectedToIdToLocalDBTableWallets,
 };

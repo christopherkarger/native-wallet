@@ -7,11 +7,11 @@ import Market from "~/components/market";
 import SafeArea from "~/components/safe-area";
 import { TextButton } from "~/components/text-button";
 import {
-  dbHasChanged,
-  ILocalWallet,
-  resetLocalDb,
-  selectLocalDBTable,
+  localDBTableWalletsHasChanged,
+  resetLocalDbWallets,
+  selectLocalDBTableWallets,
 } from "~/db";
+import { ILocalWallet } from "~/db/wallets";
 import { useUpdateLocalWalletBalances } from "~/hooks/update-local-wallet-balances";
 import { MarketDataContext } from "~/models/context";
 import { MarketData } from "~/models/market-data";
@@ -38,7 +38,7 @@ const HomeScreen = (props) => {
     }
     setIsDeletingDemoAccount(true);
     try {
-      await resetLocalDb();
+      await resetLocalDbWallets();
       updateWallets();
     } catch (err) {
       console.error(err);
@@ -48,9 +48,11 @@ const HomeScreen = (props) => {
   };
 
   const updateWallets = async () => {
-    const localWallets = await selectLocalDBTable().catch(() => {});
+    const localWallets = await selectLocalDBTableWallets().catch(() => {});
     if (localWallets && localWallets.rows.length) {
-      if (dbHasChanged(localWallets.rows._array, rawLocalDbData)) {
+      if (
+        localDBTableWalletsHasChanged(localWallets.rows._array, rawLocalDbData)
+      ) {
         setWalletsData(getWalletWrapper(localWallets.rows._array));
         setIsDemoAccount(localWallets.rows._array.some((x) => x.demoAddress));
         rawLocalDbData = localWallets.rows._array;
@@ -169,7 +171,7 @@ const styles = StyleSheet.create({
   actionButtonWrapper: {
     flexDirection: "row",
     position: "absolute",
-    top: 35,
+    top: 42,
     right: 20,
     alignItems: "center",
     zIndex: 10,

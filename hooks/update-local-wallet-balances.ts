@@ -1,5 +1,8 @@
 import { useContext, useEffect } from "react";
-import { selectLocalDBTable, updateItemBalanceToLocalDB } from "~/db";
+import {
+  selectLocalDBTableWallets,
+  updateItemBalanceToLocalDBTableWallets,
+} from "~/db";
 import { AppConfig } from "~/models/context";
 import { getWalletWrapper } from "~/services/getWalletWrapper";
 import { fetchAddress } from "../services/fetch-address";
@@ -11,7 +14,7 @@ export const useUpdateLocalWalletBalances = async () => {
   const appStatus = useAppStatus();
 
   const update = async () => {
-    const localWallets = await selectLocalDBTable().catch(() => {});
+    const localWallets = await selectLocalDBTableWallets().catch(() => {});
     if (localWallets && localWallets.rows.length) {
       const walletsData = getWalletWrapper(localWallets.rows._array);
       for (const data of walletsData) {
@@ -24,7 +27,7 @@ export const useUpdateLocalWalletBalances = async () => {
                 wallet.name,
                 appConfig
               );
-              updateItemBalanceToLocalDB(wallet.id, balance);
+              updateItemBalanceToLocalDBTableWallets(wallet.id, balance);
             }
           } catch (err) {
             console.log(err);

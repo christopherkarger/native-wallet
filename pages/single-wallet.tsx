@@ -12,7 +12,7 @@ import GradientView from "~/components/gradient-view";
 import SafeArea from "~/components/safe-area";
 import SubPageHeader from "~/components/sub-page-header";
 import { Colors, Fonts, PathNames } from "~/constants";
-import { deleteItemFromLocalDB } from "~/db";
+import { deleteItemFromLocalDBTableWallets } from "~/db";
 import { MarketDataContext } from "~/models/context";
 import { MarketData } from "~/models/market-data";
 import { Wallet } from "~/models/wallet";
@@ -38,10 +38,12 @@ const SingleWallet = (props) => {
   }, [marketData]);
 
   const deleteItem = async (item: Wallet, index: number) => {
-    await deleteItemFromLocalDB(item, walletWrapper).catch((err) => {
-      console.log(err);
-      throw new Error("Deleting wallet address from local DB failed");
-    });
+    await deleteItemFromLocalDBTableWallets(item, walletWrapper).catch(
+      (err) => {
+        console.log(err);
+        throw new Error("Deleting wallet address from local DB failed");
+      }
+    );
 
     const updatetWallets = walletWrapper.wallets.filter((e, i) => i !== index);
     if (updatetWallets.length > 0) {
