@@ -6,12 +6,20 @@ export const DateTime = (props) => {
   const formatDate = (date: number) => {
     const d = new Date(date);
     const now = new Date();
+    const formatedDate = `${d.getDate()}.${
+      d.getMonth() + 1
+    }.${d.getFullYear()}`;
+
     if (props.hourView) {
       return `${d.getHours()} Uhr - ${
-        now.getDay() === d.getDay() ? "Heute" : "Gestern"
+        now.getDay() === d.getDay() &&
+        now.getMonth() === d.getMonth() &&
+        now.getFullYear() === d.getFullYear()
+          ? "Heute"
+          : formatedDate
       }`;
     }
-    return `${d.getDate()}.${d.getMonth() + 1}.${d.getFullYear()}`;
+    return formatedDate;
   };
   return (
     <View>
