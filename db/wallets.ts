@@ -124,7 +124,7 @@ const dropLocalDBTableWallets = () => {
   return new Promise<ISQLResult>((resolve, reject) => {
     db.transaction((tx) => {
       tx.executeSql(
-        `DELTE FROM ${tableWallets}`,
+        `DELETE FROM ${tableWallets}`,
         [],
         (_, result) => {
           resolve(<ISQLResult>result);
