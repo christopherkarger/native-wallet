@@ -5,6 +5,11 @@ import React, { useEffect, useState } from "react";
 import { LogBox, StyleSheet } from "react-native";
 import { Config } from "./config";
 import { Fonts } from "./constants";
+import {
+  ILocalMarket,
+  insertItemToLocalDBTableMarket,
+  selectLocalDBTableMarket,
+} from "./db/market";
 import useAppStatus, { AppStaus } from "./hooks/handle-app-state";
 import { AppConfig, MarketDataContext } from "./models/context";
 import { MarketData } from "./models/market-data";
@@ -30,14 +35,67 @@ export default function App() {
   const [marketData, setMarketData] = useState<MarketData>(new MarketData([]));
   const appStatus = useAppStatus();
 
+  const saveMarketToLocalDb = async (data: MarketData) => {
+    for (const m of data.items) {
+      try {
+        await insertItemToLocalDBTableMarket(
+          m.name,
+          m.data.price,
+          m.data.currency,
+          m.data.rank,
+          m.data.lastFetched,
+          JSON.stringify(m.data.history),
+          JSON.stringify(m.data.lastDayHistory)
+        );
+      } catch (err) {
+        console.log(err);
+      }
+    }
+  };
+
+  const localMarketDataToClass = (localMarketData: ILocalMarket[]) => {
+    return new MarketData(
+      localMarketData.map((item) => {
+        return {
+          name: item.name,
+          data: {
+            lastFetched: item.lastFetched,
+            price: item.price,
+            rank: item.rank,
+            currency: item.currency,
+            history: item.history ? JSON.parse(item.history) : [],
+            lastDayHistory: item.lastDayHistory
+              ? JSON.parse(item.lastDayHistory)
+              : [],
+          },
+        };
+      })
+    );
+  };
+
   useEffect(() => {
     if (appStatus === AppStaus.Active) {
+      try {
+        selectLocalDBTableMarket().then((res) => {
+          if (res && res.rows.length) {
+            const localMarketData = res.rows._array;
+            const m = localMarketDataToClass(localMarketData);
+            if (marketData.items.length === 0) {
+              setMarketData(m);
+            }
+          }
+        });
+      } catch (err) {
+        console.log(err);
+      }
+
       fetchMarketData((data, db) => {
         if (dbConnection === undefined) {
           dbConnection = db;
         }
         if (data) {
           setMarketData(data);
+          saveMarketToLocalDb(data);
         }
       });
     } else {

@@ -10,7 +10,7 @@ export class Wallet {
     readonly currency: string,
     readonly address: string,
     readonly balance: number,
-    readonly fetchedDate: number,
+    readonly lastFetched: number,
     readonly connectedToId?: number,
     readonly demoAddress?: number
   ) {
@@ -24,7 +24,7 @@ export class Wallet {
       this.currency,
       this.address,
       this.balance,
-      this.fetchedDate,
+      this.lastFetched,
       this.connectedToId,
       this.demoAddress
     );

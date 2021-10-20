@@ -38,9 +38,10 @@ const HomeScreen = (props) => {
     }
     setIsDeletingDemoAccount(true);
     try {
+      setWalletsData([]);
       await resetLocalDbWallets();
-      updateWallets();
     } catch (err) {
+      updateWallets();
       console.error(err);
     } finally {
       setIsDeletingDemoAccount(false);

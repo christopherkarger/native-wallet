@@ -11,7 +11,7 @@ export interface ILocalWallet {
   address: string;
   currency: string;
   balance: number;
-  fetchedDate: number;
+  lastFetched: number;
   connectedToId?: number;
   demoAddress?: number;
 }
@@ -40,7 +40,7 @@ const localDBTableWalletsHasChanged = (
       n.connectedToId === o.connectedToId &&
       n.currency === o.currency &&
       n.demoAddress === o.demoAddress &&
-      n.fetchedDate === o.fetchedDate &&
+      n.lastFetched === o.lastFetched &&
       n.id === o.id
     );
   });
@@ -55,7 +55,7 @@ const createLocalDBTableWallets = () => {
   return new Promise<ISQLResult>((resolve, reject) => {
     db.transaction((tx) => {
       tx.executeSql(
-        `CREATE TABLE IF NOT EXISTS ${tableWallets} (id INTEGER PRIMARY KEY NOT NULL, name TEXT NOT NULL, currency TEXT NOT NULL, address TEXT NOT NULL, balance INTEGER NOT NULL, fetchedDate INTEGER NOT NULL, connectedToId INTEGER, demoAddress INTEGER);`,
+        `CREATE TABLE IF NOT EXISTS ${tableWallets} (id INTEGER PRIMARY KEY NOT NULL, name TEXT NOT NULL, currency TEXT NOT NULL, address TEXT NOT NULL, balance INTEGER NOT NULL, lastFetched INTEGER NOT NULL, connectedToId INTEGER, demoAddress INTEGER);`,
         [],
         (_, result) => {
           resolve(<ISQLResult>result);
@@ -74,20 +74,20 @@ const insertItemToLocalDBTableWallets = (
   currency: string,
   address: string,
   balance: number,
-  fetchedDate: number,
+  lastFetched: number,
   connectedToId?: number,
   demoAddress?: number
 ) => {
   return new Promise<ISQLResult>((resolve, reject) => {
     db.transaction((tx) => {
       tx.executeSql(
-        `INSERT INTO ${tableWallets} (name, currency, address, balance, fetchedDate, connectedToId, demoAddress) VALUES (?,?,?,?,?,?,?);`,
+        `INSERT INTO ${tableWallets} (name, currency, address, balance, lastFetched, connectedToId, demoAddress) VALUES (?,?,?,?,?,?,?);`,
         [
           name,
           currency,
           address,
           balance,
-          fetchedDate,
+          lastFetched,
           connectedToId,
           demoAddress,
         ],

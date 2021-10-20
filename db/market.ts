@@ -9,6 +9,7 @@ export interface ILocalMarket {
   currency: string;
   price: number;
   lastFetched: number;
+  rank: number;
   history?: string; // array stored as string
   lastDayHistory?: string; // array stored as string
 }
@@ -25,7 +26,7 @@ const createLocalDBTableMarket = () => {
   return new Promise<ISQLResult>((resolve, reject) => {
     db.transaction((tx) => {
       tx.executeSql(
-        `CREATE TABLE IF NOT EXISTS ${tableMarket} (id INTEGER PRIMARY KEY NOT NULL, name TEXT NOT NULL, price INTEGER NOT NULL, currency TEXT NOT NULL, rank INTEGER NOT NULL, lastFetched INTEGER NOT NULL, history TEXT, lastDayHistory TEXT);`,
+        `CREATE TABLE IF NOT EXISTS ${tableMarket} (id INTEGER PRIMARY KEY NOT NULL, name TEXT NOT NULL, price INTEGER NOT NULL, currency TEXT NOT NULL, rank INTEGER NOT NULL, lastFetched INTEGER NOT NULL, history TEXT NOT NULL, lastDayHistory TEXT NOT NULL);`,
         [],
         (_, result) => {
           resolve(<ISQLResult>result);
@@ -37,4 +38,54 @@ const createLocalDBTableMarket = () => {
       );
     });
   });
+};
+
+const insertItemToLocalDBTableMarket = (
+  name: string,
+  price: number,
+  currency: string,
+  rank: number,
+  lastFetched: number,
+  history: string,
+  lastDayHistory: string
+) => {
+  return new Promise<ISQLResult>((resolve, reject) => {
+    db.transaction((tx) => {
+      tx.executeSql(
+        `INSERT INTO ${tableMarket} (name, price, currency, rank, lastFetched, history, lastDayHistory) VALUES (?,?,?,?,?,?,?);`,
+        [name, price, currency, rank, lastFetched, history, lastDayHistory],
+        (_, result) => {
+          resolve(<ISQLResult>result);
+        },
+        (_, error) => {
+          reject(error);
+          return true;
+        }
+      );
+    });
+  });
+};
+
+const selectLocalDBTableMarket = () => {
+  return new Promise<ISQLResult>((resolve, reject) => {
+    db.transaction((tx) => {
+      tx.executeSql(
+        `SELECT * FROM ${tableMarket}`,
+        [],
+        (_, result) => {
+          resolve(<ISQLResult>result);
+        },
+        (_, error) => {
+          reject(error);
+          return true;
+        }
+      );
+    });
+  });
+};
+
+export {
+  createLocalDBTableMarket,
+  insertItemToLocalDBTableMarket,
+  selectLocalDBTableMarket,
 };
