@@ -12,7 +12,7 @@ import { LineChart } from "react-native-svg-charts";
 import { CryptoIcon } from "~/models/crypto-icon";
 import { MarketData } from "~/models/market-data";
 import { formatNumber } from "~/services/format-number";
-import { calcPercentage, randomString } from "~/services/helper";
+import { calcPercentage, formatDate, randomString } from "~/services/helper";
 import { Colors, Fonts, PathNames } from "../constants";
 import AppText from "./text";
 
@@ -96,7 +96,14 @@ const Market = (props) => {
 
   return (
     <View style={styles.inner}>
-      <AppText style={styles.marketHeadline}>Krypto Markt</AppText>
+      <View style={styles.header}>
+        <AppText style={styles.marketHeadline}>Krypto Markt</AppText>
+        {marketData?.items[0].data.lastFetched && (
+          <AppText style={styles.lastFetched}>
+            Daten von: {formatDate(marketData?.items[0].data.lastFetched)}
+          </AppText>
+        )}
+      </View>
       <FlatList
         style={styles.flatList}
         data={marketData?.itemsByMarketCap}
@@ -112,14 +119,21 @@ const styles = StyleSheet.create({
   inner: {
     flex: 1,
   },
+  header: {
+    flexDirection: "row",
+    alignItems: "flex-end",
+    justifyContent: "space-between",
+    borderBottomWidth: 1,
+    borderBottomColor: Colors.lightWhite,
+    paddingBottom: 10,
+    paddingHorizontal: 20,
+  },
+  lastFetched: {
+    fontSize: 12,
+  },
   marketHeadline: {
     fontSize: 20,
     fontFamily: Fonts.bold,
-    borderBottomWidth: 1,
-    borderBottomColor: Colors.lightWhite,
-    paddingBottom: 12,
-    marginLeft: 20,
-    marginRight: 20,
   },
   itemTouchWrapper: {
     flexDirection: "row",
