@@ -1,5 +1,5 @@
 import * as shape from "d3-shape";
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useMemo } from "react";
 import {
   Dimensions,
   FlatList,
@@ -17,11 +17,7 @@ import { Colors, Fonts, PathNames } from "../constants";
 import AppText from "./text";
 
 const Market = (props) => {
-  const [marketData, setMarketData] = useState<MarketData>();
-
-  useEffect(() => {
-    setMarketData(props.data);
-  }, [props.data]);
+  const marketData = props.data as MarketData;
 
   const renderedMarketItem = (listProps) => {
     const icon = new CryptoIcon(listProps.item.name);

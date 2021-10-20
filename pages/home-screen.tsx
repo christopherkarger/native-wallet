@@ -12,7 +12,6 @@ import {
   selectLocalDBTableWallets,
 } from "~/db";
 import { ILocalWallet } from "~/db/wallets";
-import { useUpdateLocalWalletBalances } from "~/hooks/update-local-wallet-balances";
 import { MarketDataContext } from "~/models/context";
 import { MarketData } from "~/models/market-data";
 import { WalletWrapper } from "~/models/wallet-wrapper";
@@ -24,13 +23,17 @@ import AppText from "../components/text";
 import WalletList from "../components/wallet-list";
 import { Colors, Fonts, PathNames } from "../constants";
 
+let rawLocalDbData: ILocalWallet[] = [];
+
 const HomeScreen = (props) => {
-  let rawLocalDbData: ILocalWallet[] = [];
   const [walletsData, setWalletsData] = useState<WalletWrapper[]>([]);
   const [totalBalance, setTotalBalance] = useState("0");
   const marketData: MarketData = useContext(MarketDataContext);
   const [isDemoAccount, setIsDemoAccount] = useState(false);
   const [isDeletingDemoAccount, setIsDeletingDemoAccount] = useState(false);
+
+  // TODO: Update local wallet balances
+  //useUpdateLocalWalletBalances();
 
   const deleteDemo = async () => {
     if (isDeletingDemoAccount) {
@@ -54,17 +57,15 @@ const HomeScreen = (props) => {
       if (
         localDBTableWalletsHasChanged(localWallets.rows._array, rawLocalDbData)
       ) {
+        rawLocalDbData = localWallets.rows._array;
         setWalletsData(getWalletWrapper(localWallets.rows._array));
         setIsDemoAccount(localWallets.rows._array.some((x) => x.demoAddress));
-        rawLocalDbData = localWallets.rows._array;
       }
     } else {
       setWalletsData([]);
       setIsDemoAccount(false);
     }
   };
-
-  useUpdateLocalWalletBalances();
 
   useEffect(() => {
     const routeListener = props.navigation.addListener("focus", () => {
