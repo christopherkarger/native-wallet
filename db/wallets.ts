@@ -48,7 +48,6 @@ const localDBTableWalletsHasChanged = (
 
 const resetLocalDbWallets = async () => {
   await dropLocalDBTableWallets();
-  await createLocalDBTableWallets();
 };
 
 const createLocalDBTableWallets = () => {
@@ -125,7 +124,7 @@ const dropLocalDBTableWallets = () => {
   return new Promise<ISQLResult>((resolve, reject) => {
     db.transaction((tx) => {
       tx.executeSql(
-        `DROP TABLE IF EXISTS ${tableWallets}`,
+        `DELTE FROM ${tableWallets}`,
         [],
         (_, result) => {
           resolve(<ISQLResult>result);

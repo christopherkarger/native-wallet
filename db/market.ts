@@ -40,6 +40,28 @@ const createLocalDBTableMarket = () => {
   });
 };
 
+const resetLocalDBTableMarket = async () => {
+  await deleteAllRowsLocalDBTableMarket();
+};
+
+const deleteAllRowsLocalDBTableMarket = () => {
+  return new Promise<ISQLResult>((resolve, reject) => {
+    db.transaction((tx) => {
+      tx.executeSql(
+        `DELETE FROM ${tableMarket}`,
+        [],
+        (_, result) => {
+          resolve(<ISQLResult>result);
+        },
+        (_, error) => {
+          reject(error);
+          return true;
+        }
+      );
+    });
+  });
+};
+
 const insertItemToLocalDBTableMarket = (
   name: string,
   price: number,
@@ -88,4 +110,5 @@ export {
   createLocalDBTableMarket,
   insertItemToLocalDBTableMarket,
   selectLocalDBTableMarket,
+  resetLocalDBTableMarket,
 };

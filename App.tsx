@@ -8,6 +8,7 @@ import { Fonts } from "./constants";
 import {
   ILocalMarket,
   insertItemToLocalDBTableMarket,
+  resetLocalDBTableMarket,
   selectLocalDBTableMarket,
 } from "./db/market";
 import useAppStatus, { AppStaus } from "./hooks/handle-app-state";
@@ -36,6 +37,13 @@ export default function App() {
   const appStatus = useAppStatus();
 
   const saveMarketToLocalDb = async (data: MarketData) => {
+    try {
+      await resetLocalDBTableMarket();
+    } catch (err) {
+      console.error(err);
+      return;
+    }
+
     for (const m of data.items) {
       try {
         await insertItemToLocalDBTableMarket(
