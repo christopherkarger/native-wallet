@@ -1,17 +1,17 @@
 import { MaterialIcons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import React, { useContext, useEffect, useState } from "react";
-import { StyleSheet, TouchableOpacity, View } from "react-native";
+import {
+  DeviceEventEmitter,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import GradientView from "~/components/gradient-view";
 import Market from "~/components/market";
 import SafeArea from "~/components/safe-area";
 import { TextButton } from "~/components/text-button";
-import {
-  localDBTableWalletsHasChanged,
-  resetLocalDbWallets,
-  selectLocalDBTableWallets,
-} from "~/db";
-import { ILocalWallet } from "~/db/wallets";
+import { resetLocalDbWallets, selectLocalDBTableWallets } from "~/db";
 import { MarketDataContext } from "~/models/context";
 import { MarketData } from "~/models/market-data";
 import { WalletWrapper } from "~/models/wallet-wrapper";
@@ -21,9 +21,7 @@ import { getWalletWrapper } from "~/services/getWalletWrapper";
 import EmptyWallets from "../components/empty-wallets";
 import AppText from "../components/text";
 import WalletList from "../components/wallet-list";
-import { Colors, Fonts, PathNames } from "../constants";
-
-let rawLocalDbData: ILocalWallet[] = [];
+import { Colors, Fonts, PathNames, UPDATE_WALLETS_EVENT } from "../constants";
 
 const HomeScreen = (props) => {
   const [walletsData, setWalletsData] = useState<WalletWrapper[]>([]);
@@ -51,29 +49,11 @@ const HomeScreen = (props) => {
     }
   };
 
-  const updateWallets = async () => {
-    const localWallets = await selectLocalDBTableWallets().catch(() => {});
-    if (localWallets && localWallets.rows.length) {
-      if (
-        localDBTableWalletsHasChanged(localWallets.rows._array, rawLocalDbData)
-      ) {
-        rawLocalDbData = localWallets.rows._array;
-        setWalletsData(getWalletWrapper(localWallets.rows._array));
-        setIsDemoAccount(localWallets.rows._array.some((x) => x.demoAddress));
-      }
-    } else {
-      setWalletsData([]);
-      setIsDemoAccount(false);
-    }
-  };
-
   useEffect(() => {
-    const routeListener = props.navigation.addListener("focus", () => {
+    updateWallets();
+    DeviceEventEmitter.addListener(UPDATE_WALLETS_EVENT, (event) => {
       updateWallets();
     });
-    return () => {
-      routeListener();
-    };
   }, []);
 
   useEffect(() => {
@@ -84,6 +64,17 @@ const HomeScreen = (props) => {
       })
     );
   }, [marketData, walletsData]);
+
+  const updateWallets = async () => {
+    const localWallets = await selectLocalDBTableWallets().catch(() => {});
+    if (localWallets && localWallets.rows.length) {
+      setWalletsData(getWalletWrapper(localWallets.rows._array));
+      setIsDemoAccount(localWallets.rows._array.some((x) => x.demoAddress));
+    } else {
+      setWalletsData([]);
+      setIsDemoAccount(false);
+    }
+  };
 
   return (
     <GradientView>

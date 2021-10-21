@@ -2,6 +2,8 @@ import { Platform } from "react-native";
 
 export const isAndroid = Platform.OS === "android";
 
+export const UPDATE_WALLETS_EVENT = "event.updateWallets";
+
 export const PathNames = {
   home: "home",
   addWallet: "add-wallet",

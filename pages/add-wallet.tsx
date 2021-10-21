@@ -2,6 +2,7 @@ import { MaterialIcons } from "@expo/vector-icons";
 import React, { useContext, useEffect, useRef, useState } from "react";
 import {
   Alert,
+  DeviceEventEmitter,
   StyleSheet,
   TextInput,
   TouchableOpacity,
@@ -13,7 +14,7 @@ import DismissKeyboard from "~/components/dismiss-keyboard";
 import GradientView from "~/components/gradient-view";
 import SafeArea from "~/components/safe-area";
 import AppText from "~/components/text";
-import { Colors, PathNames } from "~/constants";
+import { Colors, PathNames, UPDATE_WALLETS_EVENT } from "~/constants";
 import { insertItemToLocalDBTableWallets } from "~/db";
 import { AppConfig } from "~/models/context";
 import { fetchAddress } from "~/services/fetch-address";
@@ -86,6 +87,7 @@ const AddWalletScreen = (props) => {
         connectedToId
       )
         .then(() => {
+          DeviceEventEmitter.emit(UPDATE_WALLETS_EVENT, true);
           props.navigation.navigate(PathNames.home);
         })
         .catch((err) => {

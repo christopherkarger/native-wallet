@@ -1,6 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import {
   Alert,
+  DeviceEventEmitter,
   FlatList,
   Image,
   StyleSheet,
@@ -11,7 +12,7 @@ import Button from "~/components/button";
 import GradientView from "~/components/gradient-view";
 import SafeArea from "~/components/safe-area";
 import SubPageHeader from "~/components/sub-page-header";
-import { Colors, Fonts, PathNames } from "~/constants";
+import { Colors, Fonts, PathNames, UPDATE_WALLETS_EVENT } from "~/constants";
 import { deleteItemFromLocalDBTableWallets } from "~/db";
 import { MarketDataContext } from "~/models/context";
 import { MarketData } from "~/models/market-data";
@@ -44,6 +45,8 @@ const SingleWallet = (props) => {
         throw new Error("Deleting wallet address from local DB failed");
       }
     );
+
+    DeviceEventEmitter.emit(UPDATE_WALLETS_EVENT, true);
 
     const updatetWallets = walletWrapper.wallets.filter((e, i) => i !== index);
     if (updatetWallets.length > 0) {

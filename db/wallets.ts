@@ -24,28 +24,6 @@ interface ISQLResult extends SQLite.SQLResultSet {
   };
 }
 
-const localDBTableWalletsHasChanged = (
-  tableNew: ILocalWallet[],
-  tableOld: ILocalWallet[]
-) => {
-  if (tableNew.length !== tableOld.length) {
-    return true;
-  }
-  return !tableNew.every((n, i) => {
-    const o = tableOld[i];
-    return (
-      n.name === o.name &&
-      n.address === o.address &&
-      n.balance === o.balance &&
-      n.connectedToId === o.connectedToId &&
-      n.currency === o.currency &&
-      n.demoAddress === o.demoAddress &&
-      n.lastFetched === o.lastFetched &&
-      n.id === o.id
-    );
-  });
-};
-
 const resetLocalDbWallets = async () => {
   await dropLocalDBTableWallets();
 };
@@ -269,7 +247,6 @@ export {
   deleteSingleItemFromLocalDBTableWallets,
   dropLocalDBTableWallets,
   insertItemToLocalDBTableWallets,
-  localDBTableWalletsHasChanged,
   resetLocalDbWallets,
   selectLocalDBTableWallets,
   updateItemBalanceToLocalDBTableWallets,
