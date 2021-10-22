@@ -1,4 +1,6 @@
 import { useContext, useEffect } from "react";
+import { DeviceEventEmitter } from "react-native";
+import { UPDATE_WALLETS_EVENT } from "~/constants";
 import {
   selectLocalDBTableWallets,
   updateItemBalanceToLocalDBTableWallets,
@@ -14,6 +16,7 @@ export const useUpdateLocalWalletBalances = async () => {
   const appStatus = useAppStatus();
 
   const update = async () => {
+    let isDemoMode = false;
     const localWallets = await selectLocalDBTableWallets().catch(() => {});
     if (localWallets && localWallets.rows.length) {
       const walletsData = getWalletWrapper(localWallets.rows._array);
@@ -28,12 +31,18 @@ export const useUpdateLocalWalletBalances = async () => {
                 appConfig
               );
               updateItemBalanceToLocalDBTableWallets(wallet.id, balance);
+            } else {
+              isDemoMode = true;
             }
           } catch (err) {
             console.log(err);
           }
         }
       }
+    }
+
+    if (!isDemoMode) {
+      DeviceEventEmitter.emit(UPDATE_WALLETS_EVENT, true);
     }
   };
 

@@ -12,6 +12,7 @@ import Market from "~/components/market";
 import SafeArea from "~/components/safe-area";
 import { TextButton } from "~/components/text-button";
 import { resetLocalDbWallets, selectLocalDBTableWallets } from "~/db";
+import { useUpdateLocalWalletBalances } from "~/hooks/update-local-wallet-balances";
 import { MarketDataContext } from "~/models/context";
 import { MarketData } from "~/models/market-data";
 import { WalletWrapper } from "~/models/wallet-wrapper";
@@ -30,8 +31,7 @@ const HomeScreen = (props) => {
   const [isDemoAccount, setIsDemoAccount] = useState(false);
   const [isDeletingDemoAccount, setIsDeletingDemoAccount] = useState(false);
 
-  // TODO: Update local wallet balances
-  //useUpdateLocalWalletBalances();
+  useUpdateLocalWalletBalances();
 
   const deleteDemo = async () => {
     if (isDeletingDemoAccount) {
