@@ -11,7 +11,6 @@ import {
   resetLocalDBTableMarket,
   selectLocalDBTableMarket,
 } from "./db/market";
-import useAppStatus, { AppStaus } from "./hooks/handle-app-state";
 import { AppConfig, MarketDataContext } from "./models/context";
 import { MarketData } from "./models/market-data";
 import Main from "./pages/main";
@@ -34,7 +33,6 @@ export default function App() {
   const statusBarStyle = "light";
   const [appIsReady, setAppIsReady] = useState(false);
   const [marketData, setMarketData] = useState<MarketData>(new MarketData([]));
-  const appStatus = useAppStatus();
 
   const saveMarketToLocalDb = async (data: MarketData) => {
     try {
@@ -82,35 +80,30 @@ export default function App() {
   };
 
   useEffect(() => {
-    if (appStatus === AppStaus.Active) {
-      try {
-        selectLocalDBTableMarket().then((res) => {
-          if (res && res.rows.length) {
-            const localMarketData = res.rows._array;
-            const m = localMarketDataToClass(localMarketData);
-            if (marketData.items.length === 0) {
-              setMarketData(m);
-            }
+    try {
+      selectLocalDBTableMarket().then((res) => {
+        if (res && res.rows.length) {
+          const localMarketData = res.rows._array;
+          const m = localMarketDataToClass(localMarketData);
+          if (marketData.items.length === 0) {
+            setMarketData(m);
           }
-        });
-      } catch (err) {
-        console.log(err);
-      }
-
-      fetchMarketData((data, db) => {
-        if (dbConnection === undefined) {
-          dbConnection = db;
-        }
-        if (data) {
-          setMarketData(data);
-          saveMarketToLocalDb(data);
         }
       });
-    } else {
-      dbConnection?.off();
-      dbConnection = undefined;
+    } catch (err) {
+      console.log(err);
     }
-  }, [appStatus]);
+
+    fetchMarketData((data, db) => {
+      if (dbConnection === undefined) {
+        dbConnection = db;
+      }
+      if (data) {
+        setMarketData(data);
+        saveMarketToLocalDb(data);
+      }
+    });
+  }, []);
 
   if (!appIsReady) {
     return (
