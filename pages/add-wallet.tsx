@@ -1,5 +1,5 @@
 import { MaterialIcons } from "@expo/vector-icons";
-import React, { useContext, useEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   Alert,
   DeviceEventEmitter,
@@ -16,12 +16,13 @@ import SafeArea from "~/components/safe-area";
 import AppText from "~/components/text";
 import { Colors, PathNames, UPDATE_WALLETS_EVENT } from "~/constants";
 import { insertItemToLocalDBTableWallets } from "~/db";
+import { useIsMounted } from "~/hooks/mounted";
 import { AppConfig } from "~/models/context";
 import { fetchAddress } from "~/services/fetch-address";
 import SubPageHeader from "../components/sub-page-header";
 
 const AddWalletScreen = (props) => {
-  const mounted = useRef(false);
+  const mounted = useIsMounted();
   const appConfig = useContext(AppConfig);
   const [nameChangeAllowed, setNameChangeAllowed] = useState(true);
   const [name, setName] = useState("");
@@ -39,18 +40,12 @@ const AddWalletScreen = (props) => {
   }, [props.route.params]);
 
   useEffect(() => {
-    mounted.current = true;
-
     if (props.route.params && props.route.params.addToWallet) {
       setConnectedToId(props.route.params.id);
       setName(props.route.params.name);
       setCurrency(props.route.params.currency);
       setNameChangeAllowed(false);
     }
-
-    return () => {
-      mounted.current = false;
-    };
   }, []);
 
   const addWallet = async () => {

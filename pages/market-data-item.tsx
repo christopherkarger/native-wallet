@@ -9,6 +9,7 @@ import SafeArea from "~/components/safe-area";
 import SubPageHeader from "~/components/sub-page-header";
 import AppText from "~/components/text";
 import { Colors, Fonts } from "~/constants";
+import { useIsMounted } from "~/hooks/mounted";
 import { MarketDataContext } from "~/models/context";
 import {
   IHistoryItem,
@@ -36,6 +37,7 @@ const MarketdataItem = (props) => {
   const [chartView, setChartView] = useState<ChartView>();
   const [percentage, setPercentage] = useState(0);
   const [price, setPrice] = useState(0);
+  const mounted = useIsMounted();
 
   const changeView = (view: ChartView, data: IMarketDataItemData): void => {
     let viewData =
@@ -69,7 +71,7 @@ const MarketdataItem = (props) => {
 
   useEffect(() => {
     const coin = marketData.findItemByName(props.route.params.name);
-    if (coin) {
+    if (coin && mounted.current) {
       setcoinMarketData(coin.data);
       setPrice(coin.data.price);
       changeView(chartView ?? ChartView.week, coin.data);
@@ -86,7 +88,7 @@ const MarketdataItem = (props) => {
         <AppText>
           {formatNumber({
             number: listProps.item.price,
-            decimal: 2,
+            beautifulDecimal: true,
           })}
           {" €"}
         </AppText>
@@ -111,7 +113,7 @@ const MarketdataItem = (props) => {
             <AppText style={styles.headerPrice}>
               {formatNumber({
                 number: price,
-                decimal: 2,
+                beautifulDecimal: true,
               })}
               {" €"}
             </AppText>

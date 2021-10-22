@@ -15,7 +15,7 @@ export const formatNumber = (x: IFormatNumber): string => {
       ? (+x.number.toFixed(x.decimal)).toString()
       : x.number.toString();
   } else if (x.beautifulDecimal) {
-    number = getMinDecimalNumber(x.number).toString();
+    number = getMinDecimalNumberString(x.number).toString();
     hasDecimal = !Number.isInteger(+number);
   }
 
@@ -78,20 +78,24 @@ export const formatNumber = (x: IFormatNumber): string => {
   return number;
 };
 
-const getMinDecimalNumber = (num: number): number => {
+const getMinDecimalNumberString = (num: number): string => {
   // If number has no decimals
   if (Number.isInteger(num)) {
-    return num;
+    return num.toString();
   }
 
   // If number is bigger than 1
   if (num > 1) {
-    return +num.toFixed(2);
+    return num.toFixed(2);
   }
 
   const decArr: string[] = [];
   let counter = 0;
-  const decimals = num.toString().split(".")[1].split("");
+  const decimals = num.toString().split(".")[1]?.split("");
+
+  if (!decimals) {
+    return num.toString();
+  }
   let foundPosDec = false;
   decimals.forEach((d) => {
     if (+d > 0) {
@@ -104,5 +108,6 @@ const getMinDecimalNumber = (num: number): number => {
       decArr.push(d);
     }
   });
-  return Math.floor(num) + +`0.${decArr.join("")}`;
+
+  return Math.floor(num) + `.${decArr.join("")}`;
 };

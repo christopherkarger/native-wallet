@@ -26,14 +26,14 @@ const SingleWallet = (props) => {
   const [walletWrapper, setWalletWrapper] = useState<WalletWrapper>(
     props.route.params.data
   );
-  const [balance, setBalance] = useState("0");
+  const [moneyBalance, setMoneyBalance] = useState("0");
   const marketData: MarketData = useContext(MarketDataContext);
 
   useEffect(() => {
-    setBalance(
+    setMoneyBalance(
       formatNumber({
         number: calcTotalBalance(marketData, [props.route.params.data]),
-        decimal: 2,
+        beautifulDecimal: true,
       })
     );
   }, [marketData]);
@@ -70,7 +70,7 @@ const SingleWallet = (props) => {
             ></Image>
 
             <View style={styles.headerPriceWrapper}>
-              <AppText style={styles.headerPrice}>{balance} €</AppText>
+              <AppText style={styles.headerPrice}>{moneyBalance} €</AppText>
             </View>
           </View>
           <FlatList
