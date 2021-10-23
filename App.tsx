@@ -99,7 +99,6 @@ export default function App() {
         dbConnection = db;
       }
       if (data) {
-        console.log("new data");
         setMarketData(data);
         saveMarketToLocalDb(data);
       }
