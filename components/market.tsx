@@ -94,9 +94,9 @@ const Market = (props) => {
     <View style={styles.inner}>
       <View style={styles.header}>
         <AppText style={styles.marketHeadline}>Krypto Markt</AppText>
-        {marketData?.items[0].data.lastFetched && (
+        {marketData?.items[0]?.data.lastFetched && (
           <AppText style={styles.lastFetched}>
-            Daten von: {formatDate(marketData?.items[0].data.lastFetched)}
+            Daten von: {formatDate(marketData.items[0].data.lastFetched)}
           </AppText>
         )}
       </View>

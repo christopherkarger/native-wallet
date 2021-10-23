@@ -13,7 +13,7 @@ export const fetchMarketData = (
   callback: (data: MarketData, db: firebaseDB) => void
 ) => {
   const db = firebase.database().ref("/marketData");
-  return db.on("value", (snapshot) => {
+  db.on("value", (snapshot) => {
     const dbSnapshot = snapshot.val();
     const data: IResponse = !!dbSnapshot ? dbSnapshot : {};
     const m = new MarketData(
@@ -43,6 +43,5 @@ export const fetchMarketData = (
     );
 
     callback(m, db);
-    return data;
   });
 };
