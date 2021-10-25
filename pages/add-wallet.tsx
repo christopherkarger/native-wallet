@@ -55,7 +55,12 @@ const AddWalletScreen = (props) => {
     let balance = 0;
     try {
       setFetchingAndSavingAddress(true);
-      balance = await fetchAddress(address.trim(), name.trim(), appConfig);
+      const fetchedAddress = await fetchAddress(
+        address.trim(),
+        name.trim(),
+        appConfig
+      );
+      balance = fetchedAddress.balance;
     } catch (err) {
       setFetchingAndSavingAddress(false);
       Alert.alert(

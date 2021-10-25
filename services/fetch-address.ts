@@ -27,7 +27,6 @@ export const fetchAddress = (
       if (!res.data) {
         throw new Error("response data missing");
       }
-      console.log(res.data);
 
       const walletAddress =
         res.data[address] || res.data[address.toLowerCase()];
@@ -66,14 +65,20 @@ export const fetchAddress = (
 
       switch (lowerCaseName) {
         case "cardano":
-          return balance;
+          // Do nothing cardano balance is already correct
+          break;
         case "ethereum":
           // Balance returned in Wei
-          return balance / 1000000000000000000;
+          balance = balance / 1000000000000000000;
+          break;
         default:
           // Balance returned in satoshis
-          return balance / 100000000;
+          balance = balance / 100000000;
       }
+
+      return {
+        balance,
+      };
     })
   );
 };

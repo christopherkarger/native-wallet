@@ -25,12 +25,15 @@ export const useUpdateLocalWalletBalances = async () => {
           try {
             if (!wallet.demoAddress) {
               await waitTime(1000);
-              const balance = await fetchAddress(
+              const fetchedAddress = await fetchAddress(
                 wallet.address,
                 wallet.name,
                 appConfig
               );
-              updateItemBalanceToLocalDBTableWallets(wallet.id, balance);
+              updateItemBalanceToLocalDBTableWallets(
+                wallet.id,
+                fetchedAddress.balance
+              );
             } else {
               isDemoMode = true;
             }
