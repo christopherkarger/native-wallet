@@ -27,6 +27,7 @@ export const fetchAddress = (
       if (!res.data) {
         throw new Error("response data missing");
       }
+      console.log(res.data);
 
       const walletAddress =
         res.data[address] || res.data[address.toLowerCase()];

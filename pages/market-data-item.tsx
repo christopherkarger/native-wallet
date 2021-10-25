@@ -74,7 +74,7 @@ const MarketdataItem = (props) => {
     if (coin && mounted.current) {
       setcoinMarketData(coin.data);
       setPrice(coin.data.price);
-      changeView(chartView ?? ChartView.week, coin.data);
+      changeView(chartView ?? ChartView.hours, coin.data);
     }
   }, [marketData]);
 

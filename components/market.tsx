@@ -21,7 +21,7 @@ const Market = (props) => {
 
   const renderedMarketItem = (listProps) => {
     const icon = new CryptoIcon(listProps.item.name);
-    const chartData = listProps.item.data.history.slice(-7).map((h) => h.price);
+    const chartData = listProps.item.data.lastDayHistory.map((h) => h.price);
     const positiveTrend = chartData[0] < chartData[chartData.length - 1];
     const trendColor = positiveTrend ? Colors.green : Colors.red;
     const percentage = calcPercentage(

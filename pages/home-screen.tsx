@@ -25,6 +25,7 @@ import WalletList from "../components/wallet-list";
 import { Colors, Fonts, PathNames, UPDATE_WALLETS_EVENT } from "../constants";
 
 const HomeScreen = (props) => {
+  const [loading, setIsloading] = useState(true);
   const [walletsData, setWalletsData] = useState<WalletWrapper[]>([]);
   const [totalBalance, setTotalBalance] = useState("0");
   const marketData: MarketData = useContext(MarketDataContext);
@@ -74,7 +75,12 @@ const HomeScreen = (props) => {
       setWalletsData([]);
       setIsDemoAccount(false);
     }
+    setIsloading(false);
   };
+
+  if (loading) {
+    return <GradientView></GradientView>;
+  }
 
   return (
     <GradientView>
