@@ -11,9 +11,7 @@ export const formatNumber = (x: IFormatNumber): string => {
   let number = x.number.toString();
 
   if (x.decimal) {
-    number = hasDecimal
-      ? (+x.number.toFixed(x.decimal)).toString()
-      : x.number.toString();
+    number = hasDecimal ? x.number.toFixed(x.decimal) : x.number.toString();
   } else if (x.beautifulDecimal) {
     number = getMinDecimalNumberString(x.number).toString();
     hasDecimal = !Number.isInteger(+number);
