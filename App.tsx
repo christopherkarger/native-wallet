@@ -1,5 +1,6 @@
 import AppLoading from "expo-app-loading";
 import * as Font from "expo-font";
+import * as Localization from "expo-localization";
 import { StatusBar } from "expo-status-bar";
 import React, { useEffect, useState } from "react";
 import { LogBox, StyleSheet } from "react-native";
@@ -11,7 +12,13 @@ import {
   resetLocalDBTableMarket,
   selectLocalDBTableMarket,
 } from "./db/market";
-import { AppConfig, MarketDataContext } from "./models/context";
+import {
+  AppConfig,
+  DefaultLanguage,
+  DeviceLanguage,
+  MarketDataContext,
+  SupportedLanguages,
+} from "./models/context";
 import { MarketData } from "./models/market-data";
 import Main from "./pages/main";
 import { fetchMarketData } from "./services/fetch-marketdata";
@@ -20,15 +27,26 @@ import { registerNumeralFormat } from "./services/format-number";
 
 LogBox.ignoreLogs(["Setting a timer"]);
 
-registerNumeralFormat();
+let deviceLanguage = DefaultLanguage;
 
 const preload = () => {
-  return Font.loadAsync({
-    "karla-light": require("./assets/fonts/Karla-Light.ttf"),
-    "karla-regular": require("./assets/fonts/Karla-Regular.ttf"),
-    "karla-semibold": require("./assets/fonts/Karla-SemiBold.ttf"),
-    "karla-bold": require("./assets/fonts/Karla-Bold.ttf"),
-  });
+  return Promise.all([
+    Localization.getLocalizationAsync()
+      .then((res) => {
+        if (res.locale.includes(SupportedLanguages.DE)) {
+          deviceLanguage = SupportedLanguages.DE;
+        }
+      })
+      .catch(() => {
+        console.error("device language could not be set");
+      }),
+    Font.loadAsync({
+      "karla-light": require("./assets/fonts/Karla-Light.ttf"),
+      "karla-regular": require("./assets/fonts/Karla-Regular.ttf"),
+      "karla-semibold": require("./assets/fonts/Karla-SemiBold.ttf"),
+      "karla-bold": require("./assets/fonts/Karla-Bold.ttf"),
+    }),
+  ]).then(() => {});
 };
 
 export default function App() {
@@ -112,19 +130,24 @@ export default function App() {
     return (
       <AppLoading
         startAsync={preload}
-        onFinish={() => setAppIsReady(true)}
+        onFinish={() => {
+          registerNumeralFormat(deviceLanguage);
+          setAppIsReady(true);
+        }}
         onError={console.warn}
       />
     );
   }
 
   return (
-    <AppConfig.Provider value={Config}>
-      <MarketDataContext.Provider value={marketData}>
-        <StatusBar style={statusBarStyle} />
-        <Main />
-      </MarketDataContext.Provider>
-    </AppConfig.Provider>
+    <DeviceLanguage.Provider value={deviceLanguage}>
+      <AppConfig.Provider value={Config}>
+        <MarketDataContext.Provider value={marketData}>
+          <StatusBar style={statusBarStyle} />
+          <Main />
+        </MarketDataContext.Provider>
+      </AppConfig.Provider>
+    </DeviceLanguage.Provider>
   );
 }
 

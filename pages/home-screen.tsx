@@ -13,7 +13,7 @@ import SafeArea from "~/components/safe-area";
 import { TextButton } from "~/components/text-button";
 import { resetLocalDbWallets, selectLocalDBTableWallets } from "~/db";
 import { useUpdateLocalWalletBalances } from "~/hooks/update-local-wallet-balances";
-import { MarketDataContext } from "~/models/context";
+import { DeviceLanguage, MarketDataContext } from "~/models/context";
 import { MarketData } from "~/models/market-data";
 import { WalletWrapper } from "~/models/wallet-wrapper";
 import { calcTotalBalance } from "~/services/calc-balance";
@@ -25,6 +25,7 @@ import WalletList from "../components/wallet-list";
 import { Colors, Fonts, PathNames, UPDATE_WALLETS_EVENT } from "../constants";
 
 const HomeScreen = (props) => {
+  const deviceLanguage = useContext(DeviceLanguage);
   const [loading, setIsloading] = useState(true);
   const [walletsData, setWalletsData] = useState<WalletWrapper[]>([]);
   const [totalBalance, setTotalBalance] = useState("0");
@@ -61,6 +62,7 @@ const HomeScreen = (props) => {
     setTotalBalance(
       formatNumber({
         number: calcTotalBalance(marketData, walletsData),
+        language: deviceLanguage,
       })
     );
   }, [marketData, walletsData]);

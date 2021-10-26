@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import { Image, StyleSheet, TouchableOpacity, View } from "react-native";
-import { MarketDataContext } from "~/models/context";
+import { DeviceLanguage, MarketDataContext } from "~/models/context";
 import { MarketData } from "~/models/market-data";
 import { calcTotalBalance } from "~/services/calc-balance";
 import { formatNumber } from "~/services/format-number";
@@ -8,12 +8,14 @@ import { Colors, Fonts, PathNames } from "../constants";
 import AppText from "./text";
 
 const WalletCard = (props) => {
+  const deviceLanguage = useContext(DeviceLanguage);
   const data = props.data.wallets[0];
   const [amount, setAmount] = useState(props.data.totalBalance);
   const marketData: MarketData = useContext(MarketDataContext);
   const getWalletBalance = () => {
     return formatNumber({
       number: calcTotalBalance(marketData, [props.data]),
+      language: deviceLanguage,
     });
   };
   const [walletBalance, setWalletBalance] = useState(getWalletBalance());
@@ -26,6 +28,7 @@ const WalletCard = (props) => {
   useEffect(() => {
     setWalletBalance(getWalletBalance());
   }, [marketData]);
+
   return (
     <TouchableOpacity
       onPress={() => {
@@ -42,7 +45,10 @@ const WalletCard = (props) => {
     >
       <View style={styles.amountWrapper}>
         <AppText style={styles.amount}>
-          {props.data.niceBalance(amount)}
+          {formatNumber({
+            number: amount,
+            language: deviceLanguage,
+          })}
         </AppText>
         <AppText style={styles.amountShort}>{data.currency}</AppText>
       </View>

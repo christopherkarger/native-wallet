@@ -14,7 +14,7 @@ import SafeArea from "~/components/safe-area";
 import SubPageHeader from "~/components/sub-page-header";
 import { Colors, Fonts, PathNames, UPDATE_WALLETS_EVENT } from "~/constants";
 import { deleteItemFromLocalDBTableWallets } from "~/db";
-import { MarketDataContext } from "~/models/context";
+import { DeviceLanguage, MarketDataContext } from "~/models/context";
 import { MarketData } from "~/models/market-data";
 import { Wallet } from "~/models/wallet";
 import { WalletWrapper } from "~/models/wallet-wrapper";
@@ -23,6 +23,7 @@ import { formatNumber } from "~/services/format-number";
 import AppText from "../components/text";
 
 const SingleWallet = (props) => {
+  const deviceLanguage = useContext(DeviceLanguage);
   const [walletWrapper, setWalletWrapper] = useState<WalletWrapper>(
     props.route.params.data
   );
@@ -33,6 +34,7 @@ const SingleWallet = (props) => {
     setMoneyBalance(
       formatNumber({
         number: calcTotalBalance(marketData, [props.route.params.data]),
+        language: deviceLanguage,
       })
     );
   }, [marketData]);
@@ -88,6 +90,7 @@ const SingleWallet = (props) => {
                     {formatNumber({
                       number: item.balance,
                       decimal: "000000",
+                      language: deviceLanguage,
                     })}{" "}
                     {item.currency}
                   </AppText>

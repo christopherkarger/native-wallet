@@ -37,42 +37,4 @@ export class WalletWrapper {
 
     return Colors.transparent;
   }
-
-  /**
-   * Calc nice balance
-   * @param balance
-   * @returns
-   */
-  niceBalance(balance: number): string {
-    const maxChars = 8;
-    if (balance.toString().split("").length > maxChars) {
-      const toFixedDecimal = this.cutDecimal(balance, 4);
-
-      if (toFixedDecimal.length > maxChars) {
-        return `${toFixedDecimal
-          .split("")
-          .slice(0, maxChars)
-          .join("")
-          .toString()}...`;
-      }
-
-      return toFixedDecimal;
-    }
-    return balance.toString();
-  }
-  /**
-   * Cuts deciaml if number has decimal
-   * @param num
-   * @param decimal
-   * @returns
-   */
-  cutDecimal(num: number, decimal: number): string {
-    const hasDecimal = !Number.isInteger(num);
-    if (!hasDecimal) {
-      return num.toString();
-    }
-    const balanceArr = num.toString().split("");
-    const m = balanceArr.slice(0, balanceArr.indexOf(".") + 5);
-    return m.join("");
-  }
 }

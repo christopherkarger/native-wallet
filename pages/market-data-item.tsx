@@ -10,7 +10,7 @@ import SubPageHeader from "~/components/sub-page-header";
 import AppText from "~/components/text";
 import { Colors, Fonts } from "~/constants";
 import { useIsMounted } from "~/hooks/mounted";
-import { MarketDataContext } from "~/models/context";
+import { DeviceLanguage, MarketDataContext } from "~/models/context";
 import {
   IHistoryItem,
   IMarketDataItemData,
@@ -29,6 +29,7 @@ const MarketdataItem = (props) => {
   if (!props.route?.params?.item) {
     throw new Error("maket data item not provied");
   }
+  const deviceLanguage = useContext(DeviceLanguage);
   const marketData: MarketData = useContext(MarketDataContext);
   const [chartData, setChartData] = useState<number[]>([]);
   const [listData, setListData] = useState<IHistoryItem[]>([]);
@@ -88,6 +89,7 @@ const MarketdataItem = (props) => {
         <AppText>
           {formatNumber({
             number: listProps.item.price,
+            language: deviceLanguage,
           })}
           {" €"}
         </AppText>
@@ -112,6 +114,7 @@ const MarketdataItem = (props) => {
             <AppText style={styles.headerPrice}>
               {formatNumber({
                 number: price,
+                language: deviceLanguage,
               })}
               {" €"}
             </AppText>

@@ -1,5 +1,5 @@
 import * as shape from "d3-shape";
-import React, { useMemo } from "react";
+import React, { useContext, useMemo } from "react";
 import {
   Dimensions,
   FlatList,
@@ -9,6 +9,7 @@ import {
   View,
 } from "react-native";
 import { LineChart } from "react-native-svg-charts";
+import { DeviceLanguage } from "~/models/context";
 import { CryptoIcon } from "~/models/crypto-icon";
 import { MarketData } from "~/models/market-data";
 import { formatNumber } from "~/services/format-number";
@@ -18,6 +19,7 @@ import AppText from "./text";
 
 const Market = (props) => {
   const marketData = props.data as MarketData;
+  const deviceLanguage = useContext(DeviceLanguage);
 
   const renderedMarketItem = (listProps) => {
     const icon = new CryptoIcon(listProps.item.name);
@@ -73,6 +75,7 @@ const Market = (props) => {
             <AppText style={styles.price}>
               {formatNumber({
                 number: listProps.item.data.price,
+                language: deviceLanguage,
               })}{" "}
               €
             </AppText>
