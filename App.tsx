@@ -1,7 +1,6 @@
 import AppLoading from "expo-app-loading";
 import * as Font from "expo-font";
 import { StatusBar } from "expo-status-bar";
-import numeral from "numeral";
 import React, { useEffect, useState } from "react";
 import { LogBox, StyleSheet } from "react-native";
 import { Config } from "./config";
@@ -17,28 +16,11 @@ import { MarketData } from "./models/market-data";
 import Main from "./pages/main";
 import { fetchMarketData } from "./services/fetch-marketdata";
 import { firebaseDB } from "./services/firebase-init";
+import { registerNumeralFormat } from "./services/format-number";
 
 LogBox.ignoreLogs(["Setting a timer"]);
 
-numeral.register("locale", "de", {
-  delimiters: {
-    thousands: ".",
-    decimal: ",",
-  },
-  abbreviations: {
-    thousand: "tsd.",
-    million: "mil.",
-    billion: "mrd.",
-    trillion: "trill.",
-  },
-  ordinal: function (number) {
-    return number === 1 ? "er" : "ème";
-  },
-  currency: {
-    symbol: "€",
-  },
-});
-numeral.locale("de");
+registerNumeralFormat();
 
 const preload = () => {
   return Font.loadAsync({

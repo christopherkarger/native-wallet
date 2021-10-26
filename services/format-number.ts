@@ -5,6 +5,28 @@ export interface IFormatNumber {
   decimal?: string;
 }
 
+export const registerNumeralFormat = () => {
+  numeral.register("locale", "de", {
+    delimiters: {
+      thousands: ".",
+      decimal: ",",
+    },
+    abbreviations: {
+      thousand: "tsd.",
+      million: "mil.",
+      billion: "mrd.",
+      trillion: "trill.",
+    },
+    ordinal: function (number) {
+      return number === 1 ? "er" : "ème";
+    },
+    currency: {
+      symbol: "€",
+    },
+  });
+  numeral.locale("de");
+};
+
 export const formatNumber = (x: IFormatNumber): string => {
   if (x.decimal) {
     return numeral(x.number).format(`0,00.${x.decimal}`);
