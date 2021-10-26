@@ -28,11 +28,11 @@ export const registerNumeralFormat = () => {
 };
 
 export const formatNumber = (x: IFormatNumber): string => {
-  if (x.decimal) {
-    return numeral(x.number).format(`0,00.${x.decimal}`);
+  const num = parseFloat(x.number.toString());
+
+  if (num < 1) {
+    return numeral(num).format("0,00.[0000]");
   }
-  if (x.number < 1) {
-    return numeral(x.number).format("0,00.0000");
-  }
-  return numeral(x.number).format("0,00.00");
+
+  return numeral(num).format("0,00.[00]");
 };
