@@ -18,7 +18,7 @@ export const registerNumeralFormat = () => {
       trillion: "trill.",
     },
     ordinal: function (number) {
-      return number === 1 ? "er" : "ème";
+      return number.toString();
     },
     currency: {
       symbol: "€",
