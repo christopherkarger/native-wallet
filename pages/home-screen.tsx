@@ -61,7 +61,6 @@ const HomeScreen = (props) => {
     setTotalBalance(
       formatNumber({
         number: calcTotalBalance(marketData, walletsData),
-        decimal: 2,
       })
     );
   }, [marketData, walletsData]);

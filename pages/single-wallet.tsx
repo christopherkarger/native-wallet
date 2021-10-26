@@ -33,7 +33,6 @@ const SingleWallet = (props) => {
     setMoneyBalance(
       formatNumber({
         number: calcTotalBalance(marketData, [props.route.params.data]),
-        beautifulDecimal: true,
       })
     );
   }, [marketData]);
@@ -88,7 +87,7 @@ const SingleWallet = (props) => {
                   <AppText style={styles.balance}>
                     {formatNumber({
                       number: item.balance,
-                      decimal: 6,
+                      decimal: "000000",
                     })}{" "}
                     {item.currency}
                   </AppText>

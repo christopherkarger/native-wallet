@@ -73,7 +73,6 @@ const Market = (props) => {
             <AppText style={styles.price}>
               {formatNumber({
                 number: listProps.item.data.price,
-                beautifulDecimal: true,
               })}{" "}
               €
             </AppText>

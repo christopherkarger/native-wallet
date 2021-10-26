@@ -88,7 +88,6 @@ const MarketdataItem = (props) => {
         <AppText>
           {formatNumber({
             number: listProps.item.price,
-            beautifulDecimal: true,
           })}
           {" €"}
         </AppText>
@@ -113,7 +112,6 @@ const MarketdataItem = (props) => {
             <AppText style={styles.headerPrice}>
               {formatNumber({
                 number: price,
-                beautifulDecimal: true,
               })}
               {" €"}
             </AppText>

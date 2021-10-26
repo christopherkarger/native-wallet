@@ -14,7 +14,6 @@ const WalletCard = (props) => {
   const getWalletBalance = () => {
     return formatNumber({
       number: calcTotalBalance(marketData, [props.data]),
-      decimal: 2,
     });
   };
   const [walletBalance, setWalletBalance] = useState(getWalletBalance());
