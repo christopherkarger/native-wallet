@@ -12,7 +12,7 @@ export const defaultConfig: IConfig = {
   urls: {},
 };
 
-export const DefaultLanguage = SupportedLanguages.DE;
+export const DefaultLanguage = SupportedLanguages.EN;
 
 export const AppConfig = React.createContext<IConfig>(defaultConfig);
 
