@@ -6,25 +6,29 @@ export interface IFormatNumber {
 }
 
 export const registerNumeralFormat = () => {
-  numeral.register("locale", "de", {
-    delimiters: {
-      thousands: ".",
-      decimal: ",",
-    },
-    abbreviations: {
-      thousand: "tsd.",
-      million: "mil.",
-      billion: "mrd.",
-      trillion: "trill.",
-    },
-    ordinal: function (number) {
-      return number.toString();
-    },
-    currency: {
-      symbol: "€",
-    },
-  });
-  numeral.locale("de");
+  try {
+    numeral.register("locale", "de", {
+      delimiters: {
+        thousands: ".",
+        decimal: ",",
+      },
+      abbreviations: {
+        thousand: "tsd.",
+        million: "mil.",
+        billion: "mrd.",
+        trillion: "trill.",
+      },
+      ordinal: function (number) {
+        return number.toString();
+      },
+      currency: {
+        symbol: "€",
+      },
+    });
+    numeral.locale("de");
+  } catch (err) {
+    console.error("numeral local already registered");
+  }
 };
 
 export const formatNumber = (x: IFormatNumber): string => {
