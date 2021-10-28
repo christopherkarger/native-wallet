@@ -1,13 +1,15 @@
 import React, { useContext, useState } from "react";
 import { Image, StyleSheet, View } from "react-native";
 import { insertItemToLocalDBTableWallets } from "~/db";
-import { AppConfig } from "~/models/context";
-import { Colors, PathNames } from "../constants";
+import { AppConfig, DeviceLanguage } from "~/models/context";
+import { Texts } from "~/texts";
+import { Fonts, PathNames } from "../constants";
 import Button from "./button";
 import AppText from "./text";
 import { TextButton } from "./text-button";
 
 const EmptyWallets = (props) => {
+  const deviceLanguage = useContext(DeviceLanguage);
   const appConfig = useContext(AppConfig);
   const [creatingDemo, setCreatingDemo] = useState(false);
 
@@ -48,14 +50,18 @@ const EmptyWallets = (props) => {
           <Button
             style={styles.addWallet}
             onPress={() => props.navigation.navigate(PathNames.addWallet)}
-            text="Wallet hinzufügen"
+            text={Texts.addWallet[deviceLanguage]}
           ></Button>
         </View>
       </View>
       <View style={styles.demoWrapper}>
-        <AppText style={styles.demoText}>App ausprobieren?</AppText>
+        <AppText style={styles.demoText}>
+          {Texts.tryOutApp[deviceLanguage]}
+        </AppText>
         <TextButton
-          text="Demo Account"
+          style={styles.demoLink}
+          textStyle={styles.demoLinkText}
+          text={Texts.demoAccount[deviceLanguage]}
           onPress={() => createDemo()}
         ></TextButton>
       </View>
@@ -97,11 +103,12 @@ const styles = StyleSheet.create({
     marginRight: 10,
   },
   demoLink: {
-    borderBottomWidth: 1,
-    borderColor: Colors.white,
-    paddingBottom: 2,
+    paddingHorizontal: 5,
+    paddingVertical: 5,
   },
-  demoLinkText: {},
+  demoLinkText: {
+    fontFamily: Fonts.bold,
+  },
 });
 
 export default EmptyWallets;

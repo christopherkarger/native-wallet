@@ -20,6 +20,7 @@ import { Wallet } from "~/models/wallet";
 import { WalletWrapper } from "~/models/wallet-wrapper";
 import { calcTotalBalance } from "~/services/calc-balance";
 import { formatNumber } from "~/services/format-number";
+import { Texts } from "~/texts";
 import AppText from "../components/text";
 
 const SingleWallet = (props) => {
@@ -61,7 +62,7 @@ const SingleWallet = (props) => {
     <GradientView>
       <SafeArea>
         <SubPageHeader navigation={props.navigation}>
-          {walletWrapper.wallets[0].name} Wallet
+          {walletWrapper.wallets[0].name} {Texts.wallet[deviceLanguage]}
         </SubPageHeader>
         <View style={styles.inner}>
           <View style={styles.header}>
@@ -83,9 +84,9 @@ const SingleWallet = (props) => {
             renderItem={({ item, index }) => {
               return (
                 <View style={styles.singleWalletWrapper}>
-                  <AppText>Adresse:</AppText>
+                  <AppText>{Texts.address[deviceLanguage]}</AppText>
                   <AppText style={styles.address}>{item.address}</AppText>
-                  <AppText>Balance:</AppText>
+                  <AppText>{Texts.balance[deviceLanguage]}</AppText>
                   <AppText style={styles.balance}>
                     {formatNumber({
                       number: item.balance,
@@ -99,10 +100,10 @@ const SingleWallet = (props) => {
                     onPress={() => {
                       Alert.alert(
                         "",
-                        "Möchtest du wirklich diese Adresse löschen?",
+                        Texts.deleteAddressHeadline[deviceLanguage],
                         [
                           {
-                            text: "Abbrechen",
+                            text: Texts.abort[deviceLanguage],
                             onPress: () => {},
                             style: "cancel",
                           },
@@ -117,7 +118,7 @@ const SingleWallet = (props) => {
                       );
                     }}
                   >
-                    <AppText>Entfernen</AppText>
+                    <AppText>{Texts.delete[deviceLanguage]}</AppText>
                   </TouchableOpacity>
                 </View>
               );
@@ -132,7 +133,7 @@ const SingleWallet = (props) => {
                     id: walletWrapper.wallets[0].id,
                   });
                 }}
-                text="Addresse zu diesem Wallet hinzufügen"
+                text={Texts.addAddressToWallet[deviceLanguage]}
               ></Button>
             }
           ></FlatList>

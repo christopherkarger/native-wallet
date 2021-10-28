@@ -14,6 +14,7 @@ import { CryptoIcon } from "~/models/crypto-icon";
 import { MarketData } from "~/models/market-data";
 import { formatNumber } from "~/services/format-number";
 import { calcPercentage, formatDate, randomString } from "~/services/helper";
+import { Texts } from "~/texts";
 import { Colors, Fonts, PathNames } from "../constants";
 import AppText from "./text";
 
@@ -95,10 +96,13 @@ const Market = (props) => {
   return (
     <View style={styles.inner}>
       <View style={styles.header}>
-        <AppText style={styles.marketHeadline}>Krypto Markt</AppText>
+        <AppText style={styles.marketHeadline}>
+          {Texts.marketHeadline[deviceLanguage]}
+        </AppText>
         {marketData?.items[0]?.data.lastFetched && (
           <AppText style={styles.lastFetched}>
-            Daten von: {formatDate(marketData.items[0].data.lastFetched)}
+            {Texts.dataFrom[deviceLanguage]}:{" "}
+            {formatDate(marketData.items[0].data.lastFetched)}
           </AppText>
         )}
       </View>

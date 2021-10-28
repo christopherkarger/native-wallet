@@ -19,6 +19,7 @@ import { WalletWrapper } from "~/models/wallet-wrapper";
 import { calcTotalBalance } from "~/services/calc-balance";
 import { formatNumber } from "~/services/format-number";
 import { getWalletWrapper } from "~/services/getWalletWrapper";
+import { Texts } from "~/texts";
 import EmptyWallets from "../components/empty-wallets";
 import AppText from "../components/text";
 import WalletList from "../components/wallet-list";
@@ -90,7 +91,7 @@ const HomeScreen = (props) => {
           <View style={styles.actionButtonWrapper}>
             {isDemoAccount && (
               <TextButton
-                text="Demo löschen"
+                text={Texts.deleteDemo[deviceLanguage]}
                 onPress={() => deleteDemo()}
               ></TextButton>
             )}
@@ -122,8 +123,12 @@ const HomeScreen = (props) => {
         )}
         {walletsData.length > 0 && (
           <View style={styles.inner}>
-            <AppText style={styles.pfHeadline}>Portfolio</AppText>
-            <AppText style={styles.pfSubheadline}>Guthaben</AppText>
+            <AppText style={styles.pfHeadline}>
+              {Texts.portfolio[deviceLanguage]}
+            </AppText>
+            <AppText style={styles.pfSubheadline}>
+              {Texts.balance[deviceLanguage]}
+            </AppText>
             <AppText style={styles.balance}>{totalBalance} €</AppText>
           </View>
         )}

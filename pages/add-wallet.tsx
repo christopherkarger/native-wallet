@@ -17,11 +17,13 @@ import AppText from "~/components/text";
 import { Colors, PathNames, UPDATE_WALLETS_EVENT } from "~/constants";
 import { insertItemToLocalDBTableWallets } from "~/db";
 import { useIsMounted } from "~/hooks/mounted";
-import { AppConfig } from "~/models/context";
+import { AppConfig, DeviceLanguage } from "~/models/context";
 import { fetchAddress } from "~/services/fetch-address";
+import { Texts } from "~/texts";
 import SubPageHeader from "../components/sub-page-header";
 
 const AddWalletScreen = (props) => {
+  const deviceLanguage = useContext(DeviceLanguage);
   const mounted = useIsMounted();
   const appConfig = useContext(AppConfig);
   const [nameChangeAllowed, setNameChangeAllowed] = useState(true);
@@ -104,7 +106,7 @@ const AddWalletScreen = (props) => {
         <DismissKeyboard>
           <View style={styles.page}>
             <SubPageHeader navigation={props.navigation}>
-              Neues Wallet anlegen
+              {Texts.addNewWallet[deviceLanguage]}
             </SubPageHeader>
 
             <View style={styles.inner}>
@@ -117,7 +119,9 @@ const AddWalletScreen = (props) => {
                 }}
               >
                 <View style={styles.cryptoInput}>
-                  <AppText>{name ? name : "Wähle eine Kryptowährung"}</AppText>
+                  <AppText>
+                    {name ? name : Texts.chooseCrypto[deviceLanguage]}
+                  </AppText>
                 </View>
               </TouchableOpacity>
               <View>
@@ -134,7 +138,7 @@ const AddWalletScreen = (props) => {
                 </View>
                 <TextInput
                   style={styles.cryptoInput}
-                  placeholder="Adresse"
+                  placeholder={Texts.address[deviceLanguage]}
                   placeholderTextColor={Colors.white}
                   onChangeText={setEnteredAddress}
                   value={address}
@@ -148,7 +152,9 @@ const AddWalletScreen = (props) => {
                 style={styles.addWallet}
                 disabled={!name || !address || fetchingAndSavingAddress}
                 text={
-                  fetchingAndSavingAddress ? "Lade Wallet" : "Wallet anlegen"
+                  fetchingAndSavingAddress
+                    ? Texts.loadingWallet[deviceLanguage]
+                    : Texts.addWallet[deviceLanguage]
                 }
               ></Button>
             </View>

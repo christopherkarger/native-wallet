@@ -18,6 +18,7 @@ import {
 } from "~/models/market-data";
 import { formatNumber } from "~/services/format-number";
 import { calcPercentage, randomString } from "~/services/helper";
+import { Texts } from "~/texts";
 
 enum ChartView {
   hours,
@@ -152,7 +153,7 @@ const MarketdataItem = (props) => {
               }
             }}
           >
-            <AppText>24 Std.</AppText>
+            <AppText>{Texts.hoursView[deviceLanguage]}</AppText>
           </TouchableOpacity>
 
           <TouchableOpacity
@@ -167,7 +168,7 @@ const MarketdataItem = (props) => {
               }
             }}
           >
-            <AppText>7 Tage</AppText>
+            <AppText>{Texts.sevenDaysView[deviceLanguage]}</AppText>
           </TouchableOpacity>
 
           <TouchableOpacity
@@ -182,7 +183,7 @@ const MarketdataItem = (props) => {
               }
             }}
           >
-            <AppText>30 Tage</AppText>
+            <AppText>{Texts.thirtyDaysView[deviceLanguage]}</AppText>
           </TouchableOpacity>
         </View>
         <FlatList
