@@ -67,17 +67,13 @@ export const Texts = {
     de: "Abbrechen",
     en: "Abort",
   },
-  hoursView: {
-    de: "24 Std.",
-    en: "24h",
+  hours: {
+    de: "Std.",
+    en: "h",
   },
-  sevenDaysView: {
-    de: "7 Tage",
-    en: "7 days",
-  },
-  thirtyDaysView: {
-    de: "30 Tage",
-    en: "30 days",
+  days: {
+    de: "Tage",
+    en: "days",
   },
   clock: {
     de: "Uhr",

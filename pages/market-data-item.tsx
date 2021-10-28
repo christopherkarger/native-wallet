@@ -153,7 +153,7 @@ const MarketdataItem = (props) => {
               }
             }}
           >
-            <AppText>{Texts.hoursView[deviceLanguage]}</AppText>
+            <AppText>24 {Texts.hours[deviceLanguage]}</AppText>
           </TouchableOpacity>
 
           <TouchableOpacity
@@ -168,7 +168,7 @@ const MarketdataItem = (props) => {
               }
             }}
           >
-            <AppText>{Texts.sevenDaysView[deviceLanguage]}</AppText>
+            <AppText>7 {Texts.days[deviceLanguage]}</AppText>
           </TouchableOpacity>
 
           <TouchableOpacity
@@ -183,7 +183,7 @@ const MarketdataItem = (props) => {
               }
             }}
           >
-            <AppText>{Texts.thirtyDaysView[deviceLanguage]}</AppText>
+            <AppText>30 {Texts.days[deviceLanguage]}</AppText>
           </TouchableOpacity>
         </View>
         <FlatList
