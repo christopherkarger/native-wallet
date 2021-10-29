@@ -18,6 +18,7 @@ import {
   DeviceLanguage,
   MarketDataContext,
   SupportedLanguages,
+  USDPriceContext,
 } from "./models/context";
 import { MarketData } from "./models/market-data";
 import Main from "./pages/main";
@@ -54,6 +55,7 @@ export default function App() {
   const statusBarStyle = "light";
   const [appIsReady, setAppIsReady] = useState(false);
   const [marketData, setMarketData] = useState<MarketData>(new MarketData([]));
+  const [USDPrice, setUSDPrice] = useState(0);
 
   const saveMarketToLocalDb = async (data: MarketData) => {
     try {
@@ -122,8 +124,16 @@ export default function App() {
       if (data) {
         setMarketData(data);
         saveMarketToLocalDb(data);
+        const tether = data.findItemByName("Tether");
+        if (tether) {
+          setUSDPrice(tether.data.price);
+        }
       }
     });
+
+    return () => {
+      dbConnection?.off();
+    };
   }, []);
 
   if (!appIsReady) {
@@ -140,14 +150,16 @@ export default function App() {
   }
 
   return (
-    <DeviceLanguage.Provider value={deviceLanguage}>
-      <AppConfig.Provider value={Config}>
-        <MarketDataContext.Provider value={marketData}>
-          <StatusBar style={statusBarStyle} />
-          <Main />
-        </MarketDataContext.Provider>
-      </AppConfig.Provider>
-    </DeviceLanguage.Provider>
+    <USDPriceContext.Provider value={USDPrice}>
+      <DeviceLanguage.Provider value={deviceLanguage}>
+        <AppConfig.Provider value={Config}>
+          <MarketDataContext.Provider value={marketData}>
+            <StatusBar style={statusBarStyle} />
+            <Main />
+          </MarketDataContext.Provider>
+        </AppConfig.Provider>
+      </DeviceLanguage.Provider>
+    </USDPriceContext.Provider>
   );
 }
 

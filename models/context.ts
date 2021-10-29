@@ -22,3 +22,5 @@ export const DeviceLanguage =
 export const MarketDataContext = React.createContext<MarketData>(
   new MarketData([])
 );
+
+export const USDPriceContext = React.createContext(0);
