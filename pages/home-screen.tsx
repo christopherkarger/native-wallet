@@ -1,16 +1,8 @@
-import { MaterialIcons } from "@expo/vector-icons";
-import { LinearGradient } from "expo-linear-gradient";
 import React, { useContext, useEffect, useState } from "react";
-import {
-  DeviceEventEmitter,
-  StyleSheet,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { DeviceEventEmitter, StyleSheet, View } from "react-native";
 import GradientView from "~/components/gradient-view";
 import Market from "~/components/market";
 import SafeArea from "~/components/safe-area";
-import { TextButton } from "~/components/text-button";
 import { resetLocalDbWallets, selectLocalDBTableWallets } from "~/db";
 import { useUpdateLocalWalletBalances } from "~/hooks/update-local-wallet-balances";
 import { DeviceLanguage, MarketDataContext } from "~/models/context";
@@ -23,7 +15,7 @@ import { Texts } from "~/texts";
 import EmptyWallets from "../components/empty-wallets";
 import AppText from "../components/text";
 import WalletList from "../components/wallet-list";
-import { Colors, Fonts, PathNames, UPDATE_WALLETS_EVENT } from "../constants";
+import { Colors, Fonts, UPDATE_WALLETS_EVENT } from "../constants";
 
 const HomeScreen = (props) => {
   const deviceLanguage = useContext(DeviceLanguage);
@@ -87,7 +79,7 @@ const HomeScreen = (props) => {
   return (
     <GradientView>
       <SafeArea>
-        {walletsData.length > 0 && (
+        {/* {walletsData.length > 0 && (
           <View style={styles.actionButtonWrapper}>
             {isDemoAccount && (
               <TextButton
@@ -113,7 +105,7 @@ const HomeScreen = (props) => {
               </TouchableOpacity>
             </View>
           </View>
-        )}
+        )} */}
 
         {walletsData.length === 0 && (
           <EmptyWallets

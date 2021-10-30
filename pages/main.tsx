@@ -1,20 +1,17 @@
+import { MaterialIcons } from "@expo/vector-icons";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { DefaultTheme, NavigationContainer } from "@react-navigation/native";
-import {
-  createStackNavigator,
-  TransitionPresets,
-} from "@react-navigation/stack";
+import { LinearGradient } from "expo-linear-gradient";
 import React from "react";
-import GradientView from "~/components/gradient-view";
-import QrCodeScanner from "~/components/qr-code-scanner";
+import { StyleSheet } from "react-native";
+import { Colors } from "~/constants";
 import { createLocalDBTableWallets } from "~/db";
 import { createLocalDBTableMarket } from "~/db/market";
-import { Colors, PathNames } from "../constants";
 import AddWalletScreen from "./add-wallet";
-import HomeScreen from "./home-screen";
-import MarketdataItem from "./market-data-item";
-import SingleWallet from "./single-wallet";
+import Overview from "./overview";
+import Settings from "./settings";
 
-const Stack = createStackNavigator();
+const Tab = createBottomTabNavigator();
 
 createLocalDBTableMarket().catch((err) => {
   console.log(err);
@@ -36,35 +33,80 @@ const AppTheme = {
 
 const Main = () => {
   return (
-    <GradientView>
-      <NavigationContainer theme={AppTheme}>
-        <Stack.Navigator
-          initialRouteName={PathNames.home}
-          screenOptions={{
-            headerShown: false,
-            gestureEnabled: true,
-            ...TransitionPresets.SlideFromRightIOS,
+    <NavigationContainer theme={AppTheme}>
+      <Tab.Navigator
+        screenOptions={{
+          headerShown: false,
+          tabBarHideOnKeyboard: true,
+          tabBarShowLabel: false,
+          tabBarStyle: {
+            paddingTop: 3,
+            paddingBottom: 5,
+            height: 45,
+            backgroundColor: Colors.bgDark,
+            borderTopWidth: 1,
+            borderTopColor: Colors.darkBlue,
+          },
+          tabBarActiveTintColor: Colors.lightBlue,
+          tabBarInactiveTintColor: Colors.white,
+        }}
+      >
+        <Tab.Screen
+          name="overview"
+          component={Overview}
+          options={{
+            tabBarIcon: ({ color, size }) => (
+              <MaterialIcons
+                name="account-balance-wallet"
+                size={20}
+                color={color}
+              />
+            ),
           }}
-        >
-          <Stack.Screen name={PathNames.home} component={HomeScreen} />
-          <Stack.Screen
-            name={PathNames.addWallet}
-            component={AddWalletScreen}
-          />
-          <Stack.Screen
-            name={PathNames.marketDataItem}
-            component={MarketdataItem}
-          />
-          <Stack.Screen
-            name={PathNames.singleWallet}
-            component={SingleWallet}
-          />
-
-          <Stack.Screen name={PathNames.scanCode} component={QrCodeScanner} />
-        </Stack.Navigator>
-      </NavigationContainer>
-    </GradientView>
+        />
+        <Tab.Screen
+          name="addWallet"
+          component={AddWalletScreen}
+          options={{
+            tabBarIcon: ({ color, size, focused }) => (
+              <LinearGradient
+                style={styles.addWalletButtonGradient}
+                colors={[
+                  focused ? color : Colors.lightBlue,
+                  focused ? color : Colors.purple,
+                ]}
+              >
+                <MaterialIcons
+                  name="add"
+                  size={25}
+                  color={focused ? Colors.darkBlue : Colors.white}
+                />
+              </LinearGradient>
+            ),
+          }}
+        />
+        <Tab.Screen
+          name="settings"
+          component={Settings}
+          options={{
+            tabBarIcon: ({ color, size }) => (
+              <MaterialIcons name="settings" size={20} color={color} />
+            ),
+          }}
+        />
+      </Tab.Navigator>
+    </NavigationContainer>
   );
 };
+
+const styles = StyleSheet.create({
+  addWalletButtonGradient: {
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+});
 
 export default Main;

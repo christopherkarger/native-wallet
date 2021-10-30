@@ -22,6 +22,7 @@ export const Fonts = {
 export const Colors = {
   transparent: "transparent",
   bgDark: "#273244",
+  darkBlue: "#1c2637",
   fadeLight: "rgba(255,255,255, 0.8)",
   white: "#ffffff",
   lightWhite: "rgba(255,255,255, 0.5)",
