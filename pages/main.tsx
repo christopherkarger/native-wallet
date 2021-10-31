@@ -47,6 +47,7 @@ const Main = () => {
             borderTopWidth: 1,
             borderTopColor: Colors.darkBlue,
           },
+
           tabBarActiveTintColor: Colors.lightBlue,
           tabBarInactiveTintColor: Colors.white,
         }}
@@ -71,16 +72,9 @@ const Main = () => {
             tabBarIcon: ({ color, size, focused }) => (
               <LinearGradient
                 style={styles.addWalletButtonGradient}
-                colors={[
-                  focused ? color : Colors.lightBlue,
-                  focused ? color : Colors.purple,
-                ]}
+                colors={[Colors.lightBlue, Colors.purple]}
               >
-                <MaterialIcons
-                  name="add"
-                  size={25}
-                  color={focused ? Colors.darkBlue : Colors.white}
-                />
+                <MaterialIcons name="add" size={25} color={Colors.white} />
               </LinearGradient>
             ),
           }}
