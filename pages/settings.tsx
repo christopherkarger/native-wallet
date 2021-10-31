@@ -41,6 +41,8 @@ const Settings = (props) => {
       const localWallets = await selectLocalDBTableWallets().catch(() => {});
       if (localWallets && localWallets.rows.length) {
         setIsDemoAccount(localWallets.rows._array.some((x) => x.demoAddress));
+      } else {
+        setIsDemoAccount(false);
       }
     })();
   }, [isFocused]);
