@@ -16,7 +16,7 @@ export const DefaultLanguage = SupportedLanguages.EN;
 
 export const AppConfig = React.createContext<IConfig>(defaultConfig);
 
-export const DeviceLanguage =
+export const ActiveLanguage =
   React.createContext<SupportedLanguages>(DefaultLanguage);
 
 export const MarketDataContext = React.createContext<MarketData>(

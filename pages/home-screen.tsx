@@ -3,9 +3,9 @@ import { DeviceEventEmitter, StyleSheet, View } from "react-native";
 import GradientView from "~/components/gradient-view";
 import Market from "~/components/market";
 import SafeArea from "~/components/safe-area";
-import { resetLocalDbWallets, selectLocalDBTableWallets } from "~/db";
+import { selectLocalDBTableWallets } from "~/db";
 import { useUpdateLocalWalletBalances } from "~/hooks/update-local-wallet-balances";
-import { DeviceLanguage, MarketDataContext } from "~/models/context";
+import { ActiveLanguage, MarketDataContext } from "~/models/context";
 import { MarketData } from "~/models/market-data";
 import { WalletWrapper } from "~/models/wallet-wrapper";
 import { calcTotalBalance } from "~/services/calc-balance";
@@ -18,31 +18,13 @@ import WalletList from "../components/wallet-list";
 import { Colors, Fonts, UPDATE_WALLETS_EVENT } from "../constants";
 
 const HomeScreen = (props) => {
-  const deviceLanguage = useContext(DeviceLanguage);
+  const activeLanguage = useContext(ActiveLanguage);
   const [loading, setIsloading] = useState(true);
   const [walletsData, setWalletsData] = useState<WalletWrapper[]>([]);
   const [totalBalance, setTotalBalance] = useState("0");
   const marketData: MarketData = useContext(MarketDataContext);
-  const [isDemoAccount, setIsDemoAccount] = useState(false);
-  const [isDeletingDemoAccount, setIsDeletingDemoAccount] = useState(false);
 
   useUpdateLocalWalletBalances();
-
-  const deleteDemo = async () => {
-    if (isDeletingDemoAccount) {
-      return;
-    }
-    setIsDeletingDemoAccount(true);
-    try {
-      setWalletsData([]);
-      await resetLocalDbWallets();
-    } catch (err) {
-      updateWallets();
-      console.error(err);
-    } finally {
-      setIsDeletingDemoAccount(false);
-    }
-  };
 
   useEffect(() => {
     updateWallets();
@@ -55,7 +37,7 @@ const HomeScreen = (props) => {
     setTotalBalance(
       formatNumber({
         number: calcTotalBalance(marketData, walletsData),
-        language: deviceLanguage,
+        language: activeLanguage,
       })
     );
   }, [marketData, walletsData]);
@@ -64,10 +46,8 @@ const HomeScreen = (props) => {
     const localWallets = await selectLocalDBTableWallets().catch(() => {});
     if (localWallets && localWallets.rows.length) {
       setWalletsData(getWalletWrapper(localWallets.rows._array));
-      setIsDemoAccount(localWallets.rows._array.some((x) => x.demoAddress));
     } else {
       setWalletsData([]);
-      setIsDemoAccount(false);
     }
     setIsloading(false);
   };
@@ -79,34 +59,6 @@ const HomeScreen = (props) => {
   return (
     <GradientView>
       <SafeArea>
-        {/* {walletsData.length > 0 && (
-          <View style={styles.actionButtonWrapper}>
-            {isDemoAccount && (
-              <TextButton
-                text={Texts.deleteDemo[deviceLanguage]}
-                onPress={() => deleteDemo()}
-              ></TextButton>
-            )}
-            <View style={styles.addWalletButtonWrapper}>
-              <TouchableOpacity
-                onPress={() => props.navigation.navigate(PathNames.addWallet)}
-              >
-                <LinearGradient
-                  style={styles.addWalletButtonGradient}
-                  colors={[Colors.lightBlue, Colors.purple]}
-                >
-                  <MaterialIcons
-                    style={styles.addWalletButtonIcon}
-                    name="add"
-                    size={30}
-                    color={Colors.white}
-                  />
-                </LinearGradient>
-              </TouchableOpacity>
-            </View>
-          </View>
-        )} */}
-
         {walletsData.length === 0 && (
           <EmptyWallets
             navigation={props.navigation}
@@ -116,10 +68,10 @@ const HomeScreen = (props) => {
         {walletsData.length > 0 && (
           <View style={styles.inner}>
             <AppText style={styles.pfHeadline}>
-              {Texts.portfolio[deviceLanguage]}
+              {Texts.portfolio[activeLanguage]}
             </AppText>
             <AppText style={styles.pfSubheadline}>
-              {Texts.balance[deviceLanguage]}
+              {Texts.balance[activeLanguage]}
             </AppText>
             <AppText style={styles.balance}>{totalBalance} €</AppText>
           </View>

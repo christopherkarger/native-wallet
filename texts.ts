@@ -27,9 +27,9 @@ export const Texts = {
     de: "Krypto Markt",
     en: "Crypto market",
   },
-  dataFrom: {
-    de: "Daten von",
-    en: "Data from",
+  updated: {
+    de: "Upgedatet",
+    en: "updated",
   },
   addNewWallet: {
     de: "Neues Wallet anlegen",
@@ -78,5 +78,13 @@ export const Texts = {
   clock: {
     de: "Uhr",
     en: "o'clock",
+  },
+  settings: {
+    de: "Einstellungen",
+    en: "Settings",
+  },
+  today: {
+    de: "Heute",
+    en: "Today",
   },
 };

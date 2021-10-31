@@ -1,17 +1,19 @@
-import { MaterialIcons } from "@expo/vector-icons";
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { DefaultTheme, NavigationContainer } from "@react-navigation/native";
-import { LinearGradient } from "expo-linear-gradient";
+import {
+  createStackNavigator,
+  TransitionPresets,
+} from "@react-navigation/stack";
 import React from "react";
-import { StyleSheet } from "react-native";
-import { Colors } from "~/constants";
+import GradientView from "~/components/gradient-view";
+import QrCodeScanner from "~/components/qr-code-scanner";
+import { Colors, PathNames } from "~/constants";
 import { createLocalDBTableWallets } from "~/db";
 import { createLocalDBTableMarket } from "~/db/market";
-import AddWalletScreen from "./add-wallet";
-import Overview from "./overview";
-import Settings from "./settings";
+import HomeTabs from "./home-tabs";
+import MarketdataItem from "./market-data-item";
+import SingleWallet from "./single-wallet";
 
-const Tab = createBottomTabNavigator();
+const Stack = createStackNavigator();
 
 createLocalDBTableMarket().catch((err) => {
   console.log(err);
@@ -33,74 +35,31 @@ const AppTheme = {
 
 const Main = () => {
   return (
-    <NavigationContainer theme={AppTheme}>
-      <Tab.Navigator
-        screenOptions={{
-          headerShown: false,
-          tabBarHideOnKeyboard: true,
-          tabBarShowLabel: false,
-          tabBarStyle: {
-            paddingTop: 3,
-            paddingBottom: 5,
-            height: 45,
-            backgroundColor: Colors.bgDark,
-            borderTopWidth: 1,
-            borderTopColor: Colors.darkBlue,
-          },
+    <GradientView>
+      <NavigationContainer theme={AppTheme}>
+        <Stack.Navigator
+          initialRouteName={PathNames.home}
+          screenOptions={{
+            headerShown: false,
+            gestureEnabled: true,
+            ...TransitionPresets.SlideFromRightIOS,
+          }}
+        >
+          <Stack.Screen name={PathNames.home} component={HomeTabs} />
+          <Stack.Screen
+            name={PathNames.marketDataItem}
+            component={MarketdataItem}
+          />
+          <Stack.Screen
+            name={PathNames.singleWallet}
+            component={SingleWallet}
+          />
 
-          tabBarActiveTintColor: Colors.lightBlue,
-          tabBarInactiveTintColor: Colors.white,
-        }}
-      >
-        <Tab.Screen
-          name="overview"
-          component={Overview}
-          options={{
-            tabBarIcon: ({ color, size }) => (
-              <MaterialIcons
-                name="account-balance-wallet"
-                size={20}
-                color={color}
-              />
-            ),
-          }}
-        />
-        <Tab.Screen
-          name="addWallet"
-          component={AddWalletScreen}
-          options={{
-            tabBarIcon: ({ color, size, focused }) => (
-              <LinearGradient
-                style={styles.addWalletButtonGradient}
-                colors={[Colors.lightBlue, Colors.purple]}
-              >
-                <MaterialIcons name="add" size={25} color={Colors.white} />
-              </LinearGradient>
-            ),
-          }}
-        />
-        <Tab.Screen
-          name="settings"
-          component={Settings}
-          options={{
-            tabBarIcon: ({ color, size }) => (
-              <MaterialIcons name="settings" size={20} color={color} />
-            ),
-          }}
-        />
-      </Tab.Navigator>
-    </NavigationContainer>
+          <Stack.Screen name={PathNames.scanCode} component={QrCodeScanner} />
+        </Stack.Navigator>
+      </NavigationContainer>
+    </GradientView>
   );
 };
-
-const styles = StyleSheet.create({
-  addWalletButtonGradient: {
-    width: 36,
-    height: 36,
-    borderRadius: 18,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-});
 
 export default Main;

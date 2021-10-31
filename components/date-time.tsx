@@ -1,15 +1,16 @@
 import React, { useContext } from "react";
 import { View } from "react-native";
-import { DeviceLanguage } from "~/models/context";
+import { ActiveLanguage } from "~/models/context";
 import { dateIsToday } from "~/services/helper";
 import { Texts } from "~/texts";
 import AppText from "./text";
 
 export const DateTime = (props) => {
-  const deviceLanguage = useContext(DeviceLanguage);
+  const activeLanguage = useContext(ActiveLanguage);
+
   const formatDate = (date: number) => {
     const d = new Date(date);
-    const todayText = "Heute";
+    const todayText = Texts.today[activeLanguage];
     const formatedDate = `${d.getDate()}.${
       d.getMonth() + 1
     }.${d.getFullYear()}`;
@@ -17,7 +18,7 @@ export const DateTime = (props) => {
     const isToday = dateIsToday(d);
 
     if (props.hourView) {
-      return `${d.getHours()} ${Texts.clock[deviceLanguage]} - ${
+      return `${d.getHours()} ${Texts.clock[activeLanguage]} - ${
         isToday ? todayText : formatedDate
       }`;
     }

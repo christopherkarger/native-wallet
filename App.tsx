@@ -13,9 +13,9 @@ import {
   selectLocalDBTableMarket,
 } from "./db/market";
 import {
+  ActiveLanguage,
   AppConfig,
   DefaultLanguage,
-  DeviceLanguage,
   MarketDataContext,
   SupportedLanguages,
   USDPriceContext,
@@ -28,14 +28,14 @@ import { registerNumeralFormat } from "./services/format-number";
 
 LogBox.ignoreLogs(["Setting a timer"]);
 
-let deviceLanguage = DefaultLanguage;
+let activeLanguage = DefaultLanguage;
 
 const preload = () => {
   return Promise.all([
     Localization.getLocalizationAsync()
       .then((res) => {
         if (res.locale.includes(SupportedLanguages.DE)) {
-          deviceLanguage = SupportedLanguages.DE;
+          activeLanguage = SupportedLanguages.DE;
         }
       })
       .catch(() => {
@@ -141,7 +141,7 @@ export default function App() {
       <AppLoading
         startAsync={preload}
         onFinish={() => {
-          registerNumeralFormat(deviceLanguage);
+          registerNumeralFormat(activeLanguage);
           setAppIsReady(true);
         }}
         onError={console.warn}
@@ -151,14 +151,14 @@ export default function App() {
 
   return (
     <USDPriceContext.Provider value={USDPrice}>
-      <DeviceLanguage.Provider value={deviceLanguage}>
+      <ActiveLanguage.Provider value={activeLanguage}>
         <AppConfig.Provider value={Config}>
           <MarketDataContext.Provider value={marketData}>
             <StatusBar style={statusBarStyle} />
             <Main />
           </MarketDataContext.Provider>
         </AppConfig.Provider>
-      </DeviceLanguage.Provider>
+      </ActiveLanguage.Provider>
     </USDPriceContext.Provider>
   );
 }

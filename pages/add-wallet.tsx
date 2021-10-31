@@ -17,13 +17,13 @@ import AppText from "~/components/text";
 import { Colors, PathNames, UPDATE_WALLETS_EVENT } from "~/constants";
 import { insertItemToLocalDBTableWallets } from "~/db";
 import { useIsMounted } from "~/hooks/mounted";
-import { AppConfig, DeviceLanguage } from "~/models/context";
+import { ActiveLanguage, AppConfig } from "~/models/context";
 import { fetchAddress } from "~/services/fetch-address";
 import { Texts } from "~/texts";
 import SubPageHeader from "../components/sub-page-header";
 
 const AddWalletScreen = (props) => {
-  const deviceLanguage = useContext(DeviceLanguage);
+  const activeLanguage = useContext(ActiveLanguage);
   const mounted = useIsMounted();
   const appConfig = useContext(AppConfig);
   const [nameChangeAllowed, setNameChangeAllowed] = useState(true);
@@ -106,7 +106,7 @@ const AddWalletScreen = (props) => {
         <DismissKeyboard>
           <View style={styles.page}>
             <SubPageHeader navigation={props.navigation}>
-              {Texts.addNewWallet[deviceLanguage]}
+              {Texts.addNewWallet[activeLanguage]}
             </SubPageHeader>
 
             <View style={styles.inner}>
@@ -120,7 +120,7 @@ const AddWalletScreen = (props) => {
               >
                 <View style={styles.cryptoInput}>
                   <AppText>
-                    {name ? name : Texts.chooseCrypto[deviceLanguage]}
+                    {name ? name : Texts.chooseCrypto[activeLanguage]}
                   </AppText>
                 </View>
               </TouchableOpacity>
@@ -138,7 +138,7 @@ const AddWalletScreen = (props) => {
                 </View>
                 <TextInput
                   style={styles.cryptoInput}
-                  placeholder={Texts.address[deviceLanguage]}
+                  placeholder={Texts.address[activeLanguage]}
                   placeholderTextColor={Colors.white}
                   onChangeText={setEnteredAddress}
                   value={address}
@@ -153,8 +153,8 @@ const AddWalletScreen = (props) => {
                 disabled={!name || !address || fetchingAndSavingAddress}
                 text={
                   fetchingAndSavingAddress
-                    ? Texts.loadingWallet[deviceLanguage]
-                    : Texts.addWallet[deviceLanguage]
+                    ? Texts.loadingWallet[activeLanguage]
+                    : Texts.addWallet[activeLanguage]
                 }
               ></Button>
             </View>

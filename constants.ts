@@ -6,10 +6,12 @@ export const UPDATE_WALLETS_EVENT = "event.updateWallets";
 
 export const PathNames = {
   home: "home",
+  homeTab: "homeTab",
   addWallet: "add-wallet",
   singleWallet: "single-wallet",
   scanCode: "scan-code",
   marketDataItem: "market-data-item",
+  settings: "settings",
 };
 
 export const Fonts = {

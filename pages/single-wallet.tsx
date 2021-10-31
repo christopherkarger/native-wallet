@@ -14,7 +14,8 @@ import SafeArea from "~/components/safe-area";
 import SubPageHeader from "~/components/sub-page-header";
 import { Colors, Fonts, PathNames, UPDATE_WALLETS_EVENT } from "~/constants";
 import { deleteItemFromLocalDBTableWallets } from "~/db";
-import { DeviceLanguage, MarketDataContext } from "~/models/context";
+import { useIsMounted } from "~/hooks/mounted";
+import { ActiveLanguage, MarketDataContext } from "~/models/context";
 import { MarketData } from "~/models/market-data";
 import { Wallet } from "~/models/wallet";
 import { WalletWrapper } from "~/models/wallet-wrapper";
@@ -24,20 +25,23 @@ import { Texts } from "~/texts";
 import AppText from "../components/text";
 
 const SingleWallet = (props) => {
-  const deviceLanguage = useContext(DeviceLanguage);
+  const activeLanguage = useContext(ActiveLanguage);
   const [walletWrapper, setWalletWrapper] = useState<WalletWrapper>(
     props.route.params.data
   );
   const [moneyBalance, setMoneyBalance] = useState("0");
   const marketData: MarketData = useContext(MarketDataContext);
+  const mounted = useIsMounted();
 
   useEffect(() => {
-    setMoneyBalance(
-      formatNumber({
-        number: calcTotalBalance(marketData, [props.route.params.data]),
-        language: deviceLanguage,
-      })
-    );
+    if (mounted.current) {
+      setMoneyBalance(
+        formatNumber({
+          number: calcTotalBalance(marketData, [props.route.params.data]),
+          language: activeLanguage,
+        })
+      );
+    }
   }, [marketData]);
 
   const deleteItem = async (item: Wallet, index: number) => {
@@ -62,7 +66,7 @@ const SingleWallet = (props) => {
     <GradientView>
       <SafeArea>
         <SubPageHeader navigation={props.navigation}>
-          {walletWrapper.wallets[0].name} {Texts.wallet[deviceLanguage]}
+          {walletWrapper.wallets[0].name} {Texts.wallet[activeLanguage]}
         </SubPageHeader>
         <View style={styles.inner}>
           <View style={styles.header}>
@@ -84,14 +88,14 @@ const SingleWallet = (props) => {
             renderItem={({ item, index }) => {
               return (
                 <View style={styles.singleWalletWrapper}>
-                  <AppText>{Texts.address[deviceLanguage]}</AppText>
+                  <AppText>{Texts.address[activeLanguage]}</AppText>
                   <AppText style={styles.address}>{item.address}</AppText>
-                  <AppText>{Texts.balance[deviceLanguage]}</AppText>
+                  <AppText>{Texts.balance[activeLanguage]}</AppText>
                   <AppText style={styles.balance}>
                     {formatNumber({
                       number: item.balance,
                       decimal: "000000",
-                      language: deviceLanguage,
+                      language: activeLanguage,
                     })}{" "}
                     {item.currency}
                   </AppText>
@@ -100,10 +104,10 @@ const SingleWallet = (props) => {
                     onPress={() => {
                       Alert.alert(
                         "",
-                        Texts.deleteAddressHeadline[deviceLanguage],
+                        Texts.deleteAddressHeadline[activeLanguage],
                         [
                           {
-                            text: Texts.abort[deviceLanguage],
+                            text: Texts.abort[activeLanguage],
                             onPress: () => {},
                             style: "cancel",
                           },
@@ -118,7 +122,7 @@ const SingleWallet = (props) => {
                       );
                     }}
                   >
-                    <AppText>{Texts.delete[deviceLanguage]}</AppText>
+                    <AppText>{Texts.delete[activeLanguage]}</AppText>
                   </TouchableOpacity>
                 </View>
               );
@@ -133,7 +137,7 @@ const SingleWallet = (props) => {
                     id: walletWrapper.wallets[0].id,
                   });
                 }}
-                text={Texts.addAddressToWallet[deviceLanguage]}
+                text={Texts.addAddressToWallet[activeLanguage]}
               ></Button>
             }
           ></FlatList>

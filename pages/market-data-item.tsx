@@ -10,7 +10,7 @@ import SubPageHeader from "~/components/sub-page-header";
 import AppText from "~/components/text";
 import { Colors, Fonts } from "~/constants";
 import { useIsMounted } from "~/hooks/mounted";
-import { DeviceLanguage, MarketDataContext } from "~/models/context";
+import { ActiveLanguage, MarketDataContext } from "~/models/context";
 import {
   IHistoryItem,
   IMarketDataItemData,
@@ -30,7 +30,7 @@ const MarketdataItem = (props) => {
   if (!props.route?.params?.item) {
     throw new Error("maket data item not provied");
   }
-  const deviceLanguage = useContext(DeviceLanguage);
+  const activeLanguage = useContext(ActiveLanguage);
   const marketData: MarketData = useContext(MarketDataContext);
   const [chartData, setChartData] = useState<number[]>([]);
   const [listData, setListData] = useState<IHistoryItem[]>([]);
@@ -90,7 +90,7 @@ const MarketdataItem = (props) => {
         <AppText>
           {formatNumber({
             number: listProps.item.price,
-            language: deviceLanguage,
+            language: activeLanguage,
           })}
           {" €"}
         </AppText>
@@ -115,7 +115,7 @@ const MarketdataItem = (props) => {
             <AppText style={styles.headerPrice}>
               {formatNumber({
                 number: price,
-                language: deviceLanguage,
+                language: activeLanguage,
               })}
               {" €"}
             </AppText>
@@ -153,7 +153,7 @@ const MarketdataItem = (props) => {
               }
             }}
           >
-            <AppText>24 {Texts.hours[deviceLanguage]}</AppText>
+            <AppText>24 {Texts.hours[activeLanguage]}</AppText>
           </TouchableOpacity>
 
           <TouchableOpacity
@@ -168,7 +168,7 @@ const MarketdataItem = (props) => {
               }
             }}
           >
-            <AppText>7 {Texts.days[deviceLanguage]}</AppText>
+            <AppText>7 {Texts.days[activeLanguage]}</AppText>
           </TouchableOpacity>
 
           <TouchableOpacity
@@ -183,7 +183,7 @@ const MarketdataItem = (props) => {
               }
             }}
           >
-            <AppText>30 {Texts.days[deviceLanguage]}</AppText>
+            <AppText>30 {Texts.days[activeLanguage]}</AppText>
           </TouchableOpacity>
         </View>
         <FlatList

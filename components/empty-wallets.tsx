@@ -1,7 +1,7 @@
 import React, { useContext, useState } from "react";
 import { Image, StyleSheet, View } from "react-native";
 import { insertItemToLocalDBTableWallets } from "~/db";
-import { AppConfig, DeviceLanguage } from "~/models/context";
+import { ActiveLanguage, AppConfig } from "~/models/context";
 import { Texts } from "~/texts";
 import { Fonts, PathNames } from "../constants";
 import Button from "./button";
@@ -9,7 +9,7 @@ import AppText from "./text";
 import { TextButton } from "./text-button";
 
 const EmptyWallets = (props) => {
-  const deviceLanguage = useContext(DeviceLanguage);
+  const activeLanguage = useContext(ActiveLanguage);
   const appConfig = useContext(AppConfig);
   const [creatingDemo, setCreatingDemo] = useState(false);
 
@@ -50,18 +50,18 @@ const EmptyWallets = (props) => {
           <Button
             style={styles.addWallet}
             onPress={() => props.navigation.navigate(PathNames.addWallet)}
-            text={Texts.addWallet[deviceLanguage]}
+            text={Texts.addWallet[activeLanguage]}
           ></Button>
         </View>
       </View>
       <View style={styles.demoWrapper}>
         <AppText style={styles.demoText}>
-          {Texts.tryOutApp[deviceLanguage]}
+          {Texts.tryOutApp[activeLanguage]}
         </AppText>
         <TextButton
           style={styles.demoLink}
           textStyle={styles.demoLinkText}
-          text={Texts.demoAccount[deviceLanguage]}
+          text={Texts.demoAccount[activeLanguage]}
           onPress={() => createDemo()}
         ></TextButton>
       </View>
