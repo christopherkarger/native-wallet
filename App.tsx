@@ -8,8 +8,7 @@ import { Config } from "./config";
 import { Fonts } from "./constants";
 import {
   ILocalMarket,
-  insertItemToLocalDBTableMarket,
-  resetLocalDBTableMarket,
+  saveMarketToLocalDBTableMarket,
   selectLocalDBTableMarket,
   selectLocalDBTableSettings,
 } from "./db";
@@ -30,7 +29,6 @@ import { registerNumeralFormat } from "./services/format-number";
 LogBox.ignoreLogs(["Setting a timer"]);
 
 export default function App() {
-  let dbConnection: firebaseDB | undefined;
   const statusBarStyle = "light";
   const [appIsReady, setAppIsReady] = useState(false);
   const [marketData, setMarketData] = useState<MarketData>(new MarketData([]));
@@ -80,31 +78,6 @@ export default function App() {
     });
   };
 
-  const saveMarketToLocalDb = async (data: MarketData) => {
-    try {
-      await resetLocalDBTableMarket();
-    } catch (err) {
-      console.error(err);
-      return;
-    }
-
-    for (const m of data.items) {
-      try {
-        await insertItemToLocalDBTableMarket(
-          m.name,
-          m.data.price,
-          m.data.currency,
-          m.data.rank,
-          m.data.lastFetched,
-          JSON.stringify(m.data.history),
-          JSON.stringify(m.data.lastDayHistory)
-        );
-      } catch (err) {
-        console.error(err);
-      }
-    }
-  };
-
   const localMarketDataToClass = (localMarketData: ILocalMarket[]) => {
     return new MarketData(
       localMarketData.map((item) => {
@@ -126,33 +99,35 @@ export default function App() {
   };
 
   useEffect(() => {
-    try {
-      selectLocalDBTableMarket().then((res) => {
-        if (res && res.rows.length) {
-          const localMarketData = res.rows._array;
+    let dbConnection: firebaseDB | undefined;
+    (async () => {
+      try {
+        const localMarket = await selectLocalDBTableMarket();
+        if (localMarket && localMarket.rows.length) {
+          const localMarketData = localMarket.rows._array;
           const m = localMarketDataToClass(localMarketData);
           if (marketData.items.length === 0) {
             setMarketData(m);
           }
         }
-      });
-    } catch (err) {
-      console.error(err);
-    }
+      } catch (err) {
+        console.error(err);
+      }
 
-    fetchMarketData((data, db) => {
-      if (dbConnection === undefined) {
-        dbConnection = db;
-      }
-      if (data) {
-        setMarketData(data);
-        saveMarketToLocalDb(data);
-        const tether = data.findItemByName("Tether");
-        if (tether) {
-          setUSDPrice(tether.data.price);
+      fetchMarketData((data, db) => {
+        if (dbConnection === undefined) {
+          dbConnection = db;
         }
-      }
-    });
+        if (data) {
+          setMarketData(data);
+          saveMarketToLocalDBTableMarket(data);
+          const tether = data.findItemByName("Tether");
+          if (tether) {
+            setUSDPrice(tether.data.price);
+          }
+        }
+      });
+    })();
 
     return () => {
       dbConnection?.off();

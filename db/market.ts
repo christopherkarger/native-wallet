@@ -1,4 +1,5 @@
 import * as SQLite from "expo-sqlite";
+import { MarketData } from "~/models/market-data";
 import { db } from "./db";
 
 const tableMarket = "market";
@@ -106,7 +107,33 @@ const selectLocalDBTableMarket = () => {
   });
 };
 
+const saveMarketToLocalDBTableMarket = async (data: MarketData) => {
+  try {
+    await resetLocalDBTableMarket();
+  } catch (err) {
+    console.error(err);
+    return;
+  }
+
+  for (const m of data.items) {
+    try {
+      await insertItemToLocalDBTableMarket(
+        m.name,
+        m.data.price,
+        m.data.currency,
+        m.data.rank,
+        m.data.lastFetched,
+        JSON.stringify(m.data.history),
+        JSON.stringify(m.data.lastDayHistory)
+      );
+    } catch (err) {
+      console.error(err);
+    }
+  }
+};
+
 export {
+  saveMarketToLocalDBTableMarket,
   createLocalDBTableMarket,
   insertItemToLocalDBTableMarket,
   selectLocalDBTableMarket,

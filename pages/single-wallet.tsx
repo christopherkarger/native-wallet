@@ -55,7 +55,7 @@ const SingleWallet = (props) => {
     DeviceEventEmitter.emit(UPDATE_WALLETS_EVENT, true);
 
     const updatetWallets = walletWrapper.wallets.filter((e, i) => i !== index);
-    if (updatetWallets.length > 0) {
+    if (updatetWallets.length > 0 && mounted.current) {
       setWalletWrapper(new WalletWrapper(updatetWallets));
     } else {
       props.navigation.navigate(PathNames.home);
