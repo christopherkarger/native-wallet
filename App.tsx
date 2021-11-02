@@ -11,7 +11,8 @@ import {
   insertItemToLocalDBTableMarket,
   resetLocalDBTableMarket,
   selectLocalDBTableMarket,
-} from "./db/market";
+  selectLocalDBTableSettings,
+} from "./db";
 import {
   ActiveLanguage,
   AppConfig,
@@ -38,14 +39,22 @@ export default function App() {
 
   const preload = () => {
     return Promise.all([
-      Localization.getLocalizationAsync()
+      selectLocalDBTableSettings()
         .then((res) => {
-          if (res.locale.includes(SupportedLanguages.DE)) {
-            setActiveLanguage(SupportedLanguages.DE);
+          // If settings are already in database
+          if (res && res.rows.length) {
+            return res.rows._array[0];
           }
         })
         .catch(() => {
+          console.error("could not select local settings");
+          return undefined;
+        }),
+      Localization.getLocalizationAsync()
+        .then((res) => res.locale)
+        .catch(() => {
           console.error("device language could not be set");
+          return undefined;
         }),
       Font.loadAsync({
         "karla-light": require("./assets/fonts/Karla-Light.ttf"),
@@ -53,7 +62,22 @@ export default function App() {
         "karla-semibold": require("./assets/fonts/Karla-SemiBold.ttf"),
         "karla-bold": require("./assets/fonts/Karla-Bold.ttf"),
       }),
-    ]).then(() => {});
+    ]).then(([localSettings, localDeviceLanguage]) => {
+      if (localSettings) {
+        // If saved language is german
+        if (localSettings.activeLanguage === SupportedLanguages.DE) {
+          setActiveLanguage(SupportedLanguages.DE);
+        }
+      } else {
+        if (
+          localDeviceLanguage &&
+          localDeviceLanguage.includes(SupportedLanguages.DE)
+        ) {
+          // If there are no saved settings and the device language is german
+          setActiveLanguage(SupportedLanguages.DE);
+        }
+      }
+    });
   };
 
   const saveMarketToLocalDb = async (data: MarketData) => {
@@ -76,7 +100,7 @@ export default function App() {
           JSON.stringify(m.data.lastDayHistory)
         );
       } catch (err) {
-        console.log(err);
+        console.error(err);
       }
     }
   };
@@ -113,7 +137,7 @@ export default function App() {
         }
       });
     } catch (err) {
-      console.log(err);
+      console.error(err);
     }
 
     fetchMarketData((data, db) => {

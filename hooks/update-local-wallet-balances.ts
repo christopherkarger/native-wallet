@@ -38,7 +38,7 @@ export const useUpdateLocalWalletBalances = async () => {
               isDemoMode = true;
             }
           } catch (err) {
-            console.log(err);
+            console.error(err);
           }
         }
       }

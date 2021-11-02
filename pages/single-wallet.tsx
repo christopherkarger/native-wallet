@@ -47,7 +47,7 @@ const SingleWallet = (props) => {
   const deleteItem = async (item: Wallet, index: number) => {
     await deleteItemFromLocalDBTableWallets(item, walletWrapper).catch(
       (err) => {
-        console.log(err);
+        console.error(err);
         throw new Error("Deleting wallet address from local DB failed");
       }
     );

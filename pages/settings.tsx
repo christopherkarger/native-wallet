@@ -1,5 +1,5 @@
 import { useIsFocused } from "@react-navigation/native";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useCallback, useContext, useEffect, useState } from "react";
 import { DeviceEventEmitter, StyleSheet, View } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import Button from "~/components/button";
@@ -8,7 +8,12 @@ import SafeArea from "~/components/safe-area";
 import SubPageHeader from "~/components/sub-page-header";
 import AppText from "~/components/text";
 import { Colors, Fonts, PathNames, UPDATE_WALLETS_EVENT } from "~/constants";
-import { resetLocalDbWallets, selectLocalDBTableWallets } from "~/db";
+import {
+  resetLocalDbWallets,
+  saveSettingsToLocalDBTableSettings,
+  selectLocalDBTableWallets,
+} from "~/db";
+import { useIsMounted } from "~/hooks/mounted";
 import { ActiveLanguage, SupportedLanguages } from "~/models/context";
 import { switchNumeralLocal } from "~/services/format-number";
 import { Texts } from "~/texts";
@@ -18,7 +23,7 @@ const SettingsScreen = (props) => {
   const [isDemoAccount, setIsDemoAccount] = useState(false);
   const [isDeletingDemoAccount, setIsDeletingDemoAccount] = useState(false);
   const isFocused = useIsFocused();
-
+  const mounted = useIsMounted();
   const deleteDemo = async () => {
     if (isDeletingDemoAccount) {
       return;
@@ -35,16 +40,27 @@ const SettingsScreen = (props) => {
     }
   };
 
+  const changeLanguage = useCallback((language: SupportedLanguages) => {
+    setActiveLanguage(language);
+    switchNumeralLocal(language);
+    saveSettingsToLocalDBTableSettings({
+      activeLanguage: language,
+    });
+  }, []);
+
   useEffect(() => {
     if (!isFocused) {
       return;
     }
     (async () => {
       const localWallets = await selectLocalDBTableWallets().catch(() => {});
-      if (localWallets && localWallets.rows.length) {
-        setIsDemoAccount(localWallets.rows._array.some((x) => x.demoAddress));
-      } else {
-        setIsDemoAccount(false);
+
+      if (mounted.current) {
+        if (localWallets && localWallets.rows.length) {
+          setIsDemoAccount(localWallets.rows._array.some((x) => x.demoAddress));
+        } else {
+          setIsDemoAccount(false);
+        }
       }
     })();
   }, [isFocused]);
@@ -68,10 +84,7 @@ const SettingsScreen = (props) => {
                     ? styles.toggleButtonActive
                     : {},
                 ]}
-                onPress={() => {
-                  setActiveLanguage(SupportedLanguages.DE);
-                  switchNumeralLocal(SupportedLanguages.DE);
-                }}
+                onPress={() => changeLanguage(SupportedLanguages.DE)}
               >
                 <AppText
                   style={[
@@ -92,10 +105,7 @@ const SettingsScreen = (props) => {
                     ? styles.toggleButtonActive
                     : {},
                 ]}
-                onPress={() => {
-                  setActiveLanguage(SupportedLanguages.EN);
-                  switchNumeralLocal(SupportedLanguages.EN);
-                }}
+                onPress={() => changeLanguage(SupportedLanguages.EN)}
               >
                 <AppText
                   style={[
