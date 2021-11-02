@@ -30,7 +30,7 @@ const MarketdataItem = (props) => {
   if (!props.route?.params?.item) {
     throw new Error("maket data item not provied");
   }
-  const activeLanguage = useContext(ActiveLanguage);
+  const [activeLanguage] = useContext(ActiveLanguage);
   const marketData: MarketData = useContext(MarketDataContext);
   const [chartData, setChartData] = useState<number[]>([]);
   const [listData, setListData] = useState<IHistoryItem[]>([]);

@@ -20,7 +20,7 @@ import AppText from "./text";
 
 const Market = (props) => {
   const marketData = props.data as MarketData;
-  const activeLanguage = useContext(ActiveLanguage);
+  const [activeLanguage] = useContext(ActiveLanguage);
 
   const renderedMarketItem = (listProps) => {
     const icon = new CryptoIcon(listProps.item.name);
@@ -91,7 +91,10 @@ const Market = (props) => {
       </View>
     );
   };
-  const memoizedListItem = useMemo(() => renderedMarketItem, [props.data]);
+  const memoizedListItem = useMemo(
+    () => renderedMarketItem,
+    [props.data, activeLanguage]
+  );
 
   return (
     <View style={styles.inner}>

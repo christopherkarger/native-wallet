@@ -18,7 +18,7 @@ import WalletList from "../components/wallet-list";
 import { Colors, Fonts, UPDATE_WALLETS_EVENT } from "../constants";
 
 const HomeScreen = (props) => {
-  const activeLanguage = useContext(ActiveLanguage);
+  const [activeLanguage] = useContext(ActiveLanguage);
   const [loading, setIsloading] = useState(true);
   const [walletsData, setWalletsData] = useState<WalletWrapper[]>([]);
   const [totalBalance, setTotalBalance] = useState("0");
@@ -40,7 +40,7 @@ const HomeScreen = (props) => {
         language: activeLanguage,
       })
     );
-  }, [marketData, walletsData]);
+  }, [marketData, walletsData, activeLanguage]);
 
   const updateWallets = async () => {
     const localWallets = await selectLocalDBTableWallets().catch(() => {});
@@ -62,7 +62,7 @@ const HomeScreen = (props) => {
         {walletsData.length === 0 && (
           <EmptyWallets
             navigation={props.navigation}
-            onDemoCreated={() => updateWallets()}
+            onDemoCreated={updateWallets}
           ></EmptyWallets>
         )}
         {walletsData.length > 0 && (

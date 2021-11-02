@@ -23,7 +23,7 @@ import { Texts } from "~/texts";
 import SubPageHeader from "../components/sub-page-header";
 
 const AddWalletScreen = (props) => {
-  const activeLanguage = useContext(ActiveLanguage);
+  const [activeLanguage] = useContext(ActiveLanguage);
   const mounted = useIsMounted();
   const appConfig = useContext(AppConfig);
   const [nameChangeAllowed, setNameChangeAllowed] = useState(true);

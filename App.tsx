@@ -28,34 +28,33 @@ import { registerNumeralFormat } from "./services/format-number";
 
 LogBox.ignoreLogs(["Setting a timer"]);
 
-let activeLanguage = DefaultLanguage;
-
-const preload = () => {
-  return Promise.all([
-    Localization.getLocalizationAsync()
-      .then((res) => {
-        if (res.locale.includes(SupportedLanguages.DE)) {
-          activeLanguage = SupportedLanguages.DE;
-        }
-      })
-      .catch(() => {
-        console.error("device language could not be set");
-      }),
-    Font.loadAsync({
-      "karla-light": require("./assets/fonts/Karla-Light.ttf"),
-      "karla-regular": require("./assets/fonts/Karla-Regular.ttf"),
-      "karla-semibold": require("./assets/fonts/Karla-SemiBold.ttf"),
-      "karla-bold": require("./assets/fonts/Karla-Bold.ttf"),
-    }),
-  ]).then(() => {});
-};
-
 export default function App() {
   let dbConnection: firebaseDB | undefined;
   const statusBarStyle = "light";
   const [appIsReady, setAppIsReady] = useState(false);
   const [marketData, setMarketData] = useState<MarketData>(new MarketData([]));
   const [USDPrice, setUSDPrice] = useState(0);
+  const [activeLanguage, setActiveLanguage] = useState(DefaultLanguage);
+
+  const preload = () => {
+    return Promise.all([
+      Localization.getLocalizationAsync()
+        .then((res) => {
+          if (res.locale.includes(SupportedLanguages.DE)) {
+            setActiveLanguage(SupportedLanguages.DE);
+          }
+        })
+        .catch(() => {
+          console.error("device language could not be set");
+        }),
+      Font.loadAsync({
+        "karla-light": require("./assets/fonts/Karla-Light.ttf"),
+        "karla-regular": require("./assets/fonts/Karla-Regular.ttf"),
+        "karla-semibold": require("./assets/fonts/Karla-SemiBold.ttf"),
+        "karla-bold": require("./assets/fonts/Karla-Bold.ttf"),
+      }),
+    ]).then(() => {});
+  };
 
   const saveMarketToLocalDb = async (data: MarketData) => {
     try {
@@ -150,8 +149,8 @@ export default function App() {
   }
 
   return (
-    <USDPriceContext.Provider value={USDPrice}>
-      <ActiveLanguage.Provider value={activeLanguage}>
+    <USDPriceContext.Provider value={[USDPrice, setUSDPrice]}>
+      <ActiveLanguage.Provider value={[activeLanguage, setActiveLanguage]}>
         <AppConfig.Provider value={Config}>
           <MarketDataContext.Provider value={marketData}>
             <StatusBar style={statusBarStyle} />

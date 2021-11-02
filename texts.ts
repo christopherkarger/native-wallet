@@ -87,4 +87,8 @@ export const Texts = {
     de: "Heute",
     en: "Today",
   },
+  language: {
+    de: "Sprache",
+    en: "Language",
+  },
 };

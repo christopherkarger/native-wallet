@@ -8,7 +8,7 @@ import { Colors, Fonts, PathNames } from "../constants";
 import AppText from "./text";
 
 const WalletCard = (props) => {
-  const activeLanguage = useContext(ActiveLanguage);
+  const [activeLanguage] = useContext(ActiveLanguage);
   const data = props.data.wallets[0];
   const [amount, setAmount] = useState(props.data.totalBalance);
   const marketData: MarketData = useContext(MarketDataContext);
@@ -23,7 +23,7 @@ const WalletCard = (props) => {
   useEffect(() => {
     setAmount(props.data.totalBalance);
     setWalletBalance(getWalletBalance());
-  }, [props.data.wallets]);
+  }, [props.data.wallets, activeLanguage]);
 
   useEffect(() => {
     setWalletBalance(getWalletBalance());

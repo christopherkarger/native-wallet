@@ -16,11 +16,14 @@ export const DefaultLanguage = SupportedLanguages.EN;
 
 export const AppConfig = React.createContext<IConfig>(defaultConfig);
 
-export const ActiveLanguage =
-  React.createContext<SupportedLanguages>(DefaultLanguage);
+export const ActiveLanguage = React.createContext<
+  [SupportedLanguages, React.Dispatch<React.SetStateAction<SupportedLanguages>>]
+>([DefaultLanguage, () => {}]);
 
 export const MarketDataContext = React.createContext<MarketData>(
   new MarketData([])
 );
 
-export const USDPriceContext = React.createContext(0);
+export const USDPriceContext = React.createContext<
+  [number, React.Dispatch<React.SetStateAction<number>>]
+>([0, () => {}]);

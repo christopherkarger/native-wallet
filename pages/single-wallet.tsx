@@ -25,7 +25,7 @@ import { Texts } from "~/texts";
 import AppText from "../components/text";
 
 const SingleWallet = (props) => {
-  const activeLanguage = useContext(ActiveLanguage);
+  const [activeLanguage] = useContext(ActiveLanguage);
   const [walletWrapper, setWalletWrapper] = useState<WalletWrapper>(
     props.route.params.data
   );

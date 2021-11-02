@@ -9,7 +9,7 @@ import AppText from "./text";
 import { TextButton } from "./text-button";
 
 const EmptyWallets = (props) => {
-  const activeLanguage = useContext(ActiveLanguage);
+  const [activeLanguage] = useContext(ActiveLanguage);
   const appConfig = useContext(AppConfig);
   const [creatingDemo, setCreatingDemo] = useState(false);
 

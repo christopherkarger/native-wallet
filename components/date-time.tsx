@@ -6,7 +6,7 @@ import { Texts } from "~/texts";
 import AppText from "./text";
 
 export const DateTime = (props) => {
-  const activeLanguage = useContext(ActiveLanguage);
+  const [activeLanguage] = useContext(ActiveLanguage);
 
   const formatDate = (date: number) => {
     const d = new Date(date);
