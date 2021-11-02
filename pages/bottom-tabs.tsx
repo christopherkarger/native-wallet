@@ -2,58 +2,43 @@ import { MaterialIcons } from "@expo/vector-icons";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import React from "react";
 import { StyleSheet, View } from "react-native";
+import CustomTabs from "~/components/custom-tabs";
 import GradientView from "~/components/gradient-view";
 import { Colors, PathNames } from "../constants";
 import AddWalletScreen from "./add-wallet";
 import HomeScreen from "./home-screen";
-import Settings from "./settings";
+import SettingsScreen from "./settings";
 
 const Tab = createBottomTabNavigator();
 
-const HomeTabs = () => {
+const BottomTabs = () => {
   return (
     <GradientView>
       <Tab.Navigator
+        tabBar={(props) => <CustomTabs {...props} />}
         screenOptions={{
           headerShown: false,
-          tabBarHideOnKeyboard: true,
-          tabBarShowLabel: false,
-          tabBarStyle: {
-            paddingTop: 3,
-            paddingBottom: 5,
-            height: 45,
-            backgroundColor: Colors.bgDark,
-            borderTopWidth: 1,
-            borderTopColor: Colors.darkBlue,
-          },
-          tabBarActiveTintColor: Colors.lightBlue,
-          tabBarInactiveTintColor: Colors.white,
         }}
       >
         <Tab.Screen
           name={PathNames.homeTab}
           component={HomeScreen}
           options={{
-            tabBarIcon: ({ color, size }) => (
+            tabBarIcon: ({ focused }) => (
               <MaterialIcons
                 name="account-balance-wallet"
                 size={25}
-                color={color}
+                color={focused ? Colors.lightBlue : Colors.white}
               />
             ),
           }}
         />
         <Tab.Screen
-          name={PathNames.addWallet}
+          name={PathNames.addWalletTab}
           component={AddWalletScreen}
           options={{
-            tabBarIcon: ({ color, size, focused }) => (
-              <View
-                style={[
-                  styles.addWalletButtonGradient,
-                  focused ? styles.addWalletButtonActive : {},
-                ]}
-              >
+            tabBarIcon: ({ focused }) => (
+              <View style={styles.addWalletButton}>
                 <MaterialIcons
                   name="add"
                   size={25}
@@ -65,10 +50,14 @@ const HomeTabs = () => {
         />
         <Tab.Screen
           name={PathNames.settings}
-          component={Settings}
+          component={SettingsScreen}
           options={{
-            tabBarIcon: ({ color, size }) => (
-              <MaterialIcons name="settings" size={25} color={color} />
+            tabBarIcon: ({ focused }) => (
+              <MaterialIcons
+                name="settings"
+                size={25}
+                color={focused ? Colors.lightBlue : Colors.white}
+              />
             ),
           }}
         />
@@ -78,7 +67,7 @@ const HomeTabs = () => {
 };
 
 const styles = StyleSheet.create({
-  addWalletButtonGradient: {
+  addWalletButton: {
     width: 32,
     height: 32,
     borderRadius: 18,
@@ -86,11 +75,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     backgroundColor: Colors.white,
   },
-  addWalletButtonActive: {
-    // width: 22,
-    // height: 22,
-    backgroundColor: Colors.lightBlue,
-  },
 });
 
-export default HomeTabs;
+export default BottomTabs;

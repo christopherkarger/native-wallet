@@ -5,8 +5,10 @@ export const isAndroid = Platform.OS === "android";
 export const UPDATE_WALLETS_EVENT = "event.updateWallets";
 
 export const PathNames = {
-  home: "home",
   homeTab: "homeTab",
+  addWalletTab: "add-walletTab",
+
+  home: "home",
   addWallet: "add-wallet",
   singleWallet: "single-wallet",
   scanCode: "scan-code",

@@ -1,6 +1,7 @@
 import { useIsFocused } from "@react-navigation/native";
 import React, { useContext, useEffect, useState } from "react";
 import { DeviceEventEmitter, StyleSheet, View } from "react-native";
+import { TouchableOpacity } from "react-native-gesture-handler";
 import Button from "~/components/button";
 import GradientView from "~/components/gradient-view";
 import SafeArea from "~/components/safe-area";
@@ -11,7 +12,7 @@ import { resetLocalDbWallets, selectLocalDBTableWallets } from "~/db";
 import { ActiveLanguage } from "~/models/context";
 import { Texts } from "~/texts";
 
-const Settings = (props) => {
+const SettingsScreen = (props) => {
   const activeLanguage = useContext(ActiveLanguage);
   const [isDemoAccount, setIsDemoAccount] = useState(false);
   const [isDeletingDemoAccount, setIsDeletingDemoAccount] = useState(false);
@@ -54,7 +55,11 @@ const Settings = (props) => {
           {Texts.settings[activeLanguage]}
         </SubPageHeader>
         <View style={styles.inner}>
-          {isDemoAccount && (
+          <TouchableOpacity onPress={() => {}}>
+            <AppText>De</AppText>
+          </TouchableOpacity>
+
+          {!isDemoAccount && (
             <Button onPress={deleteDemo}>
               <AppText>{Texts.deleteDemo[activeLanguage]}</AppText>
             </Button>
@@ -72,4 +77,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Settings;
+export default SettingsScreen;

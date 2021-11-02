@@ -9,7 +9,8 @@ import QrCodeScanner from "~/components/qr-code-scanner";
 import { Colors, PathNames } from "~/constants";
 import { createLocalDBTableWallets } from "~/db";
 import { createLocalDBTableMarket } from "~/db/market";
-import HomeTabs from "./home-tabs";
+import AddWalletScreen from "./add-wallet";
+import BottomTabs from "./bottom-tabs";
 import MarketdataItem from "./market-data-item";
 import SingleWallet from "./single-wallet";
 
@@ -45,7 +46,11 @@ const Main = () => {
             ...TransitionPresets.SlideFromRightIOS,
           }}
         >
-          <Stack.Screen name={PathNames.home} component={HomeTabs} />
+          <Stack.Screen name={PathNames.home} component={BottomTabs} />
+          <Stack.Screen
+            name={PathNames.addWallet}
+            component={AddWalletScreen}
+          />
           <Stack.Screen
             name={PathNames.marketDataItem}
             component={MarketdataItem}
