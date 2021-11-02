@@ -9,14 +9,18 @@ import { Fonts } from "./constants";
 import {
   ILocalMarket,
   saveMarketToLocalDBTableMarket,
+  saveSettingsToLocalDBTableSettings,
   selectLocalDBTableMarket,
   selectLocalDBTableSettings,
 } from "./db";
 import {
-  ActiveLanguage,
-  AppConfig,
+  ActiveCurrencyContext,
+  ActiveLanguageContext,
+  AppConfigContext,
+  DefaultCurrency,
   DefaultLanguage,
   MarketDataContext,
+  SupportedCurrencies,
   SupportedLanguages,
   USDPriceContext,
 } from "./models/context";
@@ -34,6 +38,7 @@ export default function App() {
   const [marketData, setMarketData] = useState<MarketData>(new MarketData([]));
   const [USDPrice, setUSDPrice] = useState(0);
   const [activeLanguage, setActiveLanguage] = useState(DefaultLanguage);
+  const [activeCurrency, setActiveCurrency] = useState(DefaultCurrency);
 
   const preload = () => {
     return Promise.all([
@@ -66,14 +71,28 @@ export default function App() {
         if (localSettings.activeLanguage === SupportedLanguages.DE) {
           setActiveLanguage(SupportedLanguages.DE);
         }
+
+        if (localSettings.activeCurrency === SupportedCurrencies.EUR) {
+          setActiveCurrency(SupportedCurrencies.EUR);
+        }
       } else {
-        if (
+        const isGerman =
           localDeviceLanguage &&
-          localDeviceLanguage.includes(SupportedLanguages.DE)
-        ) {
+          localDeviceLanguage.includes(SupportedLanguages.DE);
+
+        if (isGerman) {
           // If there are no saved settings and the device language is german
           setActiveLanguage(SupportedLanguages.DE);
         }
+
+        saveSettingsToLocalDBTableSettings({
+          activeCurrency: isGerman
+            ? SupportedCurrencies.EUR
+            : SupportedCurrencies.USD,
+          activeLanguage: isGerman
+            ? SupportedLanguages.DE
+            : SupportedLanguages.EN,
+        });
       }
     });
   };
@@ -148,16 +167,20 @@ export default function App() {
   }
 
   return (
-    <USDPriceContext.Provider value={[USDPrice, setUSDPrice]}>
-      <ActiveLanguage.Provider value={[activeLanguage, setActiveLanguage]}>
-        <AppConfig.Provider value={Config}>
-          <MarketDataContext.Provider value={marketData}>
-            <StatusBar style={statusBarStyle} />
-            <Main />
-          </MarketDataContext.Provider>
-        </AppConfig.Provider>
-      </ActiveLanguage.Provider>
-    </USDPriceContext.Provider>
+    <ActiveCurrencyContext.Provider value={[activeCurrency, setActiveCurrency]}>
+      <USDPriceContext.Provider value={USDPrice}>
+        <ActiveLanguageContext.Provider
+          value={[activeLanguage, setActiveLanguage]}
+        >
+          <AppConfigContext.Provider value={Config}>
+            <MarketDataContext.Provider value={marketData}>
+              <StatusBar style={statusBarStyle} />
+              <Main />
+            </MarketDataContext.Provider>
+          </AppConfigContext.Provider>
+        </ActiveLanguageContext.Provider>
+      </USDPriceContext.Provider>
+    </ActiveCurrencyContext.Provider>
   );
 }
 

@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import { Image, StyleSheet, TouchableOpacity, View } from "react-native";
-import { ActiveLanguage, MarketDataContext } from "~/models/context";
+import { ActiveLanguageContext, MarketDataContext } from "~/models/context";
 import { MarketData } from "~/models/market-data";
 import { calcTotalBalance } from "~/services/calc-balance";
 import { formatNumber } from "~/services/format-number";
@@ -8,7 +8,7 @@ import { Colors, Fonts, PathNames } from "../constants";
 import AppText from "./text";
 
 const WalletCard = (props) => {
-  const [activeLanguage] = useContext(ActiveLanguage);
+  const [activeLanguage] = useContext(ActiveLanguageContext);
   const data = props.data.wallets[0];
   const [amount, setAmount] = useState(props.data.totalBalance);
   const marketData: MarketData = useContext(MarketDataContext);

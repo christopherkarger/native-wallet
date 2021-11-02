@@ -1,12 +1,12 @@
 import React, { useContext } from "react";
 import { View } from "react-native";
-import { ActiveLanguage } from "~/models/context";
+import { ActiveLanguageContext } from "~/models/context";
 import { dateIsToday } from "~/services/helper";
 import { Texts } from "~/texts";
 import AppText from "./text";
 
 export const DateTime = (props) => {
-  const [activeLanguage] = useContext(ActiveLanguage);
+  const [activeLanguage] = useContext(ActiveLanguageContext);
 
   const formatDate = (date: number) => {
     const d = new Date(date);

@@ -10,7 +10,7 @@ import SubPageHeader from "~/components/sub-page-header";
 import AppText from "~/components/text";
 import { Colors, Fonts } from "~/constants";
 import { useIsMounted } from "~/hooks/mounted";
-import { ActiveLanguage, MarketDataContext } from "~/models/context";
+import { ActiveLanguageContext, MarketDataContext } from "~/models/context";
 import {
   IHistoryItem,
   IMarketDataItemData,
@@ -30,7 +30,7 @@ const MarketdataItem = (props) => {
   if (!props.route?.params?.item) {
     throw new Error("maket data item not provied");
   }
-  const [activeLanguage] = useContext(ActiveLanguage);
+  const [activeLanguage] = useContext(ActiveLanguageContext);
   const marketData: MarketData = useContext(MarketDataContext);
   const [chartData, setChartData] = useState<number[]>([]);
   const [listData, setListData] = useState<IHistoryItem[]>([]);

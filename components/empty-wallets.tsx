@@ -1,7 +1,7 @@
 import React, { useContext, useState } from "react";
 import { Image, StyleSheet, View } from "react-native";
 import { insertItemToLocalDBTableWallets } from "~/db";
-import { ActiveLanguage, AppConfig } from "~/models/context";
+import { ActiveLanguageContext, AppConfigContext } from "~/models/context";
 import { Texts } from "~/texts";
 import { Fonts, PathNames } from "../constants";
 import Button from "./button";
@@ -9,8 +9,8 @@ import AppText from "./text";
 import { TextButton } from "./text-button";
 
 const EmptyWallets = (props) => {
-  const [activeLanguage] = useContext(ActiveLanguage);
-  const appConfig = useContext(AppConfig);
+  const [activeLanguage] = useContext(ActiveLanguageContext);
+  const appConfig = useContext(AppConfigContext);
   const [creatingDemo, setCreatingDemo] = useState(false);
 
   const createDemo = async () => {

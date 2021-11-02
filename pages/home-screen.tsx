@@ -5,7 +5,7 @@ import Market from "~/components/market";
 import SafeArea from "~/components/safe-area";
 import { selectLocalDBTableWallets } from "~/db";
 import { useUpdateLocalWalletBalances } from "~/hooks/update-local-wallet-balances";
-import { ActiveLanguage, MarketDataContext } from "~/models/context";
+import { ActiveLanguageContext, MarketDataContext } from "~/models/context";
 import { MarketData } from "~/models/market-data";
 import { WalletWrapper } from "~/models/wallet-wrapper";
 import { calcTotalBalance } from "~/services/calc-balance";
@@ -18,7 +18,7 @@ import WalletList from "../components/wallet-list";
 import { Colors, Fonts, UPDATE_WALLETS_EVENT } from "../constants";
 
 const HomeScreen = (props) => {
-  const [activeLanguage] = useContext(ActiveLanguage);
+  const [activeLanguage] = useContext(ActiveLanguageContext);
   const [loading, setIsloading] = useState(true);
   const [walletsData, setWalletsData] = useState<WalletWrapper[]>([]);
   const [totalBalance, setTotalBalance] = useState("0");

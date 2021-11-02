@@ -91,4 +91,8 @@ export const Texts = {
     de: "Sprache",
     en: "Language",
   },
+  currency: {
+    de: "Währung",
+    en: "Currency",
+  },
 };

@@ -9,7 +9,7 @@ import {
   View,
 } from "react-native";
 import { LineChart } from "react-native-svg-charts";
-import { ActiveLanguage } from "~/models/context";
+import { ActiveLanguageContext } from "~/models/context";
 import { CryptoIcon } from "~/models/crypto-icon";
 import { MarketData } from "~/models/market-data";
 import { formatNumber } from "~/services/format-number";
@@ -20,7 +20,7 @@ import AppText from "./text";
 
 const Market = (props) => {
   const marketData = props.data as MarketData;
-  const [activeLanguage] = useContext(ActiveLanguage);
+  const [activeLanguage] = useContext(ActiveLanguageContext);
 
   const renderedMarketItem = (listProps) => {
     const icon = new CryptoIcon(listProps.item.name);

@@ -5,14 +5,14 @@ import {
   selectLocalDBTableWallets,
   updateItemBalanceToLocalDBTableWallets,
 } from "~/db";
-import { AppConfig } from "~/models/context";
+import { AppConfigContext } from "~/models/context";
 import { getWalletWrapper } from "~/services/getWalletWrapper";
 import { fetchAddress } from "../services/fetch-address";
 import { waitTime } from "../services/helper";
 import useAppStatus, { AppStaus } from "./handle-app-state";
 
 export const useUpdateLocalWalletBalances = async () => {
-  const appConfig = useContext(AppConfig);
+  const appConfig = useContext(AppConfigContext);
   const appStatus = useAppStatus();
 
   const update = async () => {

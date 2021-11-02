@@ -25,7 +25,7 @@ interface ISQLResult extends SQLite.SQLResultSet {
 }
 
 const resetLocalDbWallets = async () => {
-  await dropLocalDBTableWallets();
+  await deleteAllFromLocalDBTableWallets();
 };
 
 const createLocalDBTableWallets = () => {
@@ -98,7 +98,7 @@ const selectLocalDBTableWallets = () => {
   });
 };
 
-const dropLocalDBTableWallets = () => {
+const deleteAllFromLocalDBTableWallets = () => {
   return new Promise<ISQLResult>((resolve, reject) => {
     db.transaction((tx) => {
       tx.executeSql(
@@ -144,7 +144,7 @@ const updateItemConnectedToIdToLocalDBTableWallets = (
   return new Promise<SQLite.SQLResultSet>((resolve, reject) => {
     db.transaction((tx) => {
       tx.executeSql(
-        `UPDATE ${tableWallets} SET connectedToId = ? WHERE id = ?`,
+        `UPDATE ${tableWallets} SET connectedToId = ? WHERE id = ?;`,
         [newId, id],
         (_, result) => {
           resolve(result);
@@ -162,7 +162,7 @@ const deleteSingleItemFromLocalDBTableWallets = (id: number) => {
   return new Promise<SQLite.SQLResultSet>((resolve, reject) => {
     db.transaction((tx) => {
       tx.executeSql(
-        `DELETE FROM ${tableWallets} WHERE id = ?`,
+        `DELETE FROM ${tableWallets} WHERE id = ?;`,
         [id],
         (_, result) => {
           resolve(result);
@@ -245,7 +245,6 @@ export {
   deleteItemFromLocalDBTableWallets,
   deleteMainItemFromLocalDBTableWallets,
   deleteSingleItemFromLocalDBTableWallets,
-  dropLocalDBTableWallets,
   insertItemToLocalDBTableWallets,
   resetLocalDbWallets,
   selectLocalDBTableWallets,

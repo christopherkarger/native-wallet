@@ -1,30 +1,37 @@
 import { useIsFocused } from "@react-navigation/native";
 import React, { useCallback, useContext, useEffect, useState } from "react";
 import { DeviceEventEmitter, StyleSheet, View } from "react-native";
-import { TouchableOpacity } from "react-native-gesture-handler";
 import Button from "~/components/button";
 import GradientView from "~/components/gradient-view";
 import SafeArea from "~/components/safe-area";
 import SubPageHeader from "~/components/sub-page-header";
 import AppText from "~/components/text";
-import { Colors, Fonts, PathNames, UPDATE_WALLETS_EVENT } from "~/constants";
+import { PathNames, UPDATE_WALLETS_EVENT } from "~/constants";
 import {
   resetLocalDbWallets,
   saveSettingsToLocalDBTableSettings,
   selectLocalDBTableWallets,
 } from "~/db";
 import { useIsMounted } from "~/hooks/mounted";
-import { ActiveLanguage, SupportedLanguages } from "~/models/context";
+import {
+  ActiveCurrencyContext,
+  ActiveLanguageContext,
+  SupportedCurrencies,
+  SupportedLanguages,
+} from "~/models/context";
 import { switchNumeralLocal } from "~/services/format-number";
 import { Texts } from "~/texts";
+import Toggle from "../components/toggle";
 
 const SettingsScreen = (props) => {
-  const [activeLanguage, setActiveLanguage] = useContext(ActiveLanguage);
+  const [activeLanguage, setActiveLanguage] = useContext(ActiveLanguageContext);
+  const [activeCurrency, setActiveCurrency] = useContext(ActiveCurrencyContext);
   const [isDemoAccount, setIsDemoAccount] = useState(false);
   const [isDeletingDemoAccount, setIsDeletingDemoAccount] = useState(false);
   const isFocused = useIsFocused();
   const mounted = useIsMounted();
-  const deleteDemo = async () => {
+
+  const deleteDemo = useCallback(async () => {
     if (isDeletingDemoAccount) {
       return;
     }
@@ -38,13 +45,20 @@ const SettingsScreen = (props) => {
       DeviceEventEmitter.emit(UPDATE_WALLETS_EVENT, true);
       props.navigation.navigate(PathNames.homeTab);
     }
-  };
+  }, []);
 
   const changeLanguage = useCallback((language: SupportedLanguages) => {
     setActiveLanguage(language);
     switchNumeralLocal(language);
     saveSettingsToLocalDBTableSettings({
       activeLanguage: language,
+    });
+  }, []);
+
+  const changeCurrency = useCallback((currency: SupportedCurrencies) => {
+    setActiveCurrency(currency);
+    saveSettingsToLocalDBTableSettings({
+      activeCurrency: currency,
     });
   }, []);
 
@@ -76,49 +90,46 @@ const SettingsScreen = (props) => {
             <AppText style={styles.itemHeadline}>
               {Texts.language[activeLanguage]}
             </AppText>
-            <View style={styles.toggleWrapper}>
-              <TouchableOpacity
-                style={[
-                  styles.toggleButton,
-                  activeLanguage === SupportedLanguages.DE
-                    ? styles.toggleButtonActive
-                    : {},
-                ]}
-                onPress={() => changeLanguage(SupportedLanguages.DE)}
-              >
-                <AppText
-                  style={[
-                    styles.toggleButtonText,
-                    activeLanguage === SupportedLanguages.DE
-                      ? styles.toggleButtonActiveText
-                      : {},
-                  ]}
-                >
-                  De
-                </AppText>
-              </TouchableOpacity>
+            <Toggle
+              headline={Texts.language[activeLanguage]}
+              text={["De", "En"]}
+              active={[
+                activeLanguage === SupportedLanguages.DE,
+                activeLanguage === SupportedLanguages.EN,
+              ]}
+              toggle={(index: number) => {
+                if (index === 0) {
+                  changeLanguage(SupportedLanguages.DE);
+                }
 
-              <TouchableOpacity
-                style={[
-                  styles.toggleButton,
-                  activeLanguage === SupportedLanguages.EN
-                    ? styles.toggleButtonActive
-                    : {},
-                ]}
-                onPress={() => changeLanguage(SupportedLanguages.EN)}
-              >
-                <AppText
-                  style={[
-                    styles.toggleButtonText,
-                    activeLanguage === SupportedLanguages.EN
-                      ? styles.toggleButtonActiveText
-                      : {},
-                  ]}
-                >
-                  En
-                </AppText>
-              </TouchableOpacity>
-            </View>
+                if (index === 1) {
+                  changeLanguage(SupportedLanguages.EN);
+                }
+              }}
+            ></Toggle>
+          </View>
+
+          <View style={styles.item}>
+            <AppText style={styles.itemHeadline}>
+              {Texts.currency[activeLanguage]}
+            </AppText>
+            <Toggle
+              headline={Texts.language[activeLanguage]}
+              text={["Dollar", "Euro"]}
+              active={[
+                activeCurrency === SupportedCurrencies.USD,
+                activeCurrency === SupportedCurrencies.EUR,
+              ]}
+              toggle={(index: number) => {
+                if (index === 0) {
+                  changeCurrency(SupportedCurrencies.USD);
+                }
+
+                if (index === 1) {
+                  changeCurrency(SupportedCurrencies.EUR);
+                }
+              }}
+            ></Toggle>
           </View>
 
           {isDemoAccount && (
@@ -136,26 +147,6 @@ const styles = StyleSheet.create({
   inner: {
     marginHorizontal: 20,
     flex: 1,
-  },
-  toggleWrapper: {
-    flexDirection: "row",
-    borderWidth: 1,
-    borderColor: Colors.white,
-    borderRadius: 5,
-    alignSelf: "flex-start",
-  },
-  toggleButton: {
-    paddingHorizontal: 20,
-    paddingVertical: 15,
-  },
-  toggleButtonText: {
-    fontFamily: Fonts.bold,
-  },
-  toggleButtonActive: {
-    backgroundColor: Colors.white,
-  },
-  toggleButtonActiveText: {
-    color: Colors.bgDark,
   },
   item: {
     marginBottom: 30,

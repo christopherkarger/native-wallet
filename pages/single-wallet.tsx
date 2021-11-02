@@ -15,7 +15,7 @@ import SubPageHeader from "~/components/sub-page-header";
 import { Colors, Fonts, PathNames, UPDATE_WALLETS_EVENT } from "~/constants";
 import { deleteItemFromLocalDBTableWallets } from "~/db";
 import { useIsMounted } from "~/hooks/mounted";
-import { ActiveLanguage, MarketDataContext } from "~/models/context";
+import { ActiveLanguageContext, MarketDataContext } from "~/models/context";
 import { MarketData } from "~/models/market-data";
 import { Wallet } from "~/models/wallet";
 import { WalletWrapper } from "~/models/wallet-wrapper";
@@ -25,7 +25,7 @@ import { Texts } from "~/texts";
 import AppText from "../components/text";
 
 const SingleWallet = (props) => {
-  const [activeLanguage] = useContext(ActiveLanguage);
+  const [activeLanguage] = useContext(ActiveLanguageContext);
   const [walletWrapper, setWalletWrapper] = useState<WalletWrapper>(
     props.route.params.data
   );

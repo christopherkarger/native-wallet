@@ -17,15 +17,15 @@ import AppText from "~/components/text";
 import { Colors, PathNames, UPDATE_WALLETS_EVENT } from "~/constants";
 import { insertItemToLocalDBTableWallets } from "~/db";
 import { useIsMounted } from "~/hooks/mounted";
-import { ActiveLanguage, AppConfig } from "~/models/context";
+import { ActiveLanguageContext, AppConfigContext } from "~/models/context";
 import { fetchAddress } from "~/services/fetch-address";
 import { Texts } from "~/texts";
 import SubPageHeader from "../components/sub-page-header";
 
 const AddWalletScreen = (props) => {
-  const [activeLanguage] = useContext(ActiveLanguage);
+  const [activeLanguage] = useContext(ActiveLanguageContext);
   const mounted = useIsMounted();
-  const appConfig = useContext(AppConfig);
+  const appConfig = useContext(AppConfigContext);
   const [nameChangeAllowed, setNameChangeAllowed] = useState(true);
   const [name, setName] = useState("");
   const [currency, setCurrency] = useState("");

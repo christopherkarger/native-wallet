@@ -10,12 +10,12 @@ import {
 import Modal from "~/components/modal";
 import AppText from "~/components/text";
 import { Colors, Fonts } from "~/constants";
-import { AppConfig } from "~/models/context";
+import { AppConfigContext } from "~/models/context";
 import { CryptoIcon } from "~/models/crypto-icon";
 import { randomString } from "~/services/helper";
 
 const AddCryptoModal = (props) => {
-  const appConfig = useContext(AppConfig);
+  const appConfig = useContext(AppConfigContext);
   return (
     <Modal
       show={props.show}
