@@ -19,4 +19,5 @@ export enum SupportedCryptos {
   Dogecoin = "Dogecoin",
   Litecoin = "Litecoin",
   Dash = "Dash",
+  Ripple = "Ripple",
 }

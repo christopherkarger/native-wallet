@@ -18,9 +18,7 @@ export const DateTime = (props) => {
     const isToday = dateIsToday(d);
 
     if (props.hourView) {
-      return `${d.getHours()} ${Texts.clock[activeLanguage]} - ${
-        isToday ? todayText : formatedDate
-      }`;
+      return `${d.getHours()}:00 - ${isToday ? todayText : formatedDate}`;
     }
 
     return isToday ? todayText : formatedDate;

@@ -22,67 +22,23 @@ export const fetchAddress = (
   }
 
   url = url.replace("${address}", address);
+
   return fetch(url, fetchHeaders).then((response) =>
     response.json().then((res) => {
       if (!res.data) {
         throw new Error("response data missing");
       }
 
-      const walletAddress =
-        res.data[address] || res.data[address.toLowerCase()];
-
-      if (!walletAddress) {
-        throw new Error("address not found or has no address property");
-      }
-
       let balance: number;
       switch (lowerCaseName) {
         case "cardano":
-          if (
-            !walletAddress.address.caBalance ||
-            (!walletAddress.address.caBalance.getCoin &&
-              walletAddress.address.caBalance.getCoin !== 0)
-          ) {
-            throw new Error("cardano wallet invalid");
-          }
-          balance = +walletAddress.address.caBalance.getCoin;
+          balance = getCardanoBalance(res, address);
           break;
         case "ripple":
-          if (!walletAddress.account?.account_data) {
-            throw new Error("ripple wallet invalid");
-          }
-          balance = +walletAddress.account.account_data.Balance;
+          balance = getRippleBalance(res, address);
           break;
         default:
-          switch (lowerCaseName) {
-            default:
-              if (!walletAddress.address.type) {
-                throw new Error("main wallet type not set");
-              }
-              if (
-                !walletAddress.address.balance &&
-                walletAddress.address.balance !== 0
-              ) {
-                throw new Error("main wallet invalid");
-              }
-              balance = +walletAddress.address.balance;
-          }
-      }
-
-      switch (lowerCaseName) {
-        case "cardano":
-          // Do nothing cardano balance is already correct
-          break;
-        case "ethereum":
-          // Balance returned in Wei
-          balance = balance / 1000000000000000000;
-          break;
-        case "ripple":
-          balance = balance / 1000000;
-          break;
-        default:
-          // Balance returned in satoshis
-          balance = balance / 100000000;
+          balance = getDefaultBalance(res, address, lowerCaseName);
       }
 
       return {
@@ -90,4 +46,75 @@ export const fetchAddress = (
       };
     })
   );
+};
+
+/**
+ * Gets Cardano Balance
+ */
+const getCardanoBalance = (res: any, address: string) => {
+  const walletAddress = res.data[address] || res.data[address.toLowerCase()];
+  if (!walletAddress || !walletAddress.address) {
+    throw new Error("address not found or has no address property");
+  }
+
+  if (
+    !walletAddress.address.caBalance ||
+    (!walletAddress.address.caBalance.getCoin &&
+      walletAddress.address.caBalance.getCoin !== 0)
+  ) {
+    throw new Error("cardano wallet invalid");
+  }
+
+  return +walletAddress.address.caBalance.getCoin;
+};
+
+/**
+ * Gets Ripple Balance
+ */
+const getRippleBalance = (res: any, address: string) => {
+  const walletAddress = res.data[address] || res.data[address.toLowerCase()];
+  if (!walletAddress) {
+    throw new Error("address not found");
+  }
+
+  if (
+    !walletAddress.account?.account_data?.Balance &&
+    walletAddress.account.account_data.Balance !== 0
+  ) {
+    throw new Error("ripple wallet invalid");
+  }
+
+  return +walletAddress.account.account_data.Balance / 1000000;
+};
+
+/**
+ * Gets Default Balance
+ */
+const getDefaultBalance = (
+  res: any,
+  address: string,
+  lowerCaseName: string
+) => {
+  const walletAddress = res.data[address] || res.data[address.toLowerCase()];
+
+  if (!walletAddress) {
+    throw new Error("address not found");
+  }
+
+  if (!walletAddress.address?.type) {
+    throw new Error("type not set");
+  }
+
+  if (!walletAddress.address.balance && walletAddress.address.balance !== 0) {
+    throw new Error("balance not set");
+  }
+
+  switch (lowerCaseName) {
+    case "ethereum":
+      // Balance returned in Wei
+      return +walletAddress.address.balance / 1000000000000000000;
+    default:
+      // Balance returned in satoshis
+      return +walletAddress.address.balance / 100000000;
+  }
 };

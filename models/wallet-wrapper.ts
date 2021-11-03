@@ -33,8 +33,10 @@ export class WalletWrapper {
         return Colors.cryptos.litecoin;
       case SupportedCryptos.Dash:
         return Colors.cryptos.dash;
+      case SupportedCryptos.Ripple:
+        return Colors.cryptos.ripple;
+      default:
+        return Colors.transparent;
     }
-
-    return Colors.transparent;
   }
 }

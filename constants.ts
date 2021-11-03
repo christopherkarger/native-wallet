@@ -46,5 +46,6 @@ export const Colors = {
     dogecoin: "#C3A634",
     litecoin: "#BFBBBB",
     dash: "#008CE7",
+    ripple: "#23282F",
   },
 };
