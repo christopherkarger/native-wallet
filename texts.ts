@@ -28,7 +28,7 @@ export const Texts = {
     en: "Crypto market",
   },
   updated: {
-    de: "Upgedatet",
+    de: "upgedatet",
     en: "updated",
   },
   addNewWallet: {

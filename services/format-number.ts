@@ -1,10 +1,15 @@
 import numeral from "numeral";
-import { SupportedLanguages } from "~/models/context";
+import { SupportedCurrencies, SupportedLanguages } from "~/models/context";
 
 export interface IFormatNumber {
+  decimal?: string;
   number: number;
   language: SupportedLanguages;
-  decimal?: string;
+}
+
+export interface IFormatCurrency extends IFormatNumber {
+  currency: SupportedCurrencies;
+  dollarPrice: number;
 }
 
 export const switchNumeralLocal = (language: string) => {
@@ -40,6 +45,16 @@ export const registerNumeralFormat = (language: string) => {
   }
 
   switchNumeralLocal(language);
+};
+
+export const formatNumberWithCurrency = (x: IFormatCurrency) => {
+  return formatNumber({
+    ...x,
+    number:
+      x.currency === SupportedCurrencies.USD
+        ? x.number * (x.number / (x.number * x.dollarPrice))
+        : x.number,
+  });
 };
 
 export const formatNumber = (x: IFormatNumber): string => {

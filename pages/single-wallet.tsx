@@ -15,17 +15,28 @@ import SubPageHeader from "~/components/sub-page-header";
 import { Colors, Fonts, PathNames, UPDATE_WALLETS_EVENT } from "~/constants";
 import { deleteItemFromLocalDBTableWallets } from "~/db";
 import { useIsMounted } from "~/hooks/mounted";
-import { ActiveLanguageContext, MarketDataContext } from "~/models/context";
+import {
+  ActiveCurrencyContext,
+  ActiveLanguageContext,
+  MarketDataContext,
+  USDPriceContext,
+} from "~/models/context";
+import { CurrencyIcon } from "~/models/currency-icon";
 import { MarketData } from "~/models/market-data";
 import { Wallet } from "~/models/wallet";
 import { WalletWrapper } from "~/models/wallet-wrapper";
 import { calcTotalBalance } from "~/services/calc-balance";
-import { formatNumber } from "~/services/format-number";
+import {
+  formatNumber,
+  formatNumberWithCurrency,
+} from "~/services/format-number";
 import { Texts } from "~/texts";
 import AppText from "../components/text";
 
 const SingleWallet = (props) => {
+  const dollarPrice = useContext(USDPriceContext);
   const [activeLanguage] = useContext(ActiveLanguageContext);
+  const [activeCurrency] = useContext(ActiveCurrencyContext);
   const [walletWrapper, setWalletWrapper] = useState<WalletWrapper>(
     props.route.params.data
   );
@@ -36,13 +47,15 @@ const SingleWallet = (props) => {
   useEffect(() => {
     if (mounted.current) {
       setMoneyBalance(
-        formatNumber({
+        formatNumberWithCurrency({
           number: calcTotalBalance(marketData, [props.route.params.data]),
           language: activeLanguage,
+          currency: activeCurrency,
+          dollarPrice: dollarPrice,
         })
       );
     }
-  }, [marketData]);
+  }, [marketData, activeCurrency]);
 
   const deleteItem = async (item: Wallet, index: number) => {
     await deleteItemFromLocalDBTableWallets(item, walletWrapper).catch(
@@ -76,7 +89,9 @@ const SingleWallet = (props) => {
             ></Image>
 
             <View style={styles.headerPriceWrapper}>
-              <AppText style={styles.headerPrice}>{moneyBalance} €</AppText>
+              <AppText style={styles.headerPrice}>
+                {moneyBalance} {CurrencyIcon.icon(activeCurrency)}
+              </AppText>
             </View>
           </View>
           <FlatList

@@ -4,6 +4,8 @@ export const isAndroid = Platform.OS === "android";
 
 export const UPDATE_WALLETS_EVENT = "event.updateWallets";
 
+export const USD_CRYPTO = "Tether";
+
 export const PathNames = {
   homeTab: "homeTab",
   addWalletTab: "add-walletTab",

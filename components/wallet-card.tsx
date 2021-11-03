@@ -1,21 +1,34 @@
 import React, { useContext, useEffect, useState } from "react";
 import { Image, StyleSheet, TouchableOpacity, View } from "react-native";
-import { ActiveLanguageContext, MarketDataContext } from "~/models/context";
+import {
+  ActiveCurrencyContext,
+  ActiveLanguageContext,
+  MarketDataContext,
+  USDPriceContext,
+} from "~/models/context";
+import { CurrencyIcon } from "~/models/currency-icon";
 import { MarketData } from "~/models/market-data";
 import { calcTotalBalance } from "~/services/calc-balance";
-import { formatNumber } from "~/services/format-number";
+import {
+  formatNumber,
+  formatNumberWithCurrency,
+} from "~/services/format-number";
 import { Colors, Fonts, PathNames } from "../constants";
 import AppText from "./text";
 
 const WalletCard = (props) => {
+  const dollarPrice = useContext(USDPriceContext);
   const [activeLanguage] = useContext(ActiveLanguageContext);
+  const [activeCurrency] = useContext(ActiveCurrencyContext);
   const data = props.data.wallets[0];
   const [amount, setAmount] = useState(props.data.totalBalance);
   const marketData: MarketData = useContext(MarketDataContext);
   const getWalletBalance = () => {
-    return formatNumber({
+    return formatNumberWithCurrency({
       number: calcTotalBalance(marketData, [props.data]),
       language: activeLanguage,
+      currency: activeCurrency,
+      dollarPrice: dollarPrice,
     });
   };
   const [walletBalance, setWalletBalance] = useState(getWalletBalance());
@@ -52,7 +65,9 @@ const WalletCard = (props) => {
         </AppText>
         <AppText style={styles.amountShort}>{data.currency}</AppText>
       </View>
-      <AppText style={styles.walletBalance}>{walletBalance} €</AppText>
+      <AppText style={styles.walletBalance}>
+        {walletBalance} {CurrencyIcon.icon(activeCurrency)}
+      </AppText>
       <Image style={styles.logo} source={data.icon.path}></Image>
     </TouchableOpacity>
   );

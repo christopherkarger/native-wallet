@@ -10,13 +10,19 @@ import SubPageHeader from "~/components/sub-page-header";
 import AppText from "~/components/text";
 import { Colors, Fonts } from "~/constants";
 import { useIsMounted } from "~/hooks/mounted";
-import { ActiveLanguageContext, MarketDataContext } from "~/models/context";
+import {
+  ActiveCurrencyContext,
+  ActiveLanguageContext,
+  MarketDataContext,
+  USDPriceContext,
+} from "~/models/context";
+import { CurrencyIcon } from "~/models/currency-icon";
 import {
   IHistoryItem,
   IMarketDataItemData,
   MarketData,
 } from "~/models/market-data";
-import { formatNumber } from "~/services/format-number";
+import { formatNumberWithCurrency } from "~/services/format-number";
 import { calcPercentage, randomString } from "~/services/helper";
 import { Texts } from "~/texts";
 
@@ -30,7 +36,9 @@ const MarketdataItem = (props) => {
   if (!props.route?.params?.item) {
     throw new Error("maket data item not provied");
   }
+  const dollarPrice = useContext(USDPriceContext);
   const [activeLanguage] = useContext(ActiveLanguageContext);
+  const [activeCurrency] = useContext(ActiveCurrencyContext);
   const marketData: MarketData = useContext(MarketDataContext);
   const [chartData, setChartData] = useState<number[]>([]);
   const [listData, setListData] = useState<IHistoryItem[]>([]);
@@ -78,7 +86,7 @@ const MarketdataItem = (props) => {
       setPrice(coin.data.price);
       changeView(chartView ?? ChartView.hours, coin.data);
     }
-  }, [marketData]);
+  }, [marketData, activeCurrency]);
 
   const renderItem = (listProps) => {
     return (
@@ -88,11 +96,13 @@ const MarketdataItem = (props) => {
           hourView={chartView === ChartView.hours}
         ></DateTime>
         <AppText>
-          {formatNumber({
+          {formatNumberWithCurrency({
             number: listProps.item.price,
             language: activeLanguage,
-          })}
-          {" €"}
+            currency: activeCurrency,
+            dollarPrice: dollarPrice,
+          })}{" "}
+          {CurrencyIcon.icon(activeCurrency)}
         </AppText>
       </View>
     );
@@ -113,11 +123,13 @@ const MarketdataItem = (props) => {
           ></Image>
           <View style={styles.headerPriceWrapper}>
             <AppText style={styles.headerPrice}>
-              {formatNumber({
+              {formatNumberWithCurrency({
                 number: price,
                 language: activeLanguage,
-              })}
-              {" €"}
+                currency: activeCurrency,
+                dollarPrice: dollarPrice,
+              })}{" "}
+              {CurrencyIcon.icon(activeCurrency)}
             </AppText>
             <AppText
               style={[

@@ -9,10 +9,15 @@ import {
   View,
 } from "react-native";
 import { LineChart } from "react-native-svg-charts";
-import { ActiveLanguageContext } from "~/models/context";
+import {
+  ActiveCurrencyContext,
+  ActiveLanguageContext,
+  USDPriceContext,
+} from "~/models/context";
 import { CryptoIcon } from "~/models/crypto-icon";
+import { CurrencyIcon } from "~/models/currency-icon";
 import { MarketData } from "~/models/market-data";
-import { formatNumber } from "~/services/format-number";
+import { formatNumberWithCurrency } from "~/services/format-number";
 import { calcPercentage, formatDate, randomString } from "~/services/helper";
 import { Texts } from "~/texts";
 import { Colors, Fonts, PathNames } from "../constants";
@@ -20,7 +25,9 @@ import AppText from "./text";
 
 const Market = (props) => {
   const marketData = props.data as MarketData;
+  const dollarPrice = useContext(USDPriceContext);
   const [activeLanguage] = useContext(ActiveLanguageContext);
+  const [activeCurrency] = useContext(ActiveCurrencyContext);
 
   const renderedMarketItem = (listProps) => {
     const icon = new CryptoIcon(listProps.item.name);
@@ -74,11 +81,13 @@ const Market = (props) => {
 
           <View style={styles.priceWrapper}>
             <AppText style={styles.price}>
-              {formatNumber({
+              {formatNumberWithCurrency({
                 number: listProps.item.data.price,
                 language: activeLanguage,
+                currency: activeCurrency,
+                dollarPrice: dollarPrice,
               })}{" "}
-              €
+              {CurrencyIcon.icon(activeCurrency)}
             </AppText>
             <AppText
               style={positiveTrend ? styles.positveTrend : styles.negativeTrend}
@@ -93,7 +102,7 @@ const Market = (props) => {
   };
   const memoizedListItem = useMemo(
     () => renderedMarketItem,
-    [props.data, activeLanguage]
+    [props.data, activeLanguage, activeCurrency]
   );
 
   return (
@@ -104,7 +113,6 @@ const Market = (props) => {
         </AppText>
         {marketData?.items[0]?.data.lastFetched && (
           <AppText style={styles.lastFetched}>
-            {Texts.updated[activeLanguage]}:{" "}
             {formatDate(marketData.items[0].data.lastFetched, activeLanguage)}
           </AppText>
         )}

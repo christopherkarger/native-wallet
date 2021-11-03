@@ -24,10 +24,12 @@ import { Texts } from "~/texts";
 import Toggle from "../components/toggle";
 
 const SettingsScreen = (props) => {
+  let isChangingCurrency = false;
+  let isDeletingDemoAccount = false;
+
   const [activeLanguage, setActiveLanguage] = useContext(ActiveLanguageContext);
   const [activeCurrency, setActiveCurrency] = useContext(ActiveCurrencyContext);
   const [isDemoAccount, setIsDemoAccount] = useState(false);
-  const [isDeletingDemoAccount, setIsDeletingDemoAccount] = useState(false);
   const isFocused = useIsFocused();
   const mounted = useIsMounted();
 
@@ -35,32 +37,49 @@ const SettingsScreen = (props) => {
     if (isDeletingDemoAccount) {
       return;
     }
-    setIsDeletingDemoAccount(true);
+    isDeletingDemoAccount = true;
     try {
       await resetLocalDbWallets();
     } catch (err) {
       console.error(err);
     } finally {
-      setIsDeletingDemoAccount(false);
+      isDeletingDemoAccount = false;
       DeviceEventEmitter.emit(UPDATE_WALLETS_EVENT, true);
       props.navigation.navigate(PathNames.homeTab);
     }
   }, []);
 
-  const changeLanguage = useCallback((language: SupportedLanguages) => {
-    setActiveLanguage(language);
-    switchNumeralLocal(language);
-    saveSettingsToLocalDBTableSettings({
-      activeLanguage: language,
-    });
-  }, []);
+  const changeLanguage = useCallback(
+    (language: SupportedLanguages) => {
+      if (activeLanguage === language) {
+        return;
+      }
+      (async () => {
+        switchNumeralLocal(language);
+        setActiveLanguage(language);
+        await saveSettingsToLocalDBTableSettings({
+          activeLanguage: language,
+        });
+      })();
+    },
+    [activeLanguage]
+  );
 
-  const changeCurrency = useCallback((currency: SupportedCurrencies) => {
-    setActiveCurrency(currency);
-    saveSettingsToLocalDBTableSettings({
-      activeCurrency: currency,
-    });
-  }, []);
+  const changeCurrency = useCallback(
+    (currency: SupportedCurrencies) => {
+      if (currency === activeCurrency) {
+        return;
+      }
+
+      (async () => {
+        setActiveCurrency(currency);
+        await saveSettingsToLocalDBTableSettings({
+          activeCurrency: currency,
+        });
+      })();
+    },
+    [activeCurrency]
+  );
 
   useEffect(() => {
     if (!isFocused) {

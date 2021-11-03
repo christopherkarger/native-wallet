@@ -5,7 +5,7 @@ import { StatusBar } from "expo-status-bar";
 import React, { useEffect, useState } from "react";
 import { LogBox, StyleSheet } from "react-native";
 import { Config } from "./config";
-import { Fonts } from "./constants";
+import { Fonts, USD_CRYPTO } from "./constants";
 import {
   ILocalMarket,
   saveMarketToLocalDBTableMarket,
@@ -125,6 +125,10 @@ export default function App() {
         if (localMarket && localMarket.rows.length) {
           const localMarketData = localMarket.rows._array;
           const m = localMarketDataToClass(localMarketData);
+          const tether = m.findItemByName(USD_CRYPTO);
+          if (tether) {
+            setUSDPrice(tether.data.price);
+          }
           if (marketData.items.length === 0) {
             setMarketData(m);
           }
@@ -138,12 +142,12 @@ export default function App() {
           dbConnection = db;
         }
         if (data) {
-          setMarketData(data);
-          saveMarketToLocalDBTableMarket(data);
-          const tether = data.findItemByName("Tether");
+          const tether = data.findItemByName(USD_CRYPTO);
           if (tether) {
             setUSDPrice(tether.data.price);
           }
+          setMarketData(data);
+          saveMarketToLocalDBTableMarket(data);
         }
       });
     })();

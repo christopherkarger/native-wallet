@@ -5,11 +5,17 @@ import Market from "~/components/market";
 import SafeArea from "~/components/safe-area";
 import { selectLocalDBTableWallets } from "~/db";
 import { useUpdateLocalWalletBalances } from "~/hooks/update-local-wallet-balances";
-import { ActiveLanguageContext, MarketDataContext } from "~/models/context";
+import {
+  ActiveCurrencyContext,
+  ActiveLanguageContext,
+  MarketDataContext,
+  USDPriceContext,
+} from "~/models/context";
+import { CurrencyIcon } from "~/models/currency-icon";
 import { MarketData } from "~/models/market-data";
 import { WalletWrapper } from "~/models/wallet-wrapper";
 import { calcTotalBalance } from "~/services/calc-balance";
-import { formatNumber } from "~/services/format-number";
+import { formatNumberWithCurrency } from "~/services/format-number";
 import { getWalletWrapper } from "~/services/getWalletWrapper";
 import { Texts } from "~/texts";
 import EmptyWallets from "../components/empty-wallets";
@@ -18,7 +24,9 @@ import WalletList from "../components/wallet-list";
 import { Colors, Fonts, UPDATE_WALLETS_EVENT } from "../constants";
 
 const HomeScreen = (props) => {
+  const dollarPrice = useContext(USDPriceContext);
   const [activeLanguage] = useContext(ActiveLanguageContext);
+  const [activeCurrency] = useContext(ActiveCurrencyContext);
   const [loading, setIsloading] = useState(true);
   const [walletsData, setWalletsData] = useState<WalletWrapper[]>([]);
   const [totalBalance, setTotalBalance] = useState("0");
@@ -35,12 +43,14 @@ const HomeScreen = (props) => {
 
   useEffect(() => {
     setTotalBalance(
-      formatNumber({
+      formatNumberWithCurrency({
         number: calcTotalBalance(marketData, walletsData),
         language: activeLanguage,
+        currency: activeCurrency,
+        dollarPrice: dollarPrice,
       })
     );
-  }, [marketData, walletsData, activeLanguage]);
+  }, [marketData, walletsData, activeLanguage, activeCurrency]);
 
   const updateWallets = async () => {
     const localWallets = await selectLocalDBTableWallets().catch(() => {});
@@ -73,7 +83,9 @@ const HomeScreen = (props) => {
             <AppText style={styles.pfSubheadline}>
               {Texts.balance[activeLanguage]}
             </AppText>
-            <AppText style={styles.balance}>{totalBalance} €</AppText>
+            <AppText style={styles.balance}>
+              {totalBalance} {CurrencyIcon.icon(activeCurrency)}
+            </AppText>
           </View>
         )}
 
