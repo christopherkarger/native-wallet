@@ -24,7 +24,6 @@ import { Texts } from "~/texts";
 import Toggle from "../components/toggle";
 
 const SettingsScreen = (props) => {
-  let isChangingCurrency = false;
   let isDeletingDemoAccount = false;
 
   const [activeLanguage, setActiveLanguage] = useContext(ActiveLanguageContext);

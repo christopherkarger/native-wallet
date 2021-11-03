@@ -64,6 +64,7 @@ const AddWalletScreen = (props) => {
       );
       balance = fetchedAddress.balance;
     } catch (err) {
+      console.error(err);
       setFetchingAndSavingAddress(false);
       Alert.alert(
         "Wallet konnte nicht angelegt werden!",

@@ -31,7 +31,7 @@ export const fetchAddress = (
       const walletAddress =
         res.data[address] || res.data[address.toLowerCase()];
 
-      if (!walletAddress || !walletAddress.address) {
+      if (!walletAddress) {
         throw new Error("address not found or has no address property");
       }
 
@@ -46,6 +46,12 @@ export const fetchAddress = (
             throw new Error("cardano wallet invalid");
           }
           balance = +walletAddress.address.caBalance.getCoin;
+          break;
+        case "ripple":
+          if (!walletAddress.account?.account_data) {
+            throw new Error("ripple wallet invalid");
+          }
+          balance = +walletAddress.account.account_data.Balance;
           break;
         default:
           switch (lowerCaseName) {
@@ -70,6 +76,9 @@ export const fetchAddress = (
         case "ethereum":
           // Balance returned in Wei
           balance = balance / 1000000000000000000;
+          break;
+        case "ripple":
+          balance = balance / 1000000;
           break;
         default:
           // Balance returned in satoshis

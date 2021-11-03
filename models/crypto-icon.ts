@@ -19,6 +19,8 @@ export class CryptoIcon {
         return require("~/node_modules/cryptocurrency-icons/128/color/dash.png");
       case "Tether":
         return require("~/node_modules/cryptocurrency-icons/128/color/usdt.png");
+      case "Ripple":
+        return require("~/node_modules/cryptocurrency-icons/128/color/xrp.png");
 
       default:
         return require("~/node_modules/cryptocurrency-icons/128/color/generic.png");
