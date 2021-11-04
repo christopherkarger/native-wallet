@@ -32,7 +32,8 @@ export const useUpdateLocalWalletBalances = async () => {
               );
               updateItemBalanceToLocalDBTableWallets(
                 wallet.id,
-                fetchedAddress.balance
+                fetchedAddress.balance,
+                fetchedAddress.transactions
               );
             } else {
               isDemoMode = true;

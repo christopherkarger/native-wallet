@@ -55,6 +55,7 @@ const AddWalletScreen = (props) => {
       return;
     }
     let balance = 0;
+    let transactions = [];
     try {
       setFetchingAndSavingAddress(true);
       const fetchedAddress = await fetchAddress(
@@ -63,6 +64,7 @@ const AddWalletScreen = (props) => {
         appConfig
       );
       balance = fetchedAddress.balance;
+      transactions = fetchedAddress.transactions;
     } catch (err) {
       console.error(err);
       setFetchingAndSavingAddress(false);
@@ -87,6 +89,7 @@ const AddWalletScreen = (props) => {
         address.trim(),
         balance,
         new Date().getTime(),
+        transactions,
         connectedToId
       )
         .then(() => {

@@ -13,6 +13,7 @@ export const getWalletWrapper = (localWalletsArr: ILocalWallet[]) => {
         w.address,
         w.balance,
         w.lastFetched,
+        JSON.parse(w.transactions),
         w.connectedToId,
         w.demoAddress
       );
@@ -29,6 +30,7 @@ export const getWalletWrapper = (localWalletsArr: ILocalWallet[]) => {
           w.address,
           w.balance,
           w.lastFetched,
+          JSON.parse(w.transactions),
           w.connectedToId,
           w.demoAddress
         ),

@@ -1,3 +1,4 @@
+import { ITransactions } from "~/db";
 import { IConfig } from "~/models/config";
 
 interface IFetchHeader {
@@ -5,6 +6,8 @@ interface IFetchHeader {
     [key: string]: string;
   };
 }
+
+const MAX_TRANSACTIONS = 20;
 
 export const fetchAddress = (
   address: string,
@@ -25,24 +28,41 @@ export const fetchAddress = (
 
   return fetch(url, fetchHeaders).then((response) =>
     response.json().then((res) => {
-      if (!res.data) {
+      if (!res?.data) {
         throw new Error("response data missing");
       }
 
       let balance: number;
+      let transactions: ITransactions[] = [];
+
+      const walletAddress =
+        res.data[address] || res.data[address.toLowerCase()];
+
+      if (!walletAddress) {
+        throw new Error("address not found");
+      }
+
       switch (lowerCaseName) {
         case "cardano":
-          balance = getCardanoBalance(res, address);
+          transactions = getCardanoTransactions(walletAddress, address);
+          balance = getCardanoBalance(walletAddress);
           break;
         case "ripple":
-          balance = getRippleBalance(res, address);
+          transactions = getRippleTransactions(walletAddress, address);
+          balance = getRippleBalance(walletAddress);
+          break;
+        case "ethereum":
+          transactions = getEthereumTransactions(walletAddress);
+          balance = getEthereumBalance(walletAddress);
           break;
         default:
-          balance = getDefaultBalance(res, address, lowerCaseName);
+          transactions = getDefaultTransactions(walletAddress);
+          balance = getDefaultBalance(walletAddress);
       }
 
       return {
         balance,
+        transactions,
       };
     })
   );
@@ -51,32 +71,21 @@ export const fetchAddress = (
 /**
  * Gets Cardano Balance
  */
-const getCardanoBalance = (res: any, address: string) => {
-  const walletAddress = res.data[address] || res.data[address.toLowerCase()];
-  if (!walletAddress || !walletAddress.address) {
-    throw new Error("address not found or has no address property");
-  }
-
+const getCardanoBalance = (walletAddress: any) => {
   if (
-    !walletAddress.address.caBalance ||
-    (!walletAddress.address.caBalance.getCoin &&
-      walletAddress.address.caBalance.getCoin !== 0)
+    !walletAddress.address?.caBalance?.getCoin &&
+    walletAddress.address.caBalance.getCoin !== 0
   ) {
     throw new Error("cardano wallet invalid");
   }
 
-  return +walletAddress.address.caBalance.getCoin;
+  return +walletAddress.address.caBalance.getCoin / 1000000;
 };
 
 /**
  * Gets Ripple Balance
  */
-const getRippleBalance = (res: any, address: string) => {
-  const walletAddress = res.data[address] || res.data[address.toLowerCase()];
-  if (!walletAddress) {
-    throw new Error("address not found");
-  }
-
+const getRippleBalance = (walletAddress: any) => {
   if (
     !walletAddress.account?.account_data?.Balance &&
     walletAddress.account.account_data.Balance !== 0
@@ -88,33 +97,106 @@ const getRippleBalance = (res: any, address: string) => {
 };
 
 /**
- * Gets Default Balance
+ * Gets Ethereum Balance
  */
-const getDefaultBalance = (
-  res: any,
-  address: string,
-  lowerCaseName: string
-) => {
-  const walletAddress = res.data[address] || res.data[address.toLowerCase()];
-
-  if (!walletAddress) {
-    throw new Error("address not found");
-  }
-
+const getEthereumBalance = (walletAddress: any) => {
   if (!walletAddress.address?.type) {
-    throw new Error("type not set");
+    throw new Error("ethereum type not set");
   }
 
   if (!walletAddress.address.balance && walletAddress.address.balance !== 0) {
-    throw new Error("balance not set");
+    throw new Error("ethereum balance not set");
+  }
+  // Balance returned in Wei
+  return +walletAddress.address.balance / 1000000000000000000;
+};
+
+/**
+ * Gets Default Balance
+ */
+const getDefaultBalance = (walletAddress: any) => {
+  if (!walletAddress.address?.type) {
+    throw new Error("default type not set");
   }
 
-  switch (lowerCaseName) {
-    case "ethereum":
-      // Balance returned in Wei
-      return +walletAddress.address.balance / 1000000000000000000;
-    default:
-      // Balance returned in satoshis
-      return +walletAddress.address.balance / 100000000;
+  if (!walletAddress.address.balance && walletAddress.address.balance !== 0) {
+    throw new Error("default balance not set");
   }
+
+  // Balance returned in satoshis
+  return +walletAddress.address.balance / 100000000;
+};
+
+/**
+ * Get Ethreum Transactions
+ */
+const getEthereumTransactions = (walletAddress: any) => {
+  const transactions = walletAddress.calls || [];
+  return transactions.slice(0, MAX_TRANSACTIONS).map((c) => ({
+    balance_change: c.value,
+    hash: c.transaction_hash,
+    time: c.time,
+  }));
+};
+
+/**
+ * Gets cardano transactions
+ */
+const getCardanoTransactions = (
+  walletAddress: any,
+  address: string
+): ITransactions[] => {
+  const tx = walletAddress.address?.caTxList || [];
+  return tx.slice(0, MAX_TRANSACTIONS).map((t) => {
+    let outputs = 0;
+    let inputs = 0;
+    t.ctbInputs.forEach((i) => {
+      if (i.ctaAddress === address) {
+        inputs += +i.ctaAmount.getCoin;
+      }
+    });
+
+    t.ctbOutputs.forEach((o) => {
+      if (o.ctaAddress === address) {
+        outputs += +o.ctaAmount.getCoin;
+      }
+    });
+
+    return {
+      balance_change: (outputs - inputs) / 1000000,
+      time: `${t.ctbTimeIssued * 1000}`,
+      hash: t.ctbId,
+    };
+  });
+};
+
+/**
+ * Gets ripple transactions
+ */
+const getRippleTransactions = (
+  walletAddress: any,
+  address: string
+): ITransactions[] => {
+  const transactions = walletAddress.transactions?.transactions || [];
+  return transactions
+    .slice(0, MAX_TRANSACTIONS)
+    .filter((t) => !!t.tx)
+    .map((t) => ({
+      balance_change:
+        t.tx.Destination === address ? t.tx.Amount : t.tx.Amount * -1,
+      hash: t.tx.hash,
+      time: `${t.tx.date * 1000}`,
+    }));
+};
+
+/**
+ * Get default transactions
+ */
+const getDefaultTransactions = (walletAddress: any): ITransactions[] => {
+  const transactions = walletAddress.transactions || [];
+  return transactions.slice(0, MAX_TRANSACTIONS).map((t) => ({
+    balance_change: t.balance_change,
+    hash: t.hash,
+    time: t.time,
+  }));
 };

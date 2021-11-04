@@ -1,25 +1,26 @@
 import { ImageSourcePropType } from "react-native";
+import { SupportedCryptos } from "./config";
 
 export class CryptoIcon {
   constructor(readonly cryptoName: string) {}
 
   get path(): ImageSourcePropType {
     switch (this.cryptoName) {
-      case "Bitcoin":
+      case SupportedCryptos.Bitcoin:
         return require("~/node_modules/cryptocurrency-icons/128/color/btc.png");
-      case "Ethereum":
+      case SupportedCryptos.Ethereum:
         return require("~/node_modules/cryptocurrency-icons/128/color/eth.png");
-      case "Cardano":
+      case SupportedCryptos.Cardano:
         return require("~/node_modules/cryptocurrency-icons/128/color/ada.png");
-      case "Dogecoin":
+      case SupportedCryptos.Dogecoin:
         return require("~/node_modules/cryptocurrency-icons/128/color/doge.png");
-      case "Litecoin":
+      case SupportedCryptos.Litecoin:
         return require("~/node_modules/cryptocurrency-icons/128/color/ltc.png");
-      case "Dash":
+      case SupportedCryptos.Dash:
         return require("~/node_modules/cryptocurrency-icons/128/color/dash.png");
       case "Tether":
         return require("~/node_modules/cryptocurrency-icons/128/color/usdt.png");
-      case "Ripple":
+      case SupportedCryptos.Ripple:
         return require("~/node_modules/cryptocurrency-icons/128/color/xrp.png");
 
       default:

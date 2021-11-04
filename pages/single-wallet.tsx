@@ -101,6 +101,7 @@ const SingleWallet = (props) => {
             data={walletWrapper.wallets}
             keyExtractor={(_, index) => index.toString()}
             renderItem={({ item, index }) => {
+              console.log(item);
               return (
                 <View style={styles.singleWalletWrapper}>
                   <AppText>{Texts.address[activeLanguage]}</AppText>
