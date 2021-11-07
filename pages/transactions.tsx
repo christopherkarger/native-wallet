@@ -46,6 +46,7 @@ const Transactions = (props) => {
                 ]}
               >
                 <MaterialIcons
+                  style={styles.itemIcon}
                   name={
                     positiveChange ? "arrow-circle-down" : "arrow-circle-up"
                   }
@@ -131,6 +132,9 @@ const styles = StyleSheet.create({
   itemDate: {
     marginBottom: 5,
     color: Colors.grey,
+  },
+  itemIcon: {
+    transform: [{ rotate: "45deg" }],
   },
 });
 export default Transactions;

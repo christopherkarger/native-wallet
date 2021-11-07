@@ -133,19 +133,17 @@ const SettingsScreen = (props) => {
             </AppText>
             <Toggle
               headline={Texts.language[activeLanguage]}
-              text={["Dollar", "Euro"]}
+              text={["US-Dollar", "Euro"]}
               active={[
                 activeCurrency === SupportedCurrencies.USD,
                 activeCurrency === SupportedCurrencies.EUR,
               ]}
               toggle={(index: number) => {
-                if (index === 0) {
-                  changeCurrency(SupportedCurrencies.USD);
-                }
-
-                if (index === 1) {
-                  changeCurrency(SupportedCurrencies.EUR);
-                }
+                changeCurrency(
+                  index === 0
+                    ? SupportedCurrencies.USD
+                    : SupportedCurrencies.EUR
+                );
               }}
             ></Toggle>
           </View>

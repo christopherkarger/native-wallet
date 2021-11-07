@@ -14,7 +14,7 @@ export class Wallet {
     readonly lastFetched: number,
     readonly transactions: ITransactions[],
     readonly connectedToId?: number,
-    readonly demoAddress?: number
+    readonly demoAddress?: boolean
   ) {
     this.icon = new CryptoIcon(name);
   }
@@ -31,7 +31,6 @@ export class Wallet {
         balance_change: t.balance_change,
         hash: t.hash,
         time: t.time,
-        sender: t.sender,
       })),
       this.connectedToId,
       this.demoAddress

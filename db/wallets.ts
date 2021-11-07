@@ -39,7 +39,7 @@ const createLocalDBTableWallets = () => {
   return new Promise<ISQLResult>((resolve, reject) => {
     db.transaction((tx) => {
       tx.executeSql(
-        `CREATE TABLE IF NOT EXISTS ${tableWallets} (id INTEGER PRIMARY KEY NOT NULL, name TEXT NOT NULL, currency TEXT NOT NULL, address TEXT NOT NULL, balance INTEGER NOT NULL, lastFetched INTEGER NOT NULL, transactions TEXT NOT NULL, connectedToId INTEGER, demoAddress TEXT);`,
+        `CREATE TABLE IF NOT EXISTS ${tableWallets} (id INTEGER PRIMARY KEY NOT NULL, name TEXT NOT NULL, currency TEXT NOT NULL, address TEXT NOT NULL, balance INTEGER NOT NULL, lastFetched INTEGER NOT NULL, transactions TEXT NOT NULL, connectedToId INTEGER, demoAddress INTEGER);`,
         [],
         (_, result) => {
           resolve(<ISQLResult>result);
@@ -61,7 +61,7 @@ const insertItemToLocalDBTableWallets = (
   lastFetched: number,
   transactions: ITransactions[],
   connectedToId?: number,
-  demoAddress?: number
+  demoAddress?: boolean
 ) => {
   return new Promise<ISQLResult>((resolve, reject) => {
     db.transaction((tx) => {
@@ -75,7 +75,7 @@ const insertItemToLocalDBTableWallets = (
           lastFetched,
           JSON.stringify(transactions),
           connectedToId,
-          demoAddress,
+          demoAddress ? 1 : 0,
         ],
         (_, result) => {
           resolve(<ISQLResult>result);
@@ -94,6 +94,24 @@ const selectLocalDBTableWallets = () => {
     db.transaction((tx) => {
       tx.executeSql(
         `SELECT * FROM ${tableWallets}`,
+        [],
+        (_, result) => {
+          resolve(<ISQLResult>result);
+        },
+        (_, error) => {
+          reject(error);
+          return true;
+        }
+      );
+    });
+  });
+};
+
+const dropLocalDBTableWallets = () => {
+  return new Promise<ISQLResult>((resolve, reject) => {
+    db.transaction((tx) => {
+      tx.executeSql(
+        `DROP TABLE ${tableWallets}`,
         [],
         (_, result) => {
           resolve(<ISQLResult>result);
@@ -260,4 +278,5 @@ export {
   selectLocalDBTableWallets,
   updateItemBalanceToLocalDBTableWallets,
   updateItemConnectedToIdToLocalDBTableWallets,
+  dropLocalDBTableWallets,
 };
