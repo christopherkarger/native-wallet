@@ -190,12 +190,10 @@ const getRippleTransactions = (
   address: string
 ): ITransactions[] => {
   const transactions = walletAddress.transactions?.transactions || [];
-  console.log(transactions.slice(0, MAX_TRANSACTIONS));
   return transactions
     .slice(0, MAX_TRANSACTIONS)
     .filter((t) => !!t.tx)
     .map((t) => {
-      console.log(t.tx.date);
       return {
         balance_change:
           (t.tx.Destination.trim().toLowerCase() === address.toLowerCase()
