@@ -95,4 +95,8 @@ export const Texts = {
     de: "Währung",
     en: "Currency",
   },
+  transactions: {
+    de: "Transaktionen",
+    en: "Transactions",
+  },
 };

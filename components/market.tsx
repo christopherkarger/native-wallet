@@ -17,7 +17,10 @@ import {
 import { CryptoIcon } from "~/models/crypto-icon";
 import { CurrencyIcon } from "~/models/currency-icon";
 import { MarketData } from "~/models/market-data";
-import { formatNumberWithCurrency } from "~/services/format-number";
+import {
+  formatNumber,
+  formatNumberWithCurrency,
+} from "~/services/format-number";
 import { calcPercentage, formatDate, randomString } from "~/services/helper";
 import { Texts } from "~/texts";
 import { Colors, Fonts, PathNames } from "../constants";
@@ -93,7 +96,12 @@ const Market = (props) => {
               style={positiveTrend ? styles.positveTrend : styles.negativeTrend}
             >
               {percentage > 0 ? "+" : ""}
-              {percentage.toFixed(2)}%
+              {formatNumber({
+                number: percentage,
+                language: activeLanguage,
+                decimal: "00",
+              })}
+              %
             </AppText>
           </View>
         </TouchableOpacity>
@@ -177,11 +185,10 @@ const styles = StyleSheet.create({
   currency: {
     fontSize: 14,
     marginLeft: 12,
-    color: Colors.lightWhite,
+    color: Colors.grey,
   },
   priceWrapper: {
     alignItems: "flex-end",
-
     minWidth: 110,
   },
   price: {

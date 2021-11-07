@@ -63,7 +63,7 @@ const WalletCard = (props) => {
             language: activeLanguage,
           })}
         </AppText>
-        <AppText style={styles.amountShort}>{data.currency}</AppText>
+        <AppText style={styles.currency}>{data.currency}</AppText>
       </View>
       <AppText style={styles.walletBalance}>
         {walletBalance} {CurrencyIcon.icon(activeCurrency)}
@@ -94,10 +94,10 @@ const styles = StyleSheet.create({
     fontFamily: Fonts.bold,
     fontSize: 25,
   },
-  amountShort: {
+  currency: {
     fontSize: 15,
     marginLeft: 10,
-    color: Colors.lightWhite,
+    color: Colors.grey,
   },
   walletBalance: {
     fontFamily: Fonts.bold,

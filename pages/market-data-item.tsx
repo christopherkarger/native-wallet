@@ -22,7 +22,10 @@ import {
   IMarketDataItemData,
   MarketData,
 } from "~/models/market-data";
-import { formatNumberWithCurrency } from "~/services/format-number";
+import {
+  formatNumber,
+  formatNumberWithCurrency,
+} from "~/services/format-number";
 import { calcPercentage, randomString } from "~/services/helper";
 import { Texts } from "~/texts";
 
@@ -138,7 +141,11 @@ const MarketdataItem = (props) => {
               ]}
             >
               {percentage > 0 ? "+" : ""}
-              {percentage.toFixed(2)}%
+              {formatNumber({
+                number: percentage,
+                language: activeLanguage,
+              })}
+              %
             </AppText>
           </View>
         </View>

@@ -59,13 +59,18 @@ export const formatNumberWithCurrency = (x: IFormatCurrency) => {
 
 export const formatNumber = (x: IFormatNumber): string => {
   const num = parseFloat(x.number.toString());
+
+  if (x.decimal) {
+    return numeral(num).format(`0,00.[${x.decimal}]`);
+  }
+
   if (num < 1) {
     return numeral(num).format("0,00.[0000]");
   }
 
   const formatedNum = numeral(num).format("0,00.[00]");
 
-  // If number is for example 10,2 add ending 0 -> 10,20
+  // If number is 10,2 add ending 0 -> 10,20
   if (
     formatedNum.split(x.language === SupportedLanguages.DE ? "," : ".")[1]
       ?.length === 1

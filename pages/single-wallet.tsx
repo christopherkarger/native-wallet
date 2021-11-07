@@ -1,17 +1,18 @@
-import React, { useContext, useEffect, useState } from "react";
+import { MaterialIcons } from "@expo/vector-icons";
+import React, { useCallback, useContext, useEffect, useState } from "react";
 import {
   Alert,
   DeviceEventEmitter,
   FlatList,
   Image,
   StyleSheet,
-  TouchableOpacity,
   View,
 } from "react-native";
 import Button from "~/components/button";
 import GradientView from "~/components/gradient-view";
 import SafeArea from "~/components/safe-area";
 import SubPageHeader from "~/components/sub-page-header";
+import { TextButton } from "~/components/text-button";
 import { Colors, Fonts, PathNames, UPDATE_WALLETS_EVENT } from "~/constants";
 import { deleteItemFromLocalDBTableWallets } from "~/db";
 import { useIsMounted } from "~/hooks/mounted";
@@ -57,23 +58,28 @@ const SingleWallet = (props) => {
     }
   }, [marketData, activeCurrency]);
 
-  const deleteItem = async (item: Wallet, index: number) => {
-    await deleteItemFromLocalDBTableWallets(item, walletWrapper).catch(
-      (err) => {
-        console.error(err);
-        throw new Error("Deleting wallet address from local DB failed");
+  const deleteItem = useCallback(
+    async (item: Wallet, index: number) => {
+      await deleteItemFromLocalDBTableWallets(item, walletWrapper).catch(
+        (err) => {
+          console.error(err);
+          throw new Error("Deleting wallet address from local DB failed");
+        }
+      );
+
+      DeviceEventEmitter.emit(UPDATE_WALLETS_EVENT, true);
+
+      const updatedWallets = walletWrapper.wallets.filter(
+        (e, i) => i !== index
+      );
+      if (updatedWallets.length > 0 && mounted.current) {
+        setWalletWrapper(new WalletWrapper(updatedWallets));
+      } else {
+        props.navigation.navigate(PathNames.home);
       }
-    );
-
-    DeviceEventEmitter.emit(UPDATE_WALLETS_EVENT, true);
-
-    const updatetWallets = walletWrapper.wallets.filter((e, i) => i !== index);
-    if (updatetWallets.length > 0 && mounted.current) {
-      setWalletWrapper(new WalletWrapper(updatetWallets));
-    } else {
-      props.navigation.navigate(PathNames.home);
-    }
-  };
+    },
+    [walletWrapper]
+  );
 
   return (
     <GradientView>
@@ -101,60 +107,75 @@ const SingleWallet = (props) => {
             data={walletWrapper.wallets}
             keyExtractor={(_, index) => index.toString()}
             renderItem={({ item, index }) => {
-              console.log(item);
               return (
                 <View style={styles.singleWalletWrapper}>
-                  <AppText>{Texts.address[activeLanguage]}</AppText>
-                  <AppText style={styles.address}>{item.address}</AppText>
-                  <AppText>{Texts.balance[activeLanguage]}</AppText>
-                  <AppText style={styles.balance}>
-                    {formatNumber({
-                      number: item.balance,
-                      decimal: "000000",
-                      language: activeLanguage,
-                    })}{" "}
-                    {item.currency}
-                  </AppText>
-                  <TouchableOpacity
-                    style={styles.deleteWalletButton}
-                    onPress={() => {
-                      Alert.alert(
-                        "",
-                        Texts.deleteAddressHeadline[activeLanguage],
-                        [
-                          {
-                            text: Texts.abort[activeLanguage],
-                            onPress: () => {},
-                            style: "cancel",
-                          },
-                          {
-                            text: "OK",
-                            onPress: () => {
-                              deleteItem(item, index);
+                  <View style={styles.walletInner}>
+                    <AppText>{Texts.address[activeLanguage]}</AppText>
+                    <AppText style={styles.address}>{item.address}</AppText>
+                    <AppText>{Texts.balance[activeLanguage]}</AppText>
+                    <AppText style={styles.balance}>
+                      {formatNumber({
+                        number: item.balance,
+                        decimal: "000000",
+                        language: activeLanguage,
+                      })}{" "}
+                      {item.currency}
+                    </AppText>
+                  </View>
+                  <View style={styles.actionBar}>
+                    <TextButton
+                      style={styles.transactionsButton}
+                      textStyle={styles.transactionsButtonText}
+                      text={Texts.transactions[activeLanguage]}
+                      onPress={() => {
+                        props.navigation.navigate(PathNames.tranactions, {
+                          transactions: item.transactions,
+                        });
+                      }}
+                    ></TextButton>
+                    <TextButton
+                      style={styles.deleteWalletButton}
+                      onPress={() => {
+                        Alert.alert(
+                          "",
+                          Texts.deleteAddressHeadline[activeLanguage],
+                          [
+                            {
+                              text: Texts.abort[activeLanguage],
+                              onPress: () => {},
+                              style: "cancel",
                             },
-                          },
-                        ],
-                        { cancelable: false }
-                      );
-                    }}
-                  >
-                    <AppText>{Texts.delete[activeLanguage]}</AppText>
-                  </TouchableOpacity>
+                            {
+                              text: "OK",
+                              onPress: () => {
+                                deleteItem(item, index);
+                              },
+                            },
+                          ],
+                          { cancelable: false }
+                        );
+                      }}
+                    >
+                      <MaterialIcons name="delete" size={20} color="white" />
+                    </TextButton>
+                  </View>
                 </View>
               );
             }}
             ListFooterComponent={
-              <Button
-                onPress={() => {
-                  props.navigation.navigate(PathNames.addWallet, {
-                    addToWallet: true,
-                    currency: walletWrapper.wallets[0].currency,
-                    name: walletWrapper.wallets[0].name,
-                    id: walletWrapper.wallets[0].id,
-                  });
-                }}
-                text={Texts.addAddressToWallet[activeLanguage]}
-              ></Button>
+              <View>
+                <Button
+                  onPress={() => {
+                    props.navigation.navigate(PathNames.addWallet, {
+                      addToWallet: true,
+                      currency: walletWrapper.wallets[0].currency,
+                      name: walletWrapper.wallets[0].name,
+                      id: walletWrapper.wallets[0].id,
+                    });
+                  }}
+                  text={Texts.addAddressToWallet[activeLanguage]}
+                ></Button>
+              </View>
             }
           ></FlatList>
         </View>
@@ -172,10 +193,14 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   singleWalletWrapper: {
-    marginBottom: 20,
-    borderBottomColor: Colors.lightWhite,
-    borderBottomWidth: 1,
-    paddingBottom: 20,
+    marginBottom: 25,
+    backgroundColor: Colors.greyBlue,
+    overflow: "hidden",
+    borderRadius: 10,
+  },
+  walletInner: {
+    paddingVertical: 12,
+    paddingHorizontal: 15,
   },
   header: {
     marginBottom: 20,
@@ -207,16 +232,25 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   deleteWalletButton: {
-    marginTop: 10,
-    marginBottom: 0,
-    backgroundColor: Colors.transparent,
-    color: Colors.green,
-    width: "auto",
-    paddingLeft: 0,
+    marginLeft: "auto",
+    paddingHorizontal: 15,
+    paddingVertical: 10,
   },
   deleteWalletButtonText: {
     color: Colors.fadeLight,
     fontFamily: Fonts.regular,
+  },
+  transactionsButton: {
+    paddingHorizontal: 15,
+    paddingVertical: 10,
+  },
+  transactionsButtonText: {
+    fontFamily: Fonts.bold,
+  },
+  actionBar: {
+    paddingVertical: 5,
+    backgroundColor: Colors.lightGreyBlue,
+    flexDirection: "row",
   },
 });
 

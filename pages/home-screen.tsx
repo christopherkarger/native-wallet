@@ -4,7 +4,7 @@ import GradientView from "~/components/gradient-view";
 import Market from "~/components/market";
 import SafeArea from "~/components/safe-area";
 import { selectLocalDBTableWallets } from "~/db";
-import { useUpdateLocalWalletBalances } from "~/hooks/update-local-wallet-balances";
+import { useIsMounted } from "~/hooks/mounted";
 import {
   ActiveCurrencyContext,
   ActiveLanguageContext,
@@ -31,8 +31,9 @@ const HomeScreen = (props) => {
   const [walletsData, setWalletsData] = useState<WalletWrapper[]>([]);
   const [totalBalance, setTotalBalance] = useState("0");
   const marketData: MarketData = useContext(MarketDataContext);
+  const mounted = useIsMounted();
 
-  useUpdateLocalWalletBalances();
+  //useUpdateLocalWalletBalances();
 
   useEffect(() => {
     updateWallets();
@@ -50,9 +51,12 @@ const HomeScreen = (props) => {
         dollarPrice: dollarPrice,
       })
     );
-  }, [marketData, walletsData, activeLanguage, activeCurrency]);
+  }, [marketData, walletsData, activeLanguage, activeCurrency, dollarPrice]);
 
   const updateWallets = async () => {
+    if (!mounted.current) {
+      return;
+    }
     const localWallets = await selectLocalDBTableWallets().catch(() => {});
     if (localWallets && localWallets.rows.length) {
       setWalletsData(getWalletWrapper(localWallets.rows._array));
@@ -120,7 +124,7 @@ const styles = StyleSheet.create({
   pfSubheadline: {
     fontSize: 15,
     marginTop: 30,
-    color: Colors.lightWhite,
+    color: Colors.grey,
   },
   balance: {
     fontSize: 40,

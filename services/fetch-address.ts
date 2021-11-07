@@ -8,6 +8,10 @@ interface IFetchHeader {
 }
 
 const MAX_TRANSACTIONS = 20;
+const CARDANO_UNIT = 1000000;
+const RIPPLE_UNIT = 1000000;
+const ETHEREUM_UNIT = 1000000000000000000;
+const DEFAULT_UNIT = 100000000;
 
 export const fetchAddress = (
   address: string,
@@ -79,7 +83,7 @@ const getCardanoBalance = (walletAddress: any) => {
     throw new Error("cardano wallet invalid");
   }
 
-  return +walletAddress.address.caBalance.getCoin / 1000000;
+  return +walletAddress.address.caBalance.getCoin / CARDANO_UNIT;
 };
 
 /**
@@ -93,7 +97,7 @@ const getRippleBalance = (walletAddress: any) => {
     throw new Error("ripple wallet invalid");
   }
 
-  return +walletAddress.account.account_data.Balance / 1000000;
+  return +walletAddress.account.account_data.Balance / RIPPLE_UNIT;
 };
 
 /**
@@ -108,7 +112,7 @@ const getEthereumBalance = (walletAddress: any) => {
     throw new Error("ethereum balance not set");
   }
   // Balance returned in Wei
-  return +walletAddress.address.balance / 1000000000000000000;
+  return +walletAddress.address.balance / ETHEREUM_UNIT;
 };
 
 /**
@@ -124,7 +128,7 @@ const getDefaultBalance = (walletAddress: any) => {
   }
 
   // Balance returned in satoshis
-  return +walletAddress.address.balance / 100000000;
+  return +walletAddress.address.balance / DEFAULT_UNIT;
 };
 
 /**
@@ -133,7 +137,7 @@ const getDefaultBalance = (walletAddress: any) => {
 const getEthereumTransactions = (walletAddress: any) => {
   const transactions = walletAddress.calls || [];
   return transactions.slice(0, MAX_TRANSACTIONS).map((c) => ({
-    balance_change: c.value,
+    balance_change: c.value / ETHEREUM_UNIT,
     hash: c.transaction_hash,
     time: c.time,
   }));
@@ -163,7 +167,7 @@ const getCardanoTransactions = (
     });
 
     return {
-      balance_change: (outputs - inputs) / 1000000,
+      balance_change: (outputs - inputs) / CARDANO_UNIT,
       time: `${t.ctbTimeIssued * 1000}`,
       hash: t.ctbId,
     };
@@ -183,7 +187,8 @@ const getRippleTransactions = (
     .filter((t) => !!t.tx)
     .map((t) => ({
       balance_change:
-        t.tx.Destination === address ? t.tx.Amount : t.tx.Amount * -1,
+        (t.tx.Destination === address ? t.tx.Amount : t.tx.Amount * -1) /
+        RIPPLE_UNIT,
       hash: t.tx.hash,
       time: `${t.tx.date * 1000}`,
     }));
@@ -195,7 +200,7 @@ const getRippleTransactions = (
 const getDefaultTransactions = (walletAddress: any): ITransactions[] => {
   const transactions = walletAddress.transactions || [];
   return transactions.slice(0, MAX_TRANSACTIONS).map((t) => ({
-    balance_change: t.balance_change,
+    balance_change: t.balance_change / DEFAULT_UNIT,
     hash: t.hash,
     time: t.time,
   }));

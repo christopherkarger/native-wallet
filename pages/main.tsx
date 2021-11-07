@@ -16,6 +16,7 @@ import AddWalletScreen from "./add-wallet";
 import BottomTabs from "./bottom-tabs";
 import MarketdataItem from "./market-data-item";
 import SingleWallet from "./single-wallet";
+import Transactions from "./transactions";
 
 const Stack = createStackNavigator();
 
@@ -67,6 +68,8 @@ const Main = () => {
             name={PathNames.singleWallet}
             component={SingleWallet}
           />
+
+          <Stack.Screen name={PathNames.tranactions} component={Transactions} />
 
           <Stack.Screen name={PathNames.scanCode} component={QrCodeScanner} />
         </Stack.Navigator>

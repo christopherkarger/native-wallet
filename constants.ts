@@ -16,6 +16,7 @@ export const PathNames = {
   scanCode: "scan-code",
   marketDataItem: "market-data-item",
   settings: "settings",
+  tranactions: "tranactions",
 };
 
 export const Fonts = {
@@ -31,7 +32,8 @@ export const Colors = {
   darkBlue: "#1c2637",
   fadeLight: "rgba(255,255,255, 0.8)",
   white: "#ffffff",
-  lightWhite: "rgba(255,255,255, 0.5)",
+  lightWhite: "rgba(255,255,255, 0.2)",
+  grey: "#a7a5a5",
   green: "#2BCD70",
   lightGreen: "#67ea9d",
   red: "#E8503A",
@@ -39,6 +41,8 @@ export const Colors = {
   text: "#333333",
   purple: "#a96af7",
   lightBlue: "#38aae2",
+  greyBlue: "#35445c",
+  lightGreyBlue: "#415370",
   cryptos: {
     bitcoin: "#F79319",
     ethereum: "#627EEA",
