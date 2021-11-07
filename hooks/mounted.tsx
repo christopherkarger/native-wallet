@@ -8,7 +8,7 @@ export const useIsMounted = () => {
     return () => {
       mounted.current = false;
     };
-  });
+  }, []);
 
   return mounted;
 };

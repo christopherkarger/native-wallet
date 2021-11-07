@@ -130,6 +130,7 @@ const SingleWallet = (props) => {
                       onPress={() => {
                         props.navigation.navigate(PathNames.tranactions, {
                           transactions: item.transactions,
+                          currency: item.currency,
                         });
                       }}
                     ></TextButton>
@@ -216,8 +217,8 @@ const styles = StyleSheet.create({
     fontSize: 25,
   },
   logo: {
-    width: 70,
-    height: 70,
+    width: 60,
+    height: 60,
   },
   center: {
     width: "100%",

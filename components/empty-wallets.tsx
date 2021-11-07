@@ -20,12 +20,22 @@ const EmptyWallets = (props) => {
     setCreatingDemo(true);
     for (const coin of appConfig.supported) {
       try {
+        const amount = Math.random() * 10;
         await insertItemToLocalDBTableWallets(
           coin.name,
           coin.currency,
           `gfde43dFFxb7hdmddsa7767d`,
-          +(Math.random() * 10).toFixed(2),
+          +amount.toFixed(2),
           new Date().getTime(),
+          [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((e, i) => {
+            const change = Math.random() * e;
+            return {
+              balance_change: Math.random() >= 0.5 ? change * -1 : change,
+              time: `${new Date(new Date().setDate(new Date().getDate() - i))}`,
+              hash: "gfde43dFFxb7hdmddsa7767dgfde43dFFxb",
+            };
+          }),
+
           undefined,
           1
         );

@@ -1,5 +1,4 @@
 import React, { useContext } from "react";
-import { View } from "react-native";
 import { ActiveLanguageContext } from "~/models/context";
 import { dateIsToday } from "~/services/helper";
 import { Texts } from "~/texts";
@@ -7,25 +6,32 @@ import AppText from "./text";
 
 export const DateTime = (props) => {
   const [activeLanguage] = useContext(ActiveLanguageContext);
+  let d = new Date(props.date);
+  const todayText = Texts.today[activeLanguage];
+  const Empty = <AppText>-</AppText>;
 
-  const formatDate = (date: number) => {
-    const d = new Date(date);
-    const todayText = Texts.today[activeLanguage];
-    const formatedDate = `${d.getDate()}.${
-      d.getMonth() + 1
-    }.${d.getFullYear()}`;
+  if (!props.date) {
+    return Empty;
+  }
 
-    const isToday = dateIsToday(d);
-
-    if (props.hourView) {
-      return `${d.getHours()}:00 - ${isToday ? todayText : formatedDate}`;
+  if (!d.getTime()) {
+    d = new Date(+props.date);
+    if (!d.getTime()) {
+      d = new Date(props.date.split(" ")[0]);
+      if (!d.getTime()) {
+        return Empty;
+      }
     }
+  }
 
-    return isToday ? todayText : formatedDate;
-  };
+  const formatedDate = `${d.getDate()}.${d.getMonth() + 1}.${d.getFullYear()}`;
+  const isToday = dateIsToday(d);
+
   return (
-    <View>
-      <AppText>{formatDate(props.date)}</AppText>
-    </View>
+    <AppText style={props.style}>
+      {props.hourView &&
+        `${d.getHours()}:00 - ${isToday ? todayText : formatedDate}`}
+      {!props.hourView && (isToday ? todayText : formatedDate)}
+    </AppText>
   );
 };

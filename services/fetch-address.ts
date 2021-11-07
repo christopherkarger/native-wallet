@@ -56,7 +56,7 @@ export const fetchAddress = (
           balance = getRippleBalance(walletAddress);
           break;
         case "ethereum":
-          transactions = getEthereumTransactions(walletAddress);
+          transactions = getEthereumTransactions(walletAddress, address);
           balance = getEthereumBalance(walletAddress);
           break;
         default:
@@ -134,13 +134,21 @@ const getDefaultBalance = (walletAddress: any) => {
 /**
  * Get Ethreum Transactions
  */
-const getEthereumTransactions = (walletAddress: any) => {
+const getEthereumTransactions = (walletAddress: any, address: string) => {
   const transactions = walletAddress.calls || [];
-  return transactions.slice(0, MAX_TRANSACTIONS).map((c) => ({
-    balance_change: c.value / ETHEREUM_UNIT,
-    hash: c.transaction_hash,
-    time: c.time,
-  }));
+  return transactions.slice(0, MAX_TRANSACTIONS).map((c) => {
+    const val = c.value / ETHEREUM_UNIT;
+
+    const amount =
+      c.recipient.trim().toLowerCase() === address.toLowerCase()
+        ? val
+        : val * -1;
+    return {
+      balance_change: amount,
+      hash: c.transaction_hash,
+      time: c.time,
+    };
+  });
 };
 
 /**
@@ -182,16 +190,22 @@ const getRippleTransactions = (
   address: string
 ): ITransactions[] => {
   const transactions = walletAddress.transactions?.transactions || [];
+  console.log(transactions.slice(0, MAX_TRANSACTIONS));
   return transactions
     .slice(0, MAX_TRANSACTIONS)
     .filter((t) => !!t.tx)
-    .map((t) => ({
-      balance_change:
-        (t.tx.Destination === address ? t.tx.Amount : t.tx.Amount * -1) /
-        RIPPLE_UNIT,
-      hash: t.tx.hash,
-      time: `${t.tx.date * 1000}`,
-    }));
+    .map((t) => {
+      console.log(t.tx.date);
+      return {
+        balance_change:
+          (t.tx.Destination.trim().toLowerCase() === address.toLowerCase()
+            ? t.tx.Amount
+            : t.tx.Amount * -1) / RIPPLE_UNIT,
+        hash: t.tx.hash,
+        // Is not returning correct value
+        //time: `${t.tx.date * 1000}`,
+      };
+    });
 };
 
 /**

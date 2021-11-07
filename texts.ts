@@ -99,4 +99,8 @@ export const Texts = {
     de: "Transaktionen",
     en: "Transactions",
   },
+  hash: {
+    de: "Hash",
+    en: "Hash",
+  },
 };
