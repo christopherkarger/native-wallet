@@ -52,7 +52,7 @@ const Transactions = (props) => {
                     name={
                       positiveChange ? "arrow-circle-down" : "arrow-circle-up"
                     }
-                    size={30}
+                    size={40}
                     color={positiveChange ? Colors.lightBlue : Colors.purple}
                   />
                   <View style={styles.itemInfoWrapper}>
@@ -119,7 +119,8 @@ const styles = StyleSheet.create({
     fontSize: 17,
     marginLeft: "auto",
     fontFamily: Fonts.bold,
-    paddingVertical: 5,
+    paddingTop: 10,
+    paddingBottom: 5,
   },
   amountPos: {
     color: Colors.lightBlue,

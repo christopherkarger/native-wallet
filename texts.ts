@@ -4,7 +4,7 @@ export const Texts = {
     en: "Add wallet",
   },
   tryOutApp: {
-    de: "App ausprobieren?",
+    de: "App testen?",
     en: "Want to try out the app?",
   },
   demoAccount: {

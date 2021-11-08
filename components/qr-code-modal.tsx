@@ -20,7 +20,7 @@ const styles = StyleSheet.create({
   },
   codeWrapper: {
     alignItems: "center",
-    padding: 25,
+    padding: 20,
   },
 });
 export default QrCodeModal;
