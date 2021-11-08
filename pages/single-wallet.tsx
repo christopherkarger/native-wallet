@@ -259,7 +259,7 @@ const styles = StyleSheet.create({
   },
   deleteWalletButton: {
     marginLeft: "auto",
-    paddingHorizontal: 15,
+    paddingHorizontal: 12,
     paddingVertical: 10,
   },
   deleteWalletButtonText: {
