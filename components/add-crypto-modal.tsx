@@ -1,4 +1,3 @@
-import { LinearGradient } from "expo-linear-gradient";
 import React, { useContext } from "react";
 import {
   FlatList,
@@ -19,12 +18,11 @@ const AddCryptoModal = (props) => {
   return (
     <Modal
       show={props.show}
-      onOutsideClick={() => {
-        props.onOutsideClick();
+      onClose={() => {
+        props.onClose();
       }}
     >
       <FlatList
-        contentContainerStyle={{ paddingBottom: 30 }}
         data={appConfig.supported}
         keyExtractor={(_, index) => randomString(index)}
         renderItem={({ item, index }) => {
@@ -46,11 +44,6 @@ const AddCryptoModal = (props) => {
           );
         }}
       ></FlatList>
-      <LinearGradient
-        pointerEvents="none"
-        colors={[Colors.transparent, Colors.white]}
-        style={styles.gradient}
-      />
     </Modal>
   );
 };
@@ -71,13 +64,6 @@ const styles = StyleSheet.create({
   addCryptoModalText: {
     color: Colors.text,
     fontFamily: Fonts.bold,
-  },
-  gradient: {
-    width: "100%",
-    height: 100,
-    position: "absolute",
-    bottom: -1,
-    left: 0,
   },
 });
 

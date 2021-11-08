@@ -1,13 +1,12 @@
 import { BlurView } from "expo-blur";
 import React, { useEffect } from "react";
 import {
-  Dimensions,
   Keyboard,
+  Modal as ExpoModal,
   StyleSheet,
   TouchableOpacity,
   View,
 } from "react-native";
-import { Colors } from "~/constants";
 
 const Modal = (props) => {
   useEffect(() => {
@@ -16,46 +15,67 @@ const Modal = (props) => {
 
   return (
     <>
-      {props.show && (
-        <BlurView intensity={80} tint="dark" style={styles.blurView}>
-          <View style={styles.inner}>{props.children}</View>
+      <ExpoModal
+        animationType="slide"
+        transparent={true}
+        visible={props.show}
+        onRequestClose={() => props.onClose()}
+      >
+        <View style={styles.centeredView}>
+          <View style={styles.modalView}>{props.children}</View>
           <TouchableOpacity
-            style={styles.bg}
-            onPress={props.onOutsideClick}
+            style={styles.blurButton}
+            onPress={props.onClose}
           ></TouchableOpacity>
-        </BlurView>
+        </View>
+      </ExpoModal>
+      {props.show && (
+        <BlurView intensity={80} tint="dark" style={styles.blurView}></BlurView>
       )}
     </>
   );
 };
 
 const styles = StyleSheet.create({
-  blurView: {
+  centeredView: {
     flex: 1,
-    position: "absolute",
-    top: 0,
-    width: "100%",
-    zIndex: 999,
-    height: Dimensions.get("screen").height,
     justifyContent: "center",
+    alignItems: "center",
+    //backgroundColor: "red",
   },
-  bg: {
-    width: "100%",
-    height: "100%",
+  modalView: {
+    backgroundColor: "white",
+    borderRadius: 20,
+    paddingHorizontal: 10,
+    paddingVertical: 10,
+    width: "80%",
+    shadowColor: "#000",
+    overflow: "hidden",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+    zIndex: 1000,
+  },
+  blurView: {
     position: "absolute",
     top: 0,
     left: 0,
-    zIndex: 10,
+    bottom: 0,
+    right: 0,
+    zIndex: 999,
   },
-  inner: {
-    backgroundColor: Colors.white,
-    zIndex: 20,
-    maxHeight: "40%",
-    width: "80%",
-    position: "relative",
-    left: "10%",
-    borderRadius: 10,
-    overflow: "hidden",
+  blurButton: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    bottom: 0,
+    right: 0,
+
+    flex: 1,
   },
 });
 

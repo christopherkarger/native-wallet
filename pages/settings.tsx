@@ -20,6 +20,7 @@ import {
   SupportedLanguages,
 } from "~/models/context";
 import { switchNumeralLocal } from "~/services/format-number";
+import { waitTime } from "~/services/helper";
 import { Texts } from "~/texts";
 import Toggle from "../components/toggle";
 
@@ -39,12 +40,14 @@ const SettingsScreen = (props) => {
     isDeletingDemoAccount = true;
     try {
       await resetLocalDbWallets();
+      DeviceEventEmitter.emit(UPDATE_WALLETS_EVENT, true);
+      // Wait till homescreen updates the wallets to avoid wallets flash
+      await waitTime(100);
+      props.navigation.navigate(PathNames.homeTab);
     } catch (err) {
       console.error(err);
     } finally {
       isDeletingDemoAccount = false;
-      DeviceEventEmitter.emit(UPDATE_WALLETS_EVENT, true);
-      props.navigation.navigate(PathNames.homeTab);
     }
   }, []);
 

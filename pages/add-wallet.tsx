@@ -164,18 +164,18 @@ const AddWalletScreen = (props) => {
             </View>
           </View>
         </DismissKeyboard>
-        <AddCryptoModal
-          show={showModal}
-          onOutsideClick={() => {
-            setShowModal(false);
-          }}
-          onSelect={(selected: { name: string; currency: string }) => {
-            setName(selected.name);
-            setCurrency(selected.currency);
-            setShowModal(false);
-          }}
-        ></AddCryptoModal>
       </SafeArea>
+      <AddCryptoModal
+        show={showModal}
+        onClose={() => {
+          setShowModal(false);
+        }}
+        onSelect={(selected: { name: string; currency: string }) => {
+          setName(selected.name);
+          setCurrency(selected.currency);
+          setShowModal(false);
+        }}
+      ></AddCryptoModal>
     </GradientView>
   );
 };

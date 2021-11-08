@@ -9,7 +9,13 @@ const SubPageHeader = (props) => {
     <View style={{ ...styles.header, ...props.style }}>
       <TouchableOpacity
         style={styles.backButton}
-        onPress={() => props.navigation.goBack()}
+        onPress={() => {
+          try {
+            props.navigation.goBack();
+          } catch (err) {
+            console.error(err);
+          }
+        }}
       >
         <View style={styles.backButtonIcon}>
           <MaterialIcons name="arrow-back-ios" size={22} color={Colors.white} />

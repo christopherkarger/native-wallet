@@ -25,6 +25,7 @@ const Transactions = (props) => {
         <SubPageHeader navigation={props.navigation}>
           {Texts.transactions[activeLanguage]}
         </SubPageHeader>
+
         <View style={styles.inner}>
           <View style={styles.transactionsHeader}>
             <AppText style={styles.currency}>{currency}</AppText>
@@ -45,22 +46,26 @@ const Transactions = (props) => {
                   index === 0 ? styles.noBorder : {},
                 ]}
               >
-                <MaterialIcons
-                  style={styles.itemIcon}
-                  name={
-                    positiveChange ? "arrow-circle-down" : "arrow-circle-up"
-                  }
-                  size={30}
-                  color={positiveChange ? Colors.lightBlue : Colors.purple}
-                />
-                <View style={styles.itemInfoWrapper}>
-                  <DateTime style={styles.itemDate} date={item.time}></DateTime>
-                  <AppText style={styles.itemHash}>
-                    {Texts.hash[activeLanguage]}:
-                  </AppText>
-                  <AppText style={styles.itemHash}>{item.hash}</AppText>
+                <View style={styles.transactionItemInner}>
+                  <MaterialIcons
+                    style={styles.itemIcon}
+                    name={
+                      positiveChange ? "arrow-circle-down" : "arrow-circle-up"
+                    }
+                    size={30}
+                    color={positiveChange ? Colors.lightBlue : Colors.purple}
+                  />
+                  <View style={styles.itemInfoWrapper}>
+                    <DateTime
+                      style={styles.itemDate}
+                      date={item.time}
+                    ></DateTime>
+                    <AppText style={styles.itemHash}>
+                      {Texts.hash[activeLanguage]}:
+                    </AppText>
+                    <AppText style={styles.itemHash}>{item.hash}</AppText>
+                  </View>
                 </View>
-
                 <AppText
                   style={[
                     styles.amount,
@@ -99,18 +104,22 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
   },
   transactionItem: {
-    flexDirection: "row",
     paddingVertical: 10,
     borderTopColor: Colors.lightWhite,
     borderTopWidth: 1,
+  },
+  transactionItemInner: {
     alignItems: "center",
+    flexDirection: "row",
   },
   noBorder: {
     borderTopWidth: 0,
   },
   amount: {
+    fontSize: 17,
     marginLeft: "auto",
     fontFamily: Fonts.bold,
+    paddingVertical: 5,
   },
   amountPos: {
     color: Colors.lightBlue,
@@ -127,7 +136,7 @@ const styles = StyleSheet.create({
     paddingRight: 40,
   },
   itemHash: {
-    fontSize: 10,
+    fontSize: 12,
   },
   itemDate: {
     marginBottom: 5,

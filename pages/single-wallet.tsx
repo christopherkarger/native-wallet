@@ -3,13 +3,14 @@ import React, { useCallback, useContext, useEffect, useState } from "react";
 import {
   Alert,
   DeviceEventEmitter,
-  FlatList,
   Image,
   StyleSheet,
   View,
 } from "react-native";
+import { FlatList } from "react-native-gesture-handler";
 import Button from "~/components/button";
 import GradientView from "~/components/gradient-view";
+import QrCodeModal from "~/components/qr-code-modal";
 import SafeArea from "~/components/safe-area";
 import SubPageHeader from "~/components/sub-page-header";
 import { TextButton } from "~/components/text-button";
@@ -44,6 +45,9 @@ const SingleWallet = (props) => {
   const [moneyBalance, setMoneyBalance] = useState("0");
   const marketData: MarketData = useContext(MarketDataContext);
   const mounted = useIsMounted();
+
+  const [qrCodeModalVisible, setQrCodeModalVisible] = useState(false);
+  const [qrCodeAdress, setQrCodeAdress] = useState("");
 
   useEffect(() => {
     if (mounted.current) {
@@ -83,10 +87,18 @@ const SingleWallet = (props) => {
 
   return (
     <GradientView>
+      <QrCodeModal
+        show={qrCodeModalVisible}
+        onClose={() => {
+          setQrCodeModalVisible(false);
+        }}
+        address={qrCodeAdress}
+      ></QrCodeModal>
       <SafeArea>
         <SubPageHeader navigation={props.navigation}>
           {walletWrapper.wallets[0].name} {Texts.wallet[activeLanguage]}
         </SubPageHeader>
+
         <View style={styles.inner}>
           <View style={styles.header}>
             <Image
@@ -108,59 +120,72 @@ const SingleWallet = (props) => {
             keyExtractor={(_, index) => index.toString()}
             renderItem={({ item, index }) => {
               return (
-                <View style={styles.singleWalletWrapper}>
-                  <View style={styles.walletInner}>
-                    <AppText>{Texts.address[activeLanguage]}</AppText>
-                    <AppText style={styles.address}>{item.address}</AppText>
-                    <AppText>{Texts.balance[activeLanguage]}</AppText>
-                    <AppText style={styles.balance}>
-                      {formatNumber({
-                        number: item.balance,
-                        decimal: "000000",
-                        language: activeLanguage,
-                      })}{" "}
-                      {item.currency}
-                    </AppText>
-                  </View>
-                  <View style={styles.actionBar}>
-                    <TextButton
-                      style={styles.transactionsButton}
-                      textStyle={styles.transactionsButtonText}
-                      text={Texts.transactions[activeLanguage]}
-                      onPress={() => {
-                        props.navigation.navigate(PathNames.tranactions, {
-                          transactions: item.transactions,
-                          currency: item.currency,
-                        });
-                      }}
-                    ></TextButton>
-                    <TextButton
-                      style={styles.deleteWalletButton}
-                      onPress={() => {
-                        Alert.alert(
-                          "",
-                          Texts.deleteAddressHeadline[activeLanguage],
-                          [
-                            {
-                              text: Texts.abort[activeLanguage],
-                              onPress: () => {},
-                              style: "cancel",
-                            },
-                            {
-                              text: "OK",
-                              onPress: () => {
-                                deleteItem(item, index);
+                <>
+                  <View style={styles.singleWalletWrapper}>
+                    <View style={styles.walletInner}>
+                      <AppText>{Texts.address[activeLanguage]}</AppText>
+                      <AppText style={styles.address}>{item.address}</AppText>
+                      <AppText>{Texts.balance[activeLanguage]}</AppText>
+                      <AppText style={styles.balance}>
+                        {formatNumber({
+                          number: item.balance,
+                          decimal: "000000",
+                          language: activeLanguage,
+                        })}{" "}
+                        {item.currency}
+                      </AppText>
+
+                      <TextButton
+                        style={styles.openQrCode}
+                        onPress={() => {
+                          setQrCodeAdress(item.address);
+                          setQrCodeModalVisible(true);
+                        }}
+                      >
+                        <MaterialIcons name="qr-code" size={24} color="white" />
+                      </TextButton>
+                    </View>
+
+                    <View style={styles.actionBar}>
+                      <TextButton
+                        style={styles.transactionsButton}
+                        textStyle={styles.transactionsButtonText}
+                        text={Texts.transactions[activeLanguage]}
+                        onPress={() => {
+                          props.navigation.navigate(PathNames.tranactions, {
+                            transactions: item.transactions,
+                            currency: item.currency,
+                          });
+                        }}
+                      ></TextButton>
+                      <TextButton
+                        style={styles.deleteWalletButton}
+                        onPress={() => {
+                          Alert.alert(
+                            "",
+                            Texts.deleteAddressHeadline[activeLanguage],
+                            [
+                              {
+                                text: Texts.abort[activeLanguage],
+                                onPress: () => {},
+                                style: "cancel",
                               },
-                            },
-                          ],
-                          { cancelable: false }
-                        );
-                      }}
-                    >
-                      <MaterialIcons name="delete" size={20} color="white" />
-                    </TextButton>
+                              {
+                                text: "OK",
+                                onPress: () => {
+                                  deleteItem(item, index);
+                                },
+                              },
+                            ],
+                            { cancelable: false }
+                          );
+                        }}
+                      >
+                        <MaterialIcons name="delete" size={20} color="white" />
+                      </TextButton>
+                    </View>
                   </View>
-                </View>
+                </>
               );
             }}
             ListFooterComponent={
@@ -242,8 +267,9 @@ const styles = StyleSheet.create({
     fontFamily: Fonts.regular,
   },
   transactionsButton: {
-    paddingHorizontal: 15,
     paddingVertical: 10,
+    paddingLeft: 15,
+    paddingRight: 40,
   },
   transactionsButtonText: {
     fontFamily: Fonts.bold,
@@ -252,6 +278,12 @@ const styles = StyleSheet.create({
     paddingVertical: 5,
     backgroundColor: Colors.lightGreyBlue,
     flexDirection: "row",
+  },
+  openQrCode: {
+    position: "absolute",
+    bottom: 0,
+    right: 0,
+    padding: 10,
   },
 });
 
