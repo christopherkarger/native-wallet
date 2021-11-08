@@ -17,6 +17,7 @@ const AddCryptoModal = (props) => {
   const appConfig = useContext(AppConfigContext);
   return (
     <Modal
+      style={styles.modalWrapper}
       show={props.show}
       onClose={() => {
         props.onClose();
@@ -49,6 +50,9 @@ const AddCryptoModal = (props) => {
 };
 
 const styles = StyleSheet.create({
+  modalWrapper: {
+    width: "80%",
+  },
   addCryptoItemWrapper: {
     paddingVertical: 13,
     paddingHorizontal: 15,

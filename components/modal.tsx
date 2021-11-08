@@ -22,7 +22,7 @@ const Modal = (props) => {
         onRequestClose={() => props.onClose()}
       >
         <View style={styles.centeredView}>
-          <View style={styles.modalView}>{props.children}</View>
+          <View style={[styles.modalView, props.style]}>{props.children}</View>
           <TouchableOpacity
             style={styles.blurButton}
             onPress={props.onClose}
@@ -48,7 +48,7 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     paddingHorizontal: 10,
     paddingVertical: 10,
-    width: "80%",
+    //width: "80%",
     shadowColor: "#000",
     overflow: "hidden",
     shadowOffset: {
