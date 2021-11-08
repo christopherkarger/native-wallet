@@ -126,24 +126,30 @@ const SingleWallet = (props) => {
                       <AppText>{Texts.address[activeLanguage]}</AppText>
                       <AppText style={styles.address}>{item.address}</AppText>
                       <AppText>{Texts.balance[activeLanguage]}</AppText>
-                      <AppText style={styles.balance}>
-                        {formatNumber({
-                          number: item.balance,
-                          decimal: "000000",
-                          language: activeLanguage,
-                        })}{" "}
-                        {item.currency}
-                      </AppText>
+                      <View style={styles.balanceWrapper}>
+                        <AppText style={styles.balance}>
+                          {formatNumber({
+                            number: item.balance,
+                            decimal: "000000",
+                            language: activeLanguage,
+                          })}{" "}
+                          {item.currency}
+                        </AppText>
 
-                      <TextButton
-                        style={styles.openQrCode}
-                        onPress={() => {
-                          setQrCodeAdress(item.address);
-                          setQrCodeModalVisible(true);
-                        }}
-                      >
-                        <MaterialIcons name="qr-code" size={24} color="white" />
-                      </TextButton>
+                        <TextButton
+                          style={styles.openQrCode}
+                          onPress={() => {
+                            setQrCodeAdress(item.address);
+                            setQrCodeModalVisible(true);
+                          }}
+                        >
+                          <MaterialIcons
+                            name="qr-code"
+                            size={24}
+                            color="white"
+                          />
+                        </TextButton>
+                      </View>
                     </View>
 
                     <View style={styles.actionBar}>
@@ -252,6 +258,7 @@ const styles = StyleSheet.create({
   balance: {
     fontSize: 25,
     fontFamily: Fonts.bold,
+    flex: 1,
   },
   address: {
     fontFamily: Fonts.bold,
@@ -259,13 +266,10 @@ const styles = StyleSheet.create({
   },
   deleteWalletButton: {
     marginLeft: "auto",
-    paddingHorizontal: 12,
+    paddingHorizontal: 15,
     paddingVertical: 10,
   },
-  deleteWalletButtonText: {
-    color: Colors.fadeLight,
-    fontFamily: Fonts.regular,
-  },
+
   transactionsButton: {
     paddingVertical: 10,
     paddingLeft: 15,
@@ -279,11 +283,14 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.lightGreyBlue,
     flexDirection: "row",
   },
+  balanceWrapper: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
   openQrCode: {
-    position: "absolute",
-    bottom: 0,
-    right: 0,
-    padding: 10,
+    marginLeft: "auto",
+    padding: 13,
+    transform: [{ translateX: 15 }],
   },
 });
 
