@@ -21,9 +21,10 @@ import {
   formatNumber,
   formatNumberWithCurrency,
 } from "~/services/format-number";
-import { calcPercentage, formatDate, randomString } from "~/services/helper";
+import { calcPercentage, randomString } from "~/services/helper";
 import { Texts } from "~/texts";
 import { Colors, Fonts, PathNames } from "../constants";
+import { DateTime } from "./date-time";
 import AppText from "./text";
 
 const Market = (props) => {
@@ -120,9 +121,11 @@ const Market = (props) => {
           {Texts.marketHeadline[activeLanguage]}
         </AppText>
         {marketData?.items[0]?.data.lastFetched && (
-          <AppText style={styles.lastFetched}>
-            {formatDate(marketData.items[0].data.lastFetched, activeLanguage)}
-          </AppText>
+          <DateTime
+            style={styles.lastFetched}
+            date={marketData.items[0].data.lastFetched}
+            withTime={true}
+          ></DateTime>
         )}
       </View>
       <FlatList

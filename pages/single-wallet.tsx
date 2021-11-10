@@ -9,6 +9,7 @@ import {
 } from "react-native";
 import { FlatList } from "react-native-gesture-handler";
 import Button from "~/components/button";
+import { DateTime } from "~/components/date-time";
 import GradientView from "~/components/gradient-view";
 import QrCodeModal from "~/components/qr-code-modal";
 import SafeArea from "~/components/safe-area";
@@ -125,31 +126,34 @@ const SingleWallet = (props) => {
                     <View style={styles.walletInner}>
                       <AppText>{Texts.address[activeLanguage]}</AppText>
                       <AppText style={styles.address}>{item.address}</AppText>
-                      <AppText>{Texts.balance[activeLanguage]}</AppText>
-                      <View style={styles.balanceWrapper}>
-                        <AppText style={styles.balance}>
-                          {formatNumber({
-                            number: item.balance,
-                            decimal: "000000",
-                            language: activeLanguage,
-                          })}{" "}
-                          {item.currency}
-                        </AppText>
-
-                        <TextButton
-                          style={styles.openQrCode}
-                          onPress={() => {
-                            setQrCodeAdress(item.address);
-                            setQrCodeModalVisible(true);
-                          }}
-                        >
-                          <MaterialIcons
-                            name="qr-code"
-                            size={24}
-                            color="white"
-                          />
-                        </TextButton>
+                      <View style={styles.updated}>
+                        <AppText>{Texts.updated[activeLanguage]}:</AppText>
+                        <DateTime
+                          style={styles.updatedDate}
+                          date={item.lastFetched}
+                          withTime={true}
+                        ></DateTime>
                       </View>
+
+                      <AppText>{Texts.balance[activeLanguage]}</AppText>
+                      <AppText style={styles.balance}>
+                        {formatNumber({
+                          number: item.balance,
+                          decimal: "000000",
+                          language: activeLanguage,
+                        })}{" "}
+                        {item.currency}
+                      </AppText>
+
+                      <TextButton
+                        style={styles.openQrCode}
+                        onPress={() => {
+                          setQrCodeAdress(item.address);
+                          setQrCodeModalVisible(true);
+                        }}
+                      >
+                        <MaterialIcons name="qr-code" size={24} color="white" />
+                      </TextButton>
                     </View>
 
                     <View style={styles.actionBar}>
@@ -232,7 +236,8 @@ const styles = StyleSheet.create({
   },
   walletInner: {
     paddingVertical: 12,
-    paddingHorizontal: 15,
+    paddingLeft: 15,
+    paddingRight: 50,
   },
   header: {
     marginBottom: 20,
@@ -269,7 +274,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15,
     paddingVertical: 10,
   },
-
   transactionsButton: {
     paddingVertical: 10,
     paddingLeft: 15,
@@ -283,14 +287,20 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.lightGreyBlue,
     flexDirection: "row",
   },
-  balanceWrapper: {
-    flexDirection: "row",
-    alignItems: "center",
-  },
   openQrCode: {
-    marginLeft: "auto",
+    position: "absolute",
+    top: 0,
+    right: 0,
     padding: 13,
-    transform: [{ translateX: 15 }],
+    //transform: [{ translateX: 15 }],
+  },
+  updated: {
+    flexDirection: "row",
+    marginBottom: 20,
+  },
+  updatedDate: {
+    marginLeft: 5,
+    fontFamily: Fonts.bold,
   },
 });
 

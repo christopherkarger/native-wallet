@@ -1,6 +1,5 @@
 import React from "react";
-import { StyleSheet } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { SafeAreaView, StyleSheet } from "react-native";
 
 const SafeArea = (props) => {
   return (
@@ -12,7 +11,6 @@ const SafeArea = (props) => {
 const styles = StyleSheet.create({
   areaView: {
     flex: 1,
-    paddingTop: 15,
   },
 });
 export default SafeArea;
