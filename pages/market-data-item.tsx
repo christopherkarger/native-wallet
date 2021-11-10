@@ -144,6 +144,7 @@ const MarketdataItem = (props) => {
               {formatNumber({
                 number: percentage,
                 language: activeLanguage,
+                decimal: "00",
               })}
               %
             </AppText>
