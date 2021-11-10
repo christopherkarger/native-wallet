@@ -146,13 +146,14 @@ const deleteAllFromLocalDBTableWallets = () => {
 const updateItemBalanceToLocalDBTableWallets = (
   id: number,
   balance: number,
+  lastFetched: number,
   transactions: ITransactions[]
 ) => {
   return new Promise<SQLite.SQLResultSet>((resolve, reject) => {
     db.transaction((tx) => {
       tx.executeSql(
-        `UPDATE ${tableWallets} SET balance = ?, transactions = ? WHERE id = ?`,
-        [balance, JSON.stringify(transactions), id],
+        `UPDATE ${tableWallets} SET balance = ?, lastFetched = ?, transactions = ? WHERE id = ?`,
+        [balance, lastFetched, JSON.stringify(transactions), id],
         (_, result) => {
           resolve(result);
         },

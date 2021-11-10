@@ -5,6 +5,7 @@ import Market from "~/components/market";
 import SafeArea from "~/components/safe-area";
 import { selectLocalDBTableWallets } from "~/db";
 import { useIsMounted } from "~/hooks/mounted";
+import { useUpdateLocalWalletBalances } from "~/hooks/update-local-wallet-balances";
 import {
   ActiveCurrencyContext,
   ActiveLanguageContext,
@@ -33,7 +34,9 @@ const HomeScreen = (props) => {
   const marketData: MarketData = useContext(MarketDataContext);
   const mounted = useIsMounted();
 
-  //useUpdateLocalWalletBalances();
+  if (!__DEV__) {
+    useUpdateLocalWalletBalances();
+  }
 
   useEffect(() => {
     updateWallets();

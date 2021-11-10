@@ -9,11 +9,9 @@ import { AppConfigContext } from "~/models/context";
 import { getWalletWrapper } from "~/services/getWalletWrapper";
 import { fetchAddress } from "../services/fetch-address";
 import { waitTime } from "../services/helper";
-import useAppStatus, { AppStaus } from "./handle-app-state";
 
 export const useUpdateLocalWalletBalances = async () => {
   const appConfig = useContext(AppConfigContext);
-  const appStatus = useAppStatus();
 
   const update = async () => {
     let isDemoMode = false;
@@ -33,6 +31,7 @@ export const useUpdateLocalWalletBalances = async () => {
               updateItemBalanceToLocalDBTableWallets(
                 wallet.id,
                 fetchedAddress.balance,
+                new Date().getTime(),
                 fetchedAddress.transactions
               );
             } else {
@@ -43,16 +42,19 @@ export const useUpdateLocalWalletBalances = async () => {
           }
         }
       }
-    }
 
-    if (!isDemoMode) {
-      DeviceEventEmitter.emit(UPDATE_WALLETS_EVENT, true);
+      if (!isDemoMode) {
+        DeviceEventEmitter.emit(UPDATE_WALLETS_EVENT, true);
+      }
     }
   };
 
   useEffect(() => {
-    if (appStatus === AppStaus.Active) {
-      update();
-    }
-  }, [appStatus]);
+    (async () => {
+      await update();
+      setInterval(() => {
+        update();
+      }, 4 * 1000 * 60);
+    })();
+  }, []);
 };
