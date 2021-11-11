@@ -8,6 +8,7 @@ import GradientView from "~/components/gradient-view";
 import QrCodeScanner from "~/components/qr-code-scanner";
 import { Colors, PathNames } from "~/constants";
 import {
+  createLocalDBTableAddressUpdate,
   createLocalDBTableMarket,
   createLocalDBTableSettings,
   createLocalDBTableWallets,
@@ -22,17 +23,22 @@ const Stack = createStackNavigator();
 
 createLocalDBTableMarket().catch((err) => {
   console.error(err);
-  console.warn("Local DB Table market could no be created");
+  console.warn("Local DB Table market could not be created");
 });
 
 createLocalDBTableWallets().catch((err) => {
   console.error(err);
-  console.warn("Local DB Table wallets could no be created");
+  console.warn("Local DB Table wallets could not be created");
 });
 
 createLocalDBTableSettings().catch((err) => {
   console.error(err);
-  console.warn("Local DB Table settings could no be created");
+  console.warn("Local DB Table settings could not be created");
+});
+
+createLocalDBTableAddressUpdate().catch((err) => {
+  console.error(err);
+  console.warn("Local DB Table address-update could not be created");
 });
 
 const AppTheme = {
@@ -69,7 +75,10 @@ const Main = () => {
             component={SingleWallet}
           />
 
-          <Stack.Screen name={PathNames.tranactions} component={Transactions} />
+          <Stack.Screen
+            name={PathNames.transactions}
+            component={Transactions}
+          />
 
           <Stack.Screen name={PathNames.scanCode} component={QrCodeScanner} />
         </Stack.Navigator>

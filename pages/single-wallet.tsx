@@ -5,6 +5,7 @@ import {
   DeviceEventEmitter,
   Image,
   StyleSheet,
+  TouchableOpacity,
   View,
 } from "react-native";
 import { FlatList } from "react-native-gesture-handler";
@@ -121,7 +122,14 @@ const SingleWallet = (props) => {
             keyExtractor={(_, index) => index.toString()}
             renderItem={({ item, index }) => {
               return (
-                <>
+                <TouchableOpacity
+                  onPress={(e) => {
+                    props.navigation.navigate(PathNames.transactions, {
+                      transactions: item.transactions,
+                      currency: item.currency,
+                    });
+                  }}
+                >
                   <View style={styles.singleWalletWrapper}>
                     <View style={styles.walletInner}>
                       <AppText>{Texts.address[activeLanguage]}</AppText>
@@ -157,17 +165,10 @@ const SingleWallet = (props) => {
                     </View>
 
                     <View style={styles.actionBar}>
-                      <TextButton
-                        style={styles.transactionsButton}
-                        textStyle={styles.transactionsButtonText}
-                        text={Texts.transactions[activeLanguage]}
-                        onPress={() => {
-                          props.navigation.navigate(PathNames.tranactions, {
-                            transactions: item.transactions,
-                            currency: item.currency,
-                          });
-                        }}
-                      ></TextButton>
+                      <AppText style={styles.transactionsButtonText}>
+                        {Texts.transactions[activeLanguage]}
+                      </AppText>
+
                       <TextButton
                         style={styles.deleteWalletButton}
                         onPress={() => {
@@ -195,7 +196,7 @@ const SingleWallet = (props) => {
                       </TextButton>
                     </View>
                   </View>
-                </>
+                </TouchableOpacity>
               );
             }}
             ListFooterComponent={
@@ -274,12 +275,10 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15,
     paddingVertical: 10,
   },
-  transactionsButton: {
+  transactionsButtonText: {
     paddingVertical: 10,
     paddingLeft: 15,
     paddingRight: 40,
-  },
-  transactionsButtonText: {
     fontFamily: Fonts.bold,
   },
   actionBar: {

@@ -7,7 +7,7 @@ export const TextButton = (props) => {
     <TouchableOpacity
       disabled={props.disabled}
       style={[styles.button, props.style]}
-      onPress={() => props.onPress()}
+      onPress={(e) => props.onPress(e)}
     >
       {!!props.text && (
         <AppText style={[styles.buttonText, props.textStyle]}>

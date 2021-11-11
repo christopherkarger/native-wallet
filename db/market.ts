@@ -23,7 +23,7 @@ interface ISQLResult extends SQLite.SQLResultSet {
   };
 }
 
-const createLocalDBTableMarket = () => {
+export const createLocalDBTableMarket = () => {
   return new Promise<ISQLResult>((resolve, reject) => {
     db.transaction((tx) => {
       tx.executeSql(
@@ -41,7 +41,7 @@ const createLocalDBTableMarket = () => {
   });
 };
 
-const resetLocalDBTableMarket = async () => {
+export const resetLocalDBTableMarket = async () => {
   await deleteAllRowsLocalDBTableMarket();
 };
 
@@ -63,7 +63,7 @@ const deleteAllRowsLocalDBTableMarket = () => {
   });
 };
 
-const insertItemToLocalDBTableMarket = (
+export const insertItemToLocalDBTableMarket = (
   name: string,
   price: number,
   currency: string,
@@ -89,7 +89,7 @@ const insertItemToLocalDBTableMarket = (
   });
 };
 
-const selectLocalDBTableMarket = () => {
+export const selectLocalDBTableMarket = () => {
   return new Promise<ISQLResult>((resolve, reject) => {
     db.transaction((tx) => {
       tx.executeSql(
@@ -107,7 +107,7 @@ const selectLocalDBTableMarket = () => {
   });
 };
 
-const saveMarketToLocalDBTableMarket = async (data: MarketData) => {
+export const saveMarketToLocalDBTableMarket = async (data: MarketData) => {
   try {
     await resetLocalDBTableMarket();
   } catch (err) {
@@ -130,12 +130,4 @@ const saveMarketToLocalDBTableMarket = async (data: MarketData) => {
       console.error(err);
     }
   }
-};
-
-export {
-  saveMarketToLocalDBTableMarket,
-  createLocalDBTableMarket,
-  insertItemToLocalDBTableMarket,
-  selectLocalDBTableMarket,
-  resetLocalDBTableMarket,
 };

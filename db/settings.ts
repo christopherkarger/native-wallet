@@ -23,7 +23,7 @@ interface ISQLResult extends SQLite.SQLResultSet {
   };
 }
 
-const createLocalDBTableSettings = () => {
+export const createLocalDBTableSettings = () => {
   return new Promise<ISQLResult>((resolve, reject) => {
     db.transaction((tx) => {
       tx.executeSql(
@@ -46,7 +46,7 @@ interface ISaveSettings {
   activeCurrency?: SupportedCurrencies;
 }
 
-const saveSettingsToLocalDBTableSettings = async (x: ISaveSettings) => {
+export const saveSettingsToLocalDBTableSettings = async (x: ISaveSettings) => {
   const settings = await selectLocalDBTableSettings();
   if (settings && settings.rows.length) {
     const localSettings = settings.rows._array[0] as ILocalSettings;
@@ -82,7 +82,7 @@ const saveSettingsToLocalDBTableSettings = async (x: ISaveSettings) => {
   }
 };
 
-const dropLocalDBTableSettings = () => {
+export const dropLocalDBTableSettings = () => {
   return new Promise<ISQLResult>((resolve, reject) => {
     db.transaction((tx) => {
       tx.executeSql(
@@ -100,7 +100,7 @@ const dropLocalDBTableSettings = () => {
   });
 };
 
-const selectLocalDBTableSettings = () => {
+export const selectLocalDBTableSettings = () => {
   return new Promise<ISQLResult>((resolve, reject) => {
     db.transaction((tx) => {
       tx.executeSql(
@@ -116,11 +116,4 @@ const selectLocalDBTableSettings = () => {
       );
     });
   });
-};
-
-export {
-  createLocalDBTableSettings,
-  saveSettingsToLocalDBTableSettings,
-  selectLocalDBTableSettings,
-  dropLocalDBTableSettings,
 };

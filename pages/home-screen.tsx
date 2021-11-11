@@ -34,9 +34,7 @@ const HomeScreen = (props) => {
   const marketData: MarketData = useContext(MarketDataContext);
   const mounted = useIsMounted();
 
-  if (!__DEV__) {
-    useUpdateLocalWalletBalances();
-  }
+  useUpdateLocalWalletBalances();
 
   useEffect(() => {
     updateWallets();

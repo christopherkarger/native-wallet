@@ -31,11 +31,11 @@ interface ISQLResult extends SQLite.SQLResultSet {
   };
 }
 
-const resetLocalDbWallets = async () => {
+export const resetLocalDbWallets = async () => {
   await deleteAllFromLocalDBTableWallets();
 };
 
-const createLocalDBTableWallets = () => {
+export const createLocalDBTableWallets = () => {
   return new Promise<ISQLResult>((resolve, reject) => {
     db.transaction((tx) => {
       tx.executeSql(
@@ -53,7 +53,7 @@ const createLocalDBTableWallets = () => {
   });
 };
 
-const insertItemToLocalDBTableWallets = (
+export const insertItemToLocalDBTableWallets = (
   name: string,
   currency: string,
   address: string,
@@ -89,7 +89,7 @@ const insertItemToLocalDBTableWallets = (
   });
 };
 
-const selectLocalDBTableWallets = () => {
+export const selectLocalDBTableWallets = () => {
   return new Promise<ISQLResult>((resolve, reject) => {
     db.transaction((tx) => {
       tx.executeSql(
@@ -107,7 +107,7 @@ const selectLocalDBTableWallets = () => {
   });
 };
 
-const dropLocalDBTableWallets = () => {
+export const dropLocalDBTableWallets = () => {
   return new Promise<ISQLResult>((resolve, reject) => {
     db.transaction((tx) => {
       tx.executeSql(
@@ -143,7 +143,7 @@ const deleteAllFromLocalDBTableWallets = () => {
   });
 };
 
-const updateItemBalanceToLocalDBTableWallets = (
+export const updateItemBalanceToLocalDBTableWallets = (
   id: number,
   balance: number,
   lastFetched: number,
@@ -166,7 +166,7 @@ const updateItemBalanceToLocalDBTableWallets = (
   });
 };
 
-const updateItemConnectedToIdToLocalDBTableWallets = (
+export const updateItemConnectedToIdToLocalDBTableWallets = (
   id: number,
   newId?: number
 ) => {
@@ -187,7 +187,7 @@ const updateItemConnectedToIdToLocalDBTableWallets = (
   });
 };
 
-const deleteSingleItemFromLocalDBTableWallets = (id: number) => {
+export const deleteSingleItemFromLocalDBTableWallets = (id: number) => {
   return new Promise<SQLite.SQLResultSet>((resolve, reject) => {
     db.transaction((tx) => {
       tx.executeSql(
@@ -205,7 +205,7 @@ const deleteSingleItemFromLocalDBTableWallets = (id: number) => {
   });
 };
 
-const deleteMainItemFromLocalDBTableWallets = (
+export const deleteMainItemFromLocalDBTableWallets = (
   item: Wallet,
   walletWrapper: WalletWrapper
 ) => {
@@ -258,7 +258,7 @@ const deleteMainItemFromLocalDBTableWallets = (
   });
 };
 
-const deleteItemFromLocalDBTableWallets = (
+export const deleteItemFromLocalDBTableWallets = (
   item: Wallet,
   walletWrapper: WalletWrapper
 ) => {
@@ -267,17 +267,4 @@ const deleteItemFromLocalDBTableWallets = (
   } else {
     return deleteMainItemFromLocalDBTableWallets(item, walletWrapper);
   }
-};
-
-export {
-  createLocalDBTableWallets,
-  deleteItemFromLocalDBTableWallets,
-  deleteMainItemFromLocalDBTableWallets,
-  deleteSingleItemFromLocalDBTableWallets,
-  insertItemToLocalDBTableWallets,
-  resetLocalDbWallets,
-  selectLocalDBTableWallets,
-  updateItemBalanceToLocalDBTableWallets,
-  updateItemConnectedToIdToLocalDBTableWallets,
-  dropLocalDBTableWallets,
 };
