@@ -5,7 +5,7 @@ import {
   DeviceEventEmitter,
   Image,
   StyleSheet,
-  TouchableOpacity,
+  TouchableNativeFeedback,
   View,
 } from "react-native";
 import { FlatList } from "react-native-gesture-handler";
@@ -122,7 +122,12 @@ const SingleWallet = (props) => {
             keyExtractor={(_, index) => index.toString()}
             renderItem={({ item, index }) => {
               return (
-                <TouchableOpacity
+                <TouchableNativeFeedback
+                  useForeground={true}
+                  background={TouchableNativeFeedback.Ripple(
+                    Colors.ripple,
+                    false
+                  )}
                   onPress={(e) => {
                     props.navigation.navigate(PathNames.transactions, {
                       transactions: item.transactions,
@@ -196,7 +201,7 @@ const SingleWallet = (props) => {
                       </TextButton>
                     </View>
                   </View>
-                </TouchableOpacity>
+                </TouchableNativeFeedback>
               );
             }}
             ListFooterComponent={
@@ -291,7 +296,6 @@ const styles = StyleSheet.create({
     top: 0,
     right: 0,
     padding: 13,
-    //transform: [{ translateX: 15 }],
   },
   updated: {
     flexDirection: "row",

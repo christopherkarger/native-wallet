@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import { Image, StyleSheet, TouchableOpacity, View } from "react-native";
+import { Image, StyleSheet, TouchableNativeFeedback, View } from "react-native";
 import {
   ActiveCurrencyContext,
   ActiveLanguageContext,
@@ -43,33 +43,38 @@ const WalletCard = (props) => {
   }, [marketData]);
 
   return (
-    <TouchableOpacity
+    <TouchableNativeFeedback
+      useForeground={true}
+      background={TouchableNativeFeedback.Ripple(Colors.ripple, false)}
       onPress={() => {
         props.navigation.navigate(PathNames.singleWallet, {
           data: props.data,
           formatedBalance: walletBalance,
         });
       }}
-      style={{
-        borderColor: props.data.mainColor,
-        ...styles.card,
-        ...props.style,
-      }}
     >
-      <View style={styles.amountWrapper}>
-        <AppText style={styles.amount}>
-          {formatNumber({
-            number: amount,
-            language: activeLanguage,
-          })}
+      <View
+        style={{
+          borderColor: props.data.mainColor,
+          ...styles.card,
+          ...props.style,
+        }}
+      >
+        <View style={styles.amountWrapper}>
+          <AppText style={styles.amount}>
+            {formatNumber({
+              number: amount,
+              language: activeLanguage,
+            })}
+          </AppText>
+          <AppText style={styles.currency}>{data.currency}</AppText>
+        </View>
+        <AppText style={styles.walletBalance}>
+          {walletBalance} {CurrencyIcon.icon(activeCurrency)}
         </AppText>
-        <AppText style={styles.currency}>{data.currency}</AppText>
+        <Image style={styles.logo} source={data.icon.path}></Image>
       </View>
-      <AppText style={styles.walletBalance}>
-        {walletBalance} {CurrencyIcon.icon(activeCurrency)}
-      </AppText>
-      <Image style={styles.logo} source={data.icon.path}></Image>
-    </TouchableOpacity>
+    </TouchableNativeFeedback>
   );
 };
 

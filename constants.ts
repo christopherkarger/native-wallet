@@ -45,6 +45,7 @@ export const Colors = {
   purple: "#a96af7",
   lightBlue: "#38aae2",
   greyBlue: "#35445c",
+  ripple: "#587199",
   lightGreyBlue: "#415370",
   cryptos: {
     bitcoin: "#F79319",
