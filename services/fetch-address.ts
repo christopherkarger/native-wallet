@@ -190,23 +190,21 @@ const getRippleTransactions = (
   address: string
 ): ITransactions[] => {
   const transactions = walletAddress.transactions?.transactions || [];
-
   return transactions
     .slice(0, MAX_TRANSACTIONS)
-    .filter((t) => !!t.tx && !!t.Acount)
+    .filter((t) => !!t.tx && !!t.tx.Amount)
     .map((t) => {
       let balanceChange = +t.tx.Amount / RIPPLE_UNIT;
       balanceChange =
         t.tx.Account.trim().toLowerCase() === address.toLowerCase()
           ? balanceChange
           : balanceChange * -1;
-
       return {
         balance_change: balanceChange,
         hash: t.tx.hash,
         // Ripple time starts at 1/1/2000
         // https://bitcoin.stackexchange.com/questions/23061/ripple-ledger-time-format
-        time: `${t.tx.date + 946684800}`,
+        time: `${(t.tx.date + 946684800) * 1000}`,
       };
     });
 };

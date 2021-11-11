@@ -59,6 +59,7 @@ const Transactions = (props) => {
                     <DateTime
                       style={styles.itemDate}
                       date={item.time}
+                      withTime={true}
                     ></DateTime>
                     <AppText style={styles.itemHash}>
                       {Texts.hash[activeLanguage]}:
