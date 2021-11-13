@@ -41,6 +41,7 @@ export const registerNumeralFormat = (language: string) => {
       },
     });
   } catch (err) {
+    console.error(err);
     console.error("not able to register locale");
   }
 
