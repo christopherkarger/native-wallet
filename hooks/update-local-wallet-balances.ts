@@ -114,7 +114,7 @@ export const useUpdateLocalWalletBalances = async () => {
 
   useEffect(() => {
     (async () => {
-      if (__DEV__) {
+      if (!__DEV__) {
         await update();
         setInterval(() => {
           update();
