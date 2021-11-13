@@ -23,6 +23,7 @@ const WalletCard = (props) => {
   const data = props.data.wallets[0];
   const [amount, setAmount] = useState(props.data.totalBalance);
   const marketData: MarketData = useContext(MarketDataContext);
+
   const getWalletBalance = () => {
     return formatNumberWithCurrency({
       number: calcTotalBalance(marketData, [props.data]),
@@ -49,7 +50,7 @@ const WalletCard = (props) => {
       onPress={() => {
         props.navigation.navigate(PathNames.singleWallet, {
           data: props.data,
-          formatedBalance: walletBalance,
+          index: props.index,
         });
       }}
     >

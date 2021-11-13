@@ -11,6 +11,12 @@ import { AppConfigContext } from "~/models/context";
 import { fetchAddress } from "../services/fetch-address";
 import { waitTime } from "../services/helper";
 
+export enum UPDATE_WALLETS_EVENT_TYPE {
+  Update,
+  Add,
+  Delete,
+}
+
 export const useUpdateLocalWalletBalances = async () => {
   const appConfig = useContext(AppConfigContext);
 
@@ -56,7 +62,10 @@ export const useUpdateLocalWalletBalances = async () => {
       }
 
       if (!allWallets.some((w) => !!w.demoAddress)) {
-        DeviceEventEmitter.emit(UPDATE_WALLETS_EVENT, true);
+        DeviceEventEmitter.emit(
+          UPDATE_WALLETS_EVENT,
+          UPDATE_WALLETS_EVENT_TYPE.Update
+        );
       }
     }
   };
@@ -105,7 +114,7 @@ export const useUpdateLocalWalletBalances = async () => {
 
   useEffect(() => {
     (async () => {
-      if (!__DEV__) {
+      if (__DEV__) {
         await update();
         setInterval(() => {
           update();

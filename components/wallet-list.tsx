@@ -9,6 +9,7 @@ const Wallets = (props) => {
       navigation={props.navigation}
       data={listProps.item}
       style={listProps.index > 0 ? { marginLeft: 20 } : {}}
+      index={listProps.index}
     ></WalletCard>
   );
 

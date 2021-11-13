@@ -13,6 +13,7 @@ import {
   selectLocalDBTableWallets,
 } from "~/db";
 import { useIsMounted } from "~/hooks/mounted";
+import { UPDATE_WALLETS_EVENT_TYPE } from "~/hooks/update-local-wallet-balances";
 import {
   ActiveCurrencyContext,
   ActiveLanguageContext,
@@ -40,7 +41,10 @@ const SettingsScreen = (props) => {
     isDeletingDemoAccount = true;
     try {
       await resetLocalDbWallets();
-      DeviceEventEmitter.emit(UPDATE_WALLETS_EVENT, true);
+      DeviceEventEmitter.emit(
+        UPDATE_WALLETS_EVENT,
+        UPDATE_WALLETS_EVENT_TYPE.Delete
+      );
       // Wait till homescreen updates the wallets to avoid wallets flash
       await waitTime(100);
       props.navigation.navigate(PathNames.homeTab);

@@ -1,8 +1,10 @@
 import { MaterialIcons } from "@expo/vector-icons";
+import { useIsFocused } from "@react-navigation/native";
 import React, { useCallback, useContext, useEffect, useState } from "react";
 import {
   Alert,
   DeviceEventEmitter,
+  EmitterSubscription,
   Image,
   StyleSheet,
   TouchableNativeFeedback,
@@ -17,8 +19,12 @@ import SafeArea from "~/components/safe-area";
 import SubPageHeader from "~/components/sub-page-header";
 import { TextButton } from "~/components/text-button";
 import { Colors, Fonts, PathNames, UPDATE_WALLETS_EVENT } from "~/constants";
-import { deleteItemFromLocalDBTableWallets } from "~/db";
+import {
+  deleteItemFromLocalDBTableWallets,
+  selectLocalDBTableWallets,
+} from "~/db";
 import { useIsMounted } from "~/hooks/mounted";
+import { UPDATE_WALLETS_EVENT_TYPE } from "~/hooks/update-local-wallet-balances";
 import {
   ActiveCurrencyContext,
   ActiveLanguageContext,
@@ -34,6 +40,7 @@ import {
   formatNumber,
   formatNumberWithCurrency,
 } from "~/services/format-number";
+import { getWalletWrapper } from "~/services/getWalletWrapper";
 import { Texts } from "~/texts";
 import AppText from "../components/text";
 
@@ -47,9 +54,42 @@ const SingleWallet = (props) => {
   const [moneyBalance, setMoneyBalance] = useState("0");
   const marketData: MarketData = useContext(MarketDataContext);
   const mounted = useIsMounted();
+  const isFocused = useIsFocused();
 
   const [qrCodeModalVisible, setQrCodeModalVisible] = useState(false);
   const [qrCodeAdress, setQrCodeAdress] = useState("");
+
+  const [focusSub, setFocusSub] = useState<EmitterSubscription>();
+
+  useEffect(() => {
+    if (!focusSub) {
+      const subscription = DeviceEventEmitter.addListener(
+        UPDATE_WALLETS_EVENT,
+        async (event) => {
+          if (event == UPDATE_WALLETS_EVENT_TYPE.Update) {
+            const localWallets = await selectLocalDBTableWallets().catch(
+              () => {}
+            );
+            if (localWallets && localWallets.rows.length) {
+              const walletWrapper = getWalletWrapper(localWallets.rows._array);
+
+              if (props.route.params.index !== undefined && mounted.current) {
+                setWalletWrapper(walletWrapper[props.route.params.index]);
+              }
+            }
+          }
+        }
+      );
+      setFocusSub(subscription);
+    }
+
+    if (!isFocused) {
+      focusSub?.remove();
+      if (mounted.current) {
+        setFocusSub(undefined);
+      }
+    }
+  }, [isFocused]);
 
   useEffect(() => {
     if (mounted.current) {
@@ -73,7 +113,10 @@ const SingleWallet = (props) => {
         }
       );
 
-      DeviceEventEmitter.emit(UPDATE_WALLETS_EVENT, true);
+      DeviceEventEmitter.emit(
+        UPDATE_WALLETS_EVENT,
+        UPDATE_WALLETS_EVENT_TYPE.Delete
+      );
 
       const updatedWallets = walletWrapper.wallets.filter(
         (e, i) => i !== index
@@ -100,137 +143,137 @@ const SingleWallet = (props) => {
         <SubPageHeader navigation={props.navigation}>
           {walletWrapper.wallets[0].name} {Texts.wallet[activeLanguage]}
         </SubPageHeader>
-
-        <View style={styles.inner}>
-          <View style={styles.header}>
-            <Image
-              style={styles.logo}
-              source={walletWrapper.wallets[0].icon.path}
-            ></Image>
-
-            <View style={styles.headerPriceWrapper}>
-              <AppText style={styles.headerPrice}>
-                {moneyBalance} {CurrencyIcon.icon(activeCurrency)}
-              </AppText>
-            </View>
-          </View>
-          <FlatList
-            style={styles.flatList}
-            scrollEnabled={true}
-            keyboardShouldPersistTaps="handled"
-            data={walletWrapper.wallets}
-            keyExtractor={(_, index) => index.toString()}
-            renderItem={({ item, index }) => {
-              return (
-                <TouchableNativeFeedback
-                  useForeground={true}
-                  background={TouchableNativeFeedback.Ripple(
-                    Colors.ripple,
-                    false
-                  )}
-                  onPress={(e) => {
-                    props.navigation.navigate(PathNames.transactions, {
-                      transactions: item.transactions,
-                      currency: item.currency,
-                    });
-                  }}
-                >
-                  <View style={styles.singleWalletWrapper}>
-                    <View style={styles.walletInner}>
-                      <AppText>{Texts.address[activeLanguage]}</AppText>
-                      <AppText style={styles.address}>{item.address}</AppText>
-                      <View style={styles.updated}>
-                        <AppText>{Texts.updated[activeLanguage]}:</AppText>
-                        <DateTime
-                          style={styles.updatedDate}
-                          date={item.lastFetched}
-                          withTime={true}
-                        ></DateTime>
-                      </View>
-
-                      <AppText>{Texts.balance[activeLanguage]}</AppText>
-                      <AppText style={styles.balance}>
-                        {formatNumber({
-                          number: item.balance,
-                          decimal: "000000",
-                          language: activeLanguage,
-                        })}{" "}
-                        {item.currency}
-                      </AppText>
-
-                      <TextButton
-                        style={styles.openQrCode}
-                        onPress={() => {
-                          setQrCodeAdress(item.address);
-                          setQrCodeModalVisible(true);
-                        }}
-                      >
-                        <MaterialIcons name="qr-code" size={24} color="white" />
-                      </TextButton>
+        <FlatList
+          contentContainerStyle={{
+            paddingRight: 20,
+            paddingLeft: 20,
+            paddingBottom: 20,
+          }}
+          style={styles.flatList}
+          scrollEnabled={true}
+          keyboardShouldPersistTaps="handled"
+          data={walletWrapper.wallets}
+          keyExtractor={(_, index) => index.toString()}
+          renderItem={({ item, index }) => {
+            return (
+              <TouchableNativeFeedback
+                useForeground={true}
+                background={TouchableNativeFeedback.Ripple(
+                  Colors.ripple,
+                  false
+                )}
+                onPress={(e) => {
+                  props.navigation.navigate(PathNames.transactions, {
+                    transactions: item.transactions,
+                    currency: item.currency,
+                  });
+                }}
+              >
+                <View style={styles.singleWalletWrapper}>
+                  <View style={styles.walletInner}>
+                    <AppText>{Texts.address[activeLanguage]}</AppText>
+                    <AppText style={styles.address}>{item.address}</AppText>
+                    <View style={styles.updated}>
+                      <AppText>{Texts.updated[activeLanguage]}:</AppText>
+                      <DateTime
+                        style={styles.updatedDate}
+                        date={item.lastFetched}
+                        withTime={true}
+                      ></DateTime>
                     </View>
 
-                    <View style={styles.actionBar}>
-                      <AppText style={styles.transactionsButtonText}>
-                        {Texts.transactions[activeLanguage]}
-                      </AppText>
+                    <AppText>{Texts.balance[activeLanguage]}</AppText>
+                    <AppText style={styles.balance}>
+                      {formatNumber({
+                        number: item.balance,
+                        decimal: "000000",
+                        language: activeLanguage,
+                      })}{" "}
+                      {item.currency}
+                    </AppText>
 
-                      <TextButton
-                        style={styles.deleteWalletButton}
-                        onPress={() => {
-                          Alert.alert(
-                            "",
-                            Texts.deleteAddressHeadline[activeLanguage],
-                            [
-                              {
-                                text: Texts.abort[activeLanguage],
-                                onPress: () => {},
-                                style: "cancel",
-                              },
-                              {
-                                text: "OK",
-                                onPress: () => {
-                                  deleteItem(item, index);
-                                },
-                              },
-                            ],
-                            { cancelable: false }
-                          );
-                        }}
-                      >
-                        <MaterialIcons name="delete" size={20} color="white" />
-                      </TextButton>
-                    </View>
+                    <TextButton
+                      style={styles.openQrCode}
+                      onPress={() => {
+                        setQrCodeAdress(item.address);
+                        setQrCodeModalVisible(true);
+                      }}
+                    >
+                      <MaterialIcons name="qr-code" size={24} color="white" />
+                    </TextButton>
                   </View>
-                </TouchableNativeFeedback>
-              );
-            }}
-            ListFooterComponent={
-              <View>
-                <Button
-                  onPress={() => {
-                    props.navigation.navigate(PathNames.addWallet, {
-                      addToWallet: true,
-                      currency: walletWrapper.wallets[0].currency,
-                      name: walletWrapper.wallets[0].name,
-                      id: walletWrapper.wallets[0].id,
-                    });
-                  }}
-                  text={Texts.addAddressToWallet[activeLanguage]}
-                ></Button>
+
+                  <View style={styles.actionBar}>
+                    <AppText style={styles.transactionsButtonText}>
+                      {Texts.transactions[activeLanguage]}
+                    </AppText>
+
+                    <TextButton
+                      style={styles.deleteWalletButton}
+                      onPress={() => {
+                        Alert.alert(
+                          "",
+                          Texts.deleteAddressHeadline[activeLanguage],
+                          [
+                            {
+                              text: Texts.abort[activeLanguage],
+                              onPress: () => {},
+                              style: "cancel",
+                            },
+                            {
+                              text: "OK",
+                              onPress: () => {
+                                deleteItem(item, index);
+                              },
+                            },
+                          ],
+                          { cancelable: false }
+                        );
+                      }}
+                    >
+                      <MaterialIcons name="delete" size={20} color="white" />
+                    </TextButton>
+                  </View>
+                </View>
+              </TouchableNativeFeedback>
+            );
+          }}
+          ListHeaderComponent={
+            <View style={styles.header}>
+              <Image
+                style={styles.logo}
+                source={walletWrapper.wallets[0].icon.path}
+              ></Image>
+
+              <View style={styles.headerPriceWrapper}>
+                <AppText style={styles.headerPrice}>
+                  {moneyBalance} {CurrencyIcon.icon(activeCurrency)}
+                </AppText>
               </View>
-            }
-          ></FlatList>
-        </View>
+            </View>
+          }
+          ListFooterComponent={
+            <View>
+              <Button
+                onPress={() => {
+                  props.navigation.navigate(PathNames.addWallet, {
+                    addToWallet: true,
+                    currency: walletWrapper.wallets[0].currency,
+                    name: walletWrapper.wallets[0].name,
+                    id: walletWrapper.wallets[0].id,
+                  });
+                }}
+                text={Texts.addAddressToWallet[activeLanguage]}
+              ></Button>
+            </View>
+          }
+        ></FlatList>
       </SafeArea>
     </GradientView>
   );
 };
 
 const styles = StyleSheet.create({
-  inner: {
-    marginHorizontal: 20,
-    flex: 1,
-  },
   flatList: {
     flex: 1,
   },

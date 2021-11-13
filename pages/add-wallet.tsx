@@ -17,6 +17,7 @@ import AppText from "~/components/text";
 import { Colors, PathNames, UPDATE_WALLETS_EVENT } from "~/constants";
 import { insertItemToLocalDBTableWallets } from "~/db";
 import { useIsMounted } from "~/hooks/mounted";
+import { UPDATE_WALLETS_EVENT_TYPE } from "~/hooks/update-local-wallet-balances";
 import { ActiveLanguageContext, AppConfigContext } from "~/models/context";
 import { fetchAddress } from "~/services/fetch-address";
 import { Texts } from "~/texts";
@@ -93,8 +94,11 @@ const AddWalletScreen = (props) => {
         connectedToId
       )
         .then(() => {
-          DeviceEventEmitter.emit(UPDATE_WALLETS_EVENT, true);
-          props.navigation.navigate(PathNames.home);
+          DeviceEventEmitter.emit(
+            UPDATE_WALLETS_EVENT,
+            UPDATE_WALLETS_EVENT_TYPE.Add
+          );
+          props.navigation.goBack();
         })
         .catch((err) => {
           setFetchingAndSavingAddress(false);
