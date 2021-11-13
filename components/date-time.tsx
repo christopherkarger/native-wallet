@@ -18,6 +18,15 @@ export const DateTime = (props) => {
     d = new Date(+props.date);
     if (!d.getTime()) {
       d = new Date(props.date.split(" ")[0]);
+      const time = props.date.split(" ")[1];
+      if (time) {
+        const timeArr = time.split(":");
+        if (timeArr[0] && timeArr[1]) {
+          d.setUTCHours(timeArr[0]);
+          d.setUTCMinutes(timeArr[1]);
+        }
+      }
+
       if (!d.getTime()) {
         return Empty;
       }

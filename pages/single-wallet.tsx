@@ -55,14 +55,14 @@ const SingleWallet = (props) => {
     if (mounted.current) {
       setMoneyBalance(
         formatNumberWithCurrency({
-          number: calcTotalBalance(marketData, [props.route.params.data]),
+          number: calcTotalBalance(marketData, [walletWrapper]),
           language: activeLanguage,
           currency: activeCurrency,
           dollarPrice: dollarPrice,
         })
       );
     }
-  }, [marketData, activeCurrency]);
+  }, [marketData, activeCurrency, walletWrapper]);
 
   const deleteItem = useCallback(
     async (item: Wallet, index: number) => {
