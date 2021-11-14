@@ -4,7 +4,6 @@ import React, { useCallback, useContext, useEffect, useState } from "react";
 import {
   Alert,
   DeviceEventEmitter,
-  EmitterSubscription,
   Image,
   StyleSheet,
   TouchableNativeFeedback,
@@ -59,37 +58,32 @@ const SingleWallet = (props) => {
   const [qrCodeModalVisible, setQrCodeModalVisible] = useState(false);
   const [qrCodeAdress, setQrCodeAdress] = useState("");
 
-  const [focusSub, setFocusSub] = useState<EmitterSubscription>();
-
   useEffect(() => {
-    if (!focusSub) {
-      const subscription = DeviceEventEmitter.addListener(
-        UPDATE_WALLETS_EVENT,
-        async (event) => {
-          if (event == UPDATE_WALLETS_EVENT_TYPE.Update) {
-            const localWallets = await selectLocalDBTableWallets().catch(
-              () => {}
-            );
-            if (localWallets && localWallets.rows.length) {
-              const walletWrapper = getWalletWrapper(localWallets.rows._array);
+    const subscription = DeviceEventEmitter.addListener(
+      UPDATE_WALLETS_EVENT,
+      async (event) => {
+        if (
+          event == UPDATE_WALLETS_EVENT_TYPE.Update ||
+          event == UPDATE_WALLETS_EVENT_TYPE.Add
+        ) {
+          const localWallets = await selectLocalDBTableWallets().catch(
+            () => {}
+          );
+          if (localWallets && localWallets.rows.length) {
+            const walletWrapper = getWalletWrapper(localWallets.rows._array);
 
-              if (props.route.params.index !== undefined && mounted.current) {
-                setWalletWrapper(walletWrapper[props.route.params.index]);
-              }
+            if (props.route.params.index !== undefined && mounted.current) {
+              setWalletWrapper(walletWrapper[props.route.params.index]);
             }
           }
         }
-      );
-      setFocusSub(subscription);
-    }
-
-    if (!isFocused) {
-      focusSub?.remove();
-      if (mounted.current) {
-        setFocusSub(undefined);
       }
-    }
-  }, [isFocused]);
+    );
+
+    return () => {
+      subscription.remove();
+    };
+  }, []);
 
   useEffect(() => {
     if (mounted.current) {
