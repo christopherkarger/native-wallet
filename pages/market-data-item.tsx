@@ -119,100 +119,111 @@ const MarketdataItem = (props) => {
         <SubPageHeader navigation={props.navigation}>
           {props.route.params.name}
         </SubPageHeader>
-        <View style={styles.header}>
-          <Image
-            style={styles.logo}
-            source={props.route.params.iconPath}
-          ></Image>
-          <View style={styles.headerPriceWrapper}>
-            <AppText style={styles.headerPrice}>
-              {formatNumberWithCurrency({
-                number: price,
-                language: activeLanguage,
-                currency: activeCurrency,
-                dollarPrice: dollarPrice,
-              })}{" "}
-              {CurrencyIcon.icon(activeCurrency)}
-            </AppText>
-            <AppText
-              style={[
-                styles.headerPercentage,
-                percentage > 0 ? styles.positveTrend : styles.negativeTrend,
-              ]}
-            >
-              {percentage > 0 ? "+" : ""}
-              {formatNumber({
-                number: percentage,
-                language: activeLanguage,
-                decimal: "00",
-              })}
-              %
-            </AppText>
-          </View>
-        </View>
-        <View style={styles.chartWrapper}>
-          <LineChart
-            style={styles.chart}
-            data={chartData}
-            svg={{ stroke: trendColor }}
-            curve={shape.curveNatural}
-            contentInset={{ top: 20, bottom: 20, left: 0, right: 0 }}
-            animate={true}
-          ></LineChart>
-        </View>
-        <View style={styles.chartButtonWraper}>
-          <TouchableOpacity
-            disabled={chartView === ChartView.hours}
-            style={[
-              styles.chartButton,
-              chartView === ChartView.hours ? styles.activeChartButton : {},
-            ]}
-            onPress={() => {
-              if (coinMarketData) {
-                changeView(ChartView.hours, coinMarketData);
-              }
-            }}
-          >
-            <AppText>24 {Texts.hours[activeLanguage]}</AppText>
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            disabled={chartView === ChartView.week}
-            style={[
-              styles.chartButton,
-              chartView === ChartView.week ? styles.activeChartButton : {},
-            ]}
-            onPress={() => {
-              if (coinMarketData) {
-                changeView(ChartView.week, coinMarketData);
-              }
-            }}
-          >
-            <AppText>7 {Texts.days[activeLanguage]}</AppText>
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            disabled={chartView === ChartView.month}
-            style={[
-              styles.chartButton,
-              chartView === ChartView.month ? styles.activeChartButton : {},
-            ]}
-            onPress={() => {
-              if (coinMarketData) {
-                changeView(ChartView.month, coinMarketData);
-              }
-            }}
-          >
-            <AppText>30 {Texts.days[activeLanguage]}</AppText>
-          </TouchableOpacity>
-        </View>
         <FlatList
           style={styles.chartDataList}
-          contentContainerStyle={{ paddingRight: 20, paddingLeft: 20 }}
           keyboardShouldPersistTaps="handled"
           data={listData}
           keyExtractor={(_, index) => randomString(index)}
           renderItem={memoizedListItem}
+          ListHeaderComponent={
+            <>
+              <View style={styles.header}>
+                <Image
+                  style={styles.logo}
+                  source={props.route.params.iconPath}
+                ></Image>
+                <View style={styles.headerPriceWrapper}>
+                  <AppText style={styles.headerPrice}>
+                    {formatNumberWithCurrency({
+                      number: price,
+                      language: activeLanguage,
+                      currency: activeCurrency,
+                      dollarPrice: dollarPrice,
+                    })}{" "}
+                    {CurrencyIcon.icon(activeCurrency)}
+                  </AppText>
+                  <AppText
+                    style={[
+                      styles.headerPercentage,
+                      percentage > 0
+                        ? styles.positveTrend
+                        : styles.negativeTrend,
+                    ]}
+                  >
+                    {percentage > 0 ? "+" : ""}
+                    {formatNumber({
+                      number: percentage,
+                      language: activeLanguage,
+                      decimal: "00",
+                    })}
+                    %
+                  </AppText>
+                </View>
+              </View>
+              <View style={styles.chartWrapper}>
+                <LineChart
+                  style={styles.chart}
+                  data={chartData}
+                  svg={{ stroke: trendColor }}
+                  curve={shape.curveNatural}
+                  contentInset={{ top: 20, bottom: 20, left: 0, right: 0 }}
+                  animate={true}
+                ></LineChart>
+              </View>
+              <View style={styles.chartButtonWraper}>
+                <TouchableOpacity
+                  disabled={chartView === ChartView.hours}
+                  style={[
+                    styles.chartButton,
+                    chartView === ChartView.hours
+                      ? styles.activeChartButton
+                      : {},
+                  ]}
+                  onPress={() => {
+                    if (coinMarketData) {
+                      changeView(ChartView.hours, coinMarketData);
+                    }
+                  }}
+                >
+                  <AppText>24 {Texts.hours[activeLanguage]}</AppText>
+                </TouchableOpacity>
+
+                <TouchableOpacity
+                  disabled={chartView === ChartView.week}
+                  style={[
+                    styles.chartButton,
+                    chartView === ChartView.week
+                      ? styles.activeChartButton
+                      : {},
+                  ]}
+                  onPress={() => {
+                    if (coinMarketData) {
+                      changeView(ChartView.week, coinMarketData);
+                    }
+                  }}
+                >
+                  <AppText>7 {Texts.days[activeLanguage]}</AppText>
+                </TouchableOpacity>
+
+                <TouchableOpacity
+                  disabled={chartView === ChartView.month}
+                  style={[
+                    styles.chartButton,
+                    chartView === ChartView.month
+                      ? styles.activeChartButton
+                      : {},
+                  ]}
+                  onPress={() => {
+                    if (coinMarketData) {
+                      changeView(ChartView.month, coinMarketData);
+                    }
+                  }}
+                >
+                  <AppText>30 {Texts.days[activeLanguage]}</AppText>
+                </TouchableOpacity>
+              </View>
+            </>
+          }
         ></FlatList>
       </SafeArea>
     </GradientView>
@@ -274,6 +285,7 @@ const styles = StyleSheet.create({
     borderTopWidth: 1,
     paddingTop: 8,
     paddingBottom: 8,
+    marginHorizontal: 20,
   },
 });
 

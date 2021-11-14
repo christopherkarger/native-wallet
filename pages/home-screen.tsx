@@ -80,32 +80,34 @@ const HomeScreen = (props) => {
             onDemoCreated={updateWallets}
           ></EmptyWallets>
         )}
-        {walletsData.length > 0 && (
-          <View style={styles.inner}>
-            <AppText style={styles.pfHeadline}>
-              {Texts.portfolio[activeLanguage]}
-            </AppText>
-            <AppText style={styles.pfSubheadline}>
-              {Texts.balance[activeLanguage]}
-            </AppText>
-            <AppText style={styles.balance}>
-              {totalBalance} {CurrencyIcon.icon(activeCurrency)}
-            </AppText>
-          </View>
-        )}
 
         {walletsData.length > 0 && (
-          <View>
-            <WalletList
-              data={walletsData}
-              navigation={props.navigation}
-            ></WalletList>
-            <View style={styles.inner}></View>
-          </View>
-        )}
-
-        {walletsData.length > 0 && Object.keys(marketData).length > 0 && (
-          <Market navigation={props.navigation} data={marketData}></Market>
+          <Market
+            navigation={props.navigation}
+            data={marketData}
+            ListHeaderComponent={
+              <>
+                <View style={styles.inner}>
+                  <AppText style={styles.pfHeadline}>
+                    {Texts.portfolio[activeLanguage]}
+                  </AppText>
+                  <AppText style={styles.pfSubheadline}>
+                    {Texts.balance[activeLanguage]}
+                  </AppText>
+                  <AppText style={styles.balance}>
+                    {totalBalance} {CurrencyIcon.icon(activeCurrency)}
+                  </AppText>
+                </View>
+                <View>
+                  <WalletList
+                    data={walletsData}
+                    navigation={props.navigation}
+                  ></WalletList>
+                  <View style={styles.inner}></View>
+                </View>
+              </>
+            }
+          ></Market>
         )}
       </SafeArea>
     </GradientView>

@@ -115,34 +115,36 @@ const Market = (props) => {
   );
 
   return (
-    <View style={styles.inner}>
-      <View style={styles.header}>
-        <AppText style={styles.marketHeadline}>
-          {Texts.marketHeadline[activeLanguage]}
-        </AppText>
-        {marketData?.items[0]?.data.lastFetched && (
-          <DateTime
-            style={styles.lastFetched}
-            date={marketData.items[0].data.lastFetched}
-            withTime={true}
-          ></DateTime>
-        )}
-      </View>
-      <FlatList
-        style={styles.flatList}
-        data={marketData?.itemsByMarketCap}
-        scrollEnabled={true}
-        keyExtractor={(_, index) => randomString(index)}
-        keyboardShouldPersistTaps="handled"
-        renderItem={memoizedListItem}
-      ></FlatList>
-    </View>
+    <FlatList
+      style={styles.flatList}
+      data={marketData.itemsByMarketCap}
+      scrollEnabled={true}
+      keyExtractor={(_, index) => randomString(index)}
+      keyboardShouldPersistTaps="handled"
+      renderItem={memoizedListItem}
+      ListHeaderComponent={
+        <>
+          {props.ListHeaderComponent}
+          {Object.keys(marketData).length > 0 && (
+            <View style={styles.header}>
+              <AppText style={styles.marketHeadline}>
+                {Texts.marketHeadline[activeLanguage]}
+              </AppText>
+              {marketData?.items[0]?.data.lastFetched && (
+                <DateTime
+                  style={styles.lastFetched}
+                  date={marketData.items[0].data.lastFetched}
+                  withTime={true}
+                ></DateTime>
+              )}
+            </View>
+          )}
+        </>
+      }
+    ></FlatList>
   );
 };
 const styles = StyleSheet.create({
-  inner: {
-    flex: 1,
-  },
   header: {
     flexDirection: "row",
     alignItems: "flex-end",
@@ -150,7 +152,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: Colors.lightWhite,
     paddingBottom: 10,
-    paddingHorizontal: 20,
+    marginHorizontal: 20,
   },
   lastFetched: {
     fontSize: 12,
@@ -169,6 +171,7 @@ const styles = StyleSheet.create({
   itemWrapper: {
     borderBottomWidth: 1,
     borderBottomColor: Colors.lightWhite,
+    marginHorizontal: 20,
   },
   lastItemWrapper: {
     borderBottomWidth: 0,
@@ -208,8 +211,6 @@ const styles = StyleSheet.create({
   },
   flatList: {
     flex: 1,
-    paddingLeft: 20,
-    paddingRight: 20,
   },
   positveTrend: {
     color: Colors.green,
