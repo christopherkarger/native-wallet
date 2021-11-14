@@ -70,8 +70,8 @@ const AddWalletScreen = (props) => {
       console.error(err);
       setFetchingAndSavingAddress(false);
       Alert.alert(
-        "Wallet konnte nicht angelegt werden!",
-        "Korregiere die Adresse oder versuche es bitte erneut.",
+        Texts.addWalletErrorHeadline[activeLanguage],
+        Texts.addWalletErrorText[activeLanguage],
         [
           {
             text: "OK",
@@ -84,27 +84,26 @@ const AddWalletScreen = (props) => {
     }
 
     if (mounted.current) {
-      insertItemToLocalDBTableWallets(
-        name.trim(),
-        currency,
-        address.trim(),
-        balance,
-        new Date().getTime(),
-        transactions,
-        connectedToId
-      )
-        .then(() => {
-          DeviceEventEmitter.emit(
-            UPDATE_WALLETS_EVENT,
-            UPDATE_WALLETS_EVENT_TYPE.Add
-          );
-          props.navigation.goBack();
-        })
-        .catch((err) => {
-          setFetchingAndSavingAddress(false);
-          console.error("Insert Wallet into DB failed");
-          console.error(err);
-        });
+      try {
+        await insertItemToLocalDBTableWallets(
+          name.trim(),
+          currency,
+          address.trim(),
+          balance,
+          new Date().getTime(),
+          transactions,
+          connectedToId
+        );
+        DeviceEventEmitter.emit(
+          UPDATE_WALLETS_EVENT,
+          UPDATE_WALLETS_EVENT_TYPE.Add
+        );
+        props.navigation.goBack();
+      } catch (err) {
+        setFetchingAndSavingAddress(false);
+        console.error("Insert Wallet into DB failed");
+        console.error(err);
+      }
     }
   };
 

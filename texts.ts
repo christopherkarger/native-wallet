@@ -103,4 +103,12 @@ export const Texts = {
     de: "Hash",
     en: "Hash",
   },
+  addWalletErrorHeadline: {
+    de: "Wallet konnte nicht angelegt werden!",
+    en: "Wallet could not get added!",
+  },
+  addWalletErrorText: {
+    de: "Korregiere die Adresse oder versuche es bitte erneut.",
+    en: "Please correct the address or try it again.",
+  },
 };
