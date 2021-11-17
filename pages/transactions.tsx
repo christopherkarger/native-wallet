@@ -56,15 +56,19 @@ const Transactions = (props) => {
                     color={positiveChange ? Colors.lightBlue : Colors.purple}
                   />
                   <View style={styles.itemInfoWrapper}>
-                    <DateTime
-                      style={styles.itemDate}
-                      date={item.time}
-                      withTime={true}
-                    ></DateTime>
+                    {item.time && (
+                      <DateTime
+                        style={styles.itemDate}
+                        date={item.time}
+                        withTime={true}
+                      ></DateTime>
+                    )}
                     <AppText style={styles.itemHash}>
-                      {Texts.hash[activeLanguage]}:
+                      {Texts.hash[activeLanguage]}
                     </AppText>
-                    <AppText style={styles.itemHash}>{item.hash}</AppText>
+                    <AppText style={styles.itemHash}>
+                      {item.hash ?? "-"}
+                    </AppText>
                   </View>
                 </View>
                 <AppText
@@ -75,7 +79,7 @@ const Transactions = (props) => {
                 >
                   {formatNumber({
                     number: item.balance_change,
-                    decimal: "000000",
+                    decimal: "00000000",
                     language: activeLanguage,
                   })}
                 </AppText>

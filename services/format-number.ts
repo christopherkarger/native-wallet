@@ -5,6 +5,7 @@ export interface IFormatNumber {
   decimal?: string;
   number: number;
   language: SupportedLanguages;
+  maxChar?: number;
 }
 
 export interface IFormatCurrency extends IFormatNumber {
@@ -59,24 +60,28 @@ export const formatNumberWithCurrency = (x: IFormatCurrency) => {
 };
 
 export const formatNumber = (x: IFormatNumber): string => {
+  if (isNaN(x.number) || x.number === null) {
+    return " ";
+  }
+
   const num = parseFloat(x.number.toString());
+  let formatedNumber = numeral(num).format("0,00.[00]");
 
   if (x.decimal) {
-    return numeral(num).format(`0,00.[${x.decimal}]`);
-  }
-
-  if (num < 1) {
-    return numeral(num).format("0,00.[0000]");
-  }
-
-  const formatedNum = numeral(num).format("0,00.[00]");
-
-  // If number is 10,2 add ending 0 -> 10,20
-  if (
-    formatedNum.split(x.language === SupportedLanguages.DE ? "," : ".")[1]
+    formatedNumber = numeral(num).format(`0,00.[${x.decimal}]`);
+  } else if (num < 1) {
+    formatedNumber = numeral(num).format("0,00.[0000]");
+  } else if (
+    formatedNumber.split(x.language === SupportedLanguages.DE ? "," : ".")[1]
       ?.length === 1
   ) {
-    return numeral(num).format("0,00.00");
+    // If number is 10,2 add ending 0 -> 10,20
+    formatedNumber = numeral(num).format("0,00.00");
   }
-  return formatedNum;
+
+  if (x.maxChar && formatedNumber.length > x.maxChar) {
+    formatedNumber = `${formatedNumber.substring(0, x.maxChar)}...`;
+  }
+
+  return formatedNumber;
 };

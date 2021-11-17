@@ -66,6 +66,7 @@ const WalletCard = (props) => {
             {formatNumber({
               number: amount,
               language: activeLanguage,
+              maxChar: 9,
             })}
           </AppText>
           <AppText style={styles.currency}>{data.currency}</AppText>
@@ -98,7 +99,7 @@ const styles = StyleSheet.create({
   },
   amount: {
     fontFamily: Fonts.bold,
-    fontSize: 25,
+    fontSize: 23,
   },
   currency: {
     fontSize: 15,
