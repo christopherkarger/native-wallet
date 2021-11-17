@@ -18,7 +18,7 @@ export const dateIsToday = (date: Date) => {
   const now = new Date();
 
   return (
-    now.getDay() === date.getDay() &&
+    now.getDate() === date.getDate() &&
     now.getMonth() === date.getMonth() &&
     now.getFullYear() === date.getFullYear()
   );
