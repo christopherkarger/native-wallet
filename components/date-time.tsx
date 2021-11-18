@@ -33,11 +33,6 @@ export const DateTime = (props) => {
     }
   }
 
-  if (props.utcDate && !props.hourView) {
-    // Set to UTC Date, market data gets fetched at utc time zone
-    d = new Date(d.getTime() + d.getTimezoneOffset() * 60 * 1000);
-  }
-
   const formatedDate = `${d.getDate()}.${d.getMonth() + 1}.${d.getFullYear()}`;
   const formatedTime = `${d.getHours() < 10 ? "0" : ""}${d.getHours()}:${
     d.getMinutes() < 10 ? "0" : ""
