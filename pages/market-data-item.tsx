@@ -54,7 +54,7 @@ const MarketdataItem = (props) => {
 
   const changeView = (view: ChartView, data: IMarketDataItemData): void => {
     let viewData =
-      view === ChartView.hours ? data.lastDayHistory : data.history;
+      view === ChartView.hours ? data.lastDayHistory : data.history.slice(-30);
 
     const cloneViewData = (d: IHistoryItem[]) =>
       d.map((c) => ({

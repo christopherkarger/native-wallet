@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { ActiveLanguageContext } from "~/models/context";
+import { ActiveLanguageContext, SupportedLanguages } from "~/models/context";
 import { dateIsToday } from "~/services/helper";
 import { Texts } from "~/texts";
 import AppText from "./text";
@@ -33,7 +33,12 @@ export const DateTime = (props) => {
     }
   }
 
-  const formatedDate = `${d.getDate()}.${d.getMonth() + 1}.${d.getFullYear()}`;
+  let formatedDate = `${d.getMonth() + 1}/${d.getDate()}/${d.getFullYear()}`;
+
+  if (activeLanguage === SupportedLanguages.DE) {
+    formatedDate = `${d.getDate()}.${d.getMonth() + 1}.${d.getFullYear()}`;
+  }
+
   const formatedTime = `${d.getHours() < 10 ? "0" : ""}${d.getHours()}:${
     d.getMinutes() < 10 ? "0" : ""
   }${d.getMinutes()}`;
