@@ -13,6 +13,7 @@ import {
   createLocalDBTableSettings,
   createLocalDBTableWallets,
 } from "~/db";
+import AddAssetScreen from "./add-asset";
 import AddWalletScreen from "./add-wallet";
 import BottomTabs from "./bottom-tabs";
 import MarketdataItem from "./market-data-item";
@@ -62,6 +63,7 @@ const Main = () => {
           }}
         >
           <Stack.Screen name={PathNames.home} component={BottomTabs} />
+          <Stack.Screen name={PathNames.addAsset} component={AddAssetScreen} />
           <Stack.Screen
             name={PathNames.addWallet}
             component={AddWalletScreen}
@@ -74,12 +76,10 @@ const Main = () => {
             name={PathNames.singleWallet}
             component={SingleWallet}
           />
-
           <Stack.Screen
             name={PathNames.transactions}
             component={Transactions}
           />
-
           <Stack.Screen name={PathNames.scanCode} component={QrCodeScanner} />
         </Stack.Navigator>
       </NavigationContainer>

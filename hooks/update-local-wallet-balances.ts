@@ -30,15 +30,20 @@ export const useUpdateLocalWalletBalances = async () => {
           address: w.address,
           name: w.name,
           lastFetched: w.lastFetched,
-          demoAddress: w.demoAddress,
+          isDemoAddress: w.isDemoAddress,
         }))
-        .sort((a, b) => a.lastFetched - b.lastFetched);
+        .sort((a, b) =>
+          a.lastFetched !== undefined && b.lastFetched !== undefined
+            ? a.lastFetched - b.lastFetched
+            : 0
+        );
 
       for (const wallet of allWallets) {
         const addressUpdate = await localAddressUpdate();
         if (
           addressUpdate.count < MAX_FETCHING_ADDRESSES &&
-          !wallet.demoAddress
+          wallet.address &&
+          !wallet.isDemoAddress
         ) {
           try {
             await waitTime(1000);
@@ -61,7 +66,7 @@ export const useUpdateLocalWalletBalances = async () => {
         }
       }
 
-      if (!allWallets.some((w) => !!w.demoAddress)) {
+      if (!allWallets.some((w) => !!w.isDemoAddress)) {
         DeviceEventEmitter.emit(
           UPDATE_WALLETS_EVENT,
           UPDATE_WALLETS_EVENT_TYPE.Update

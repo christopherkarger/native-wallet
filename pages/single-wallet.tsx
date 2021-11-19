@@ -158,23 +158,30 @@ const SingleWallet = (props) => {
                 )}
                 onPress={(e) => {
                   props.navigation.navigate(PathNames.transactions, {
-                    transactions: item.transactions,
+                    transactions: item.transactions ?? [],
                     currency: item.currency,
                   });
                 }}
               >
                 <View style={styles.singleWalletWrapper}>
                   <View style={styles.walletInner}>
-                    <AppText>{Texts.address[activeLanguage]}</AppText>
-                    <AppText style={styles.address}>{item.address}</AppText>
-                    <View style={styles.updated}>
-                      <AppText>{Texts.updated[activeLanguage]}:</AppText>
-                      <DateTime
-                        style={styles.updatedDate}
-                        date={item.lastFetched}
-                        withTime={true}
-                      ></DateTime>
-                    </View>
+                    {item.address && (
+                      <View>
+                        <AppText>{Texts.address[activeLanguage]}</AppText>
+                        <AppText style={styles.address}>{item.address}</AppText>
+                      </View>
+                    )}
+
+                    {item.lastFetched && (
+                      <View style={styles.updated}>
+                        <AppText>{Texts.updated[activeLanguage]}:</AppText>
+                        <DateTime
+                          style={styles.updatedDate}
+                          date={item.lastFetched}
+                          withTime={true}
+                        ></DateTime>
+                      </View>
+                    )}
 
                     <AppText>{Texts.balance[activeLanguage]}</AppText>
                     <AppText style={styles.balance}>
@@ -186,15 +193,17 @@ const SingleWallet = (props) => {
                       {item.currency}
                     </AppText>
 
-                    <TextButton
-                      style={styles.openQrCode}
-                      onPress={() => {
-                        setQrCodeAdress(item.address);
-                        setQrCodeModalVisible(true);
-                      }}
-                    >
-                      <MaterialIcons name="qr-code" size={24} color="white" />
-                    </TextButton>
+                    {item.address && (
+                      <TextButton
+                        style={styles.openQrCode}
+                        onPress={() => {
+                          setQrCodeAdress(item.address);
+                          setQrCodeModalVisible(true);
+                        }}
+                      >
+                        <MaterialIcons name="qr-code" size={24} color="white" />
+                      </TextButton>
+                    )}
                   </View>
 
                   <View style={styles.actionBar}>

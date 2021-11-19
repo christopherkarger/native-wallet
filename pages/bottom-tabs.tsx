@@ -5,7 +5,7 @@ import { StyleSheet, View } from "react-native";
 import CustomTabs from "~/components/custom-tabs";
 import GradientView from "~/components/gradient-view";
 import { Colors, PathNames } from "../constants";
-import AddWalletScreen from "./add-wallet";
+import AddAssetScreen from "./add-asset";
 import HomeScreen from "./home-screen";
 import SettingsScreen from "./settings";
 
@@ -34,11 +34,11 @@ const BottomTabs = () => {
           }}
         />
         <Tab.Screen
-          name={PathNames.addWalletTab}
-          component={AddWalletScreen}
+          name={PathNames.addAssetTab}
+          component={AddAssetScreen}
           options={{
             tabBarIcon: ({ focused }) => (
-              <View style={styles.addWalletButton}>
+              <View style={styles.addAssetButton}>
                 <MaterialIcons
                   name="add"
                   size={25}
@@ -67,7 +67,7 @@ const BottomTabs = () => {
 };
 
 const styles = StyleSheet.create({
-  addWalletButton: {
+  addAssetButton: {
     width: 32,
     height: 32,
     borderRadius: 18,

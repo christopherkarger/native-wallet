@@ -14,13 +14,26 @@ export interface ITransactions {
 export interface ILocalWallet {
   id: number;
   name: string;
-  address: string;
   currency: string;
   balance: number;
-  lastFetched: number;
-  transactions: string;
+  isCoinWallet: number;
+  isDemoAddress: number;
+  address?: string;
+  lastFetched?: number;
+  transactions?: string;
   connectedToId?: number;
-  demoAddress?: number;
+}
+
+interface IWalletInsertInput {
+  readonly name: string;
+  readonly currency: string;
+  readonly balance: number;
+  readonly isCoinWallet: boolean;
+  readonly isDemoAddress: boolean;
+  readonly address?: string;
+  readonly lastFetched?: number;
+  readonly transactions?: ITransactions[];
+  readonly connectedToId?: number;
 }
 
 interface ISQLResult extends SQLite.SQLResultSet {
@@ -39,7 +52,7 @@ export const createLocalDBTableWallets = () => {
   return new Promise<ISQLResult>((resolve, reject) => {
     db.transaction((tx) => {
       tx.executeSql(
-        `CREATE TABLE IF NOT EXISTS ${tableWallets} (id INTEGER PRIMARY KEY NOT NULL, name TEXT NOT NULL, currency TEXT NOT NULL, address TEXT NOT NULL, balance INTEGER NOT NULL, lastFetched INTEGER NOT NULL, transactions TEXT NOT NULL, connectedToId INTEGER, demoAddress INTEGER);`,
+        `CREATE TABLE IF NOT EXISTS ${tableWallets} (id INTEGER PRIMARY KEY NOT NULL, name TEXT NOT NULL, currency TEXT NOT NULL, balance INTEGER NOT NULL, isCoinWallet INTEGER NOT NULL, isDemoAddress INTEGER NOT NULL, address TEXT, lastFetched INTEGER, transactions TEXT, connectedToId INTEGER);`,
         [],
         (_, result) => {
           resolve(<ISQLResult>result);
@@ -53,29 +66,21 @@ export const createLocalDBTableWallets = () => {
   });
 };
 
-export const insertItemToLocalDBTableWallets = (
-  name: string,
-  currency: string,
-  address: string,
-  balance: number,
-  lastFetched: number,
-  transactions: ITransactions[],
-  connectedToId?: number,
-  demoAddress?: boolean
-) => {
+export const insertItemToLocalDBTableWallets = (x: IWalletInsertInput) => {
   return new Promise<ISQLResult>((resolve, reject) => {
     db.transaction((tx) => {
       tx.executeSql(
-        `INSERT INTO ${tableWallets} (name, currency, address, balance, lastFetched, transactions, connectedToId, demoAddress) VALUES (?,?,?,?,?,?,?,?);`,
+        `INSERT INTO ${tableWallets} (name, currency, balance, isCoinWallet, isDemoAddress, address, lastFetched, transactions, connectedToId) VALUES (?,?,?,?,?,?,?,?,?);`,
         [
-          name,
-          currency,
-          address,
-          balance,
-          lastFetched,
-          JSON.stringify(transactions),
-          connectedToId,
-          demoAddress ? 1 : 0,
+          x.name,
+          x.currency,
+          x.balance,
+          x.isCoinWallet ? 1 : 0,
+          x.isDemoAddress ? 1 : 0,
+          x.address,
+          x.lastFetched,
+          x.transactions ? JSON.stringify(x.transactions) : undefined,
+          x.connectedToId,
         ],
         (_, result) => {
           resolve(<ISQLResult>result);

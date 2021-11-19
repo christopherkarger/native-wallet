@@ -96,7 +96,9 @@ const SettingsScreen = (props) => {
 
       if (mounted.current) {
         if (localWallets && localWallets.rows.length) {
-          setIsDemoAccount(localWallets.rows._array.some((x) => x.demoAddress));
+          setIsDemoAccount(
+            localWallets.rows._array.some((x) => x.isDemoAddress)
+          );
         } else {
           setIsDemoAccount(false);
         }

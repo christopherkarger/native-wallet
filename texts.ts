@@ -1,7 +1,23 @@
 export const Texts = {
+  addAsset: {
+    de: "Asset anlegen",
+    en: "Add asset",
+  },
+  addWalletHeadline: {
+    de: "Eine physiche Wallet Adresse hinzufügen",
+    en: "Add a physical wallet address",
+  },
   addWallet: {
     de: "Wallet hinzufügen",
     en: "Add wallet",
+  },
+  addCoinHeadline: {
+    de: "Einen Coin ohne Adresse hinzufügen",
+    en: "Add a coin without an address",
+  },
+  addCoin: {
+    de: "Coin hinzufügen",
+    en: "Add a coin",
   },
   tryOutApp: {
     de: "App testen?",

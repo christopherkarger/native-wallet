@@ -4,17 +4,16 @@ export const isAndroid = Platform.OS === "android";
 export const isIOS = Platform.OS === "ios";
 
 export const UPDATE_WALLETS_EVENT = "event.updateWallets";
-
-export const MAX_FETCHING_ADDRESSES = 1000;
-
+export const MAX_FETCHING_ADDRESSES = 500;
 export const USD_CRYPTO = "Tether";
 
 export const PathNames = {
   homeTab: "homeTab",
-  addWalletTab: "add-walletTab",
+  addAssetTab: "add-assetTab",
 
   home: "home",
   addWallet: "add-wallet",
+  addAsset: "add-asset",
   singleWallet: "single-wallet",
   scanCode: "scan-code",
   marketDataItem: "market-data-item",

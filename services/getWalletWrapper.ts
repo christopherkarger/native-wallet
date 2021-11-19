@@ -6,34 +6,36 @@ export const getWalletWrapper = (localWalletsArr: ILocalWallet[]) => {
   const connectedWallets = localWalletsArr
     .filter((e) => e.connectedToId)
     .map((w) => {
-      return new Wallet(
-        w.id,
-        w.name,
-        w.currency,
-        w.address,
-        w.balance,
-        w.lastFetched,
-        JSON.parse(w.transactions),
-        w.connectedToId,
-        w.demoAddress === 1
-      );
+      return new Wallet({
+        id: w.id,
+        name: w.name,
+        currency: w.currency,
+        balance: w.balance,
+        isCoinWallet: w.isCoinWallet === 1,
+        isDemoAddress: w.isDemoAddress === 1,
+        address: w.address,
+        lastFetched: w.lastFetched,
+        transactions: w.transactions ? JSON.parse(w.transactions) : undefined,
+        connectedToId: w.connectedToId,
+      });
     });
 
   return localWalletsArr
     .filter((e) => !e.connectedToId)
     .map((w) => {
       return new WalletWrapper([
-        new Wallet(
-          w.id,
-          w.name,
-          w.currency,
-          w.address,
-          w.balance,
-          w.lastFetched,
-          JSON.parse(w.transactions),
-          w.connectedToId,
-          w.demoAddress === 1
-        ),
+        new Wallet({
+          id: w.id,
+          name: w.name,
+          currency: w.currency,
+          balance: w.balance,
+          isCoinWallet: w.isCoinWallet === 1,
+          isDemoAddress: w.isDemoAddress === 1,
+          address: w.address,
+          lastFetched: w.lastFetched,
+          transactions: w.transactions ? JSON.parse(w.transactions) : undefined,
+          connectedToId: w.connectedToId,
+        }),
         ...connectedWallets.filter((e) => e.connectedToId === w.id),
       ]);
     });

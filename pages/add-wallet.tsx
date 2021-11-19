@@ -85,15 +85,17 @@ const AddWalletScreen = (props) => {
 
     if (mounted.current) {
       try {
-        await insertItemToLocalDBTableWallets(
-          name.trim(),
-          currency,
-          address.trim(),
-          balance,
-          new Date().getTime(),
-          transactions,
-          connectedToId
-        );
+        await insertItemToLocalDBTableWallets({
+          name: name.trim(),
+          currency: currency,
+          balance: balance,
+          isCoinWallet: false,
+          isDemoAddress: false,
+          address: address.trim(),
+          lastFetched: new Date().getTime(),
+          transactions: transactions,
+          connectedToId: connectedToId,
+        });
         DeviceEventEmitter.emit(
           UPDATE_WALLETS_EVENT,
           UPDATE_WALLETS_EVENT_TYPE.Add

@@ -30,8 +30,8 @@ const CustomTabs = ({ state, descriptors, navigation }) => {
         let path: string;
 
         switch (route.name) {
-          case PathNames.addWalletTab:
-            path = PathNames.addWallet;
+          case PathNames.addAssetTab:
+            path = PathNames.addAsset;
             break;
           default:
             path = route.name;

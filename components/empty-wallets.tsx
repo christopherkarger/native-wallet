@@ -21,13 +21,15 @@ const EmptyWallets = (props) => {
     for (const coin of appConfig.supported) {
       try {
         const amount = Math.random() * 10;
-        await insertItemToLocalDBTableWallets(
-          coin.name,
-          coin.currency,
-          `gfde43dFFxb7hdmddsa7767d`,
-          +amount.toFixed(2),
-          new Date().getTime(),
-          [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((e, i) => {
+        await insertItemToLocalDBTableWallets({
+          name: coin.name,
+          currency: coin.currency,
+          balance: +amount.toFixed(2),
+          isCoinWallet: false,
+          isDemoAddress: true,
+          lastFetched: new Date().getTime(),
+          address: `gfde43dFFxb7hdmddsa7767d`,
+          transactions: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((e, i) => {
             const change = Math.random() * e;
             return {
               balance_change: Math.random() >= 0.5 ? change * -1 : change,
@@ -35,10 +37,7 @@ const EmptyWallets = (props) => {
               hash: "gfde43dFFxb7hdmddsa7767dgfde43dFFxb",
             };
           }),
-
-          undefined,
-          1
-        );
+        });
       } catch (err) {
         console.error(err);
         setCreatingDemo(false);
@@ -56,11 +55,11 @@ const EmptyWallets = (props) => {
           style={styles.wallet}
           source={require("../assets/wallet.png")}
         ></Image>
-        <View style={styles.addWalletWrapper}>
+        <View style={styles.addAssetWrapper}>
           <Button
-            style={styles.addWallet}
-            onPress={() => props.navigation.navigate(PathNames.addWallet)}
-            text={Texts.addWallet[activeLanguage]}
+            style={styles.addAsset}
+            onPress={() => props.navigation.navigate(PathNames.addAsset)}
+            text={Texts.addAsset[activeLanguage]}
           ></Button>
         </View>
       </View>
@@ -89,10 +88,10 @@ const styles = StyleSheet.create({
     position: "relative",
     top: -40,
   },
-  addWalletWrapper: {
+  addAssetWrapper: {
     alignItems: "center",
   },
-  addWallet: {
+  addAsset: {
     marginTop: 20,
   },
   wallet: {

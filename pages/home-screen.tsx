@@ -28,7 +28,7 @@ const HomeScreen = (props) => {
   const dollarPrice = useContext(USDPriceContext);
   const [activeLanguage] = useContext(ActiveLanguageContext);
   const [activeCurrency] = useContext(ActiveCurrencyContext);
-  const [loading, setIsloading] = useState(true);
+  const [loading, setLoading] = useState(true);
   const [walletsData, setWalletsData] = useState<WalletWrapper[]>([]);
   const [totalBalance, setTotalBalance] = useState("0");
   const marketData: MarketData = useContext(MarketDataContext);
@@ -64,7 +64,7 @@ const HomeScreen = (props) => {
     } else {
       setWalletsData([]);
     }
-    setIsloading(false);
+    setLoading(false);
   };
 
   if (loading) {
