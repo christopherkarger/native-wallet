@@ -3,6 +3,7 @@ import React, { useContext, useEffect, useState } from "react";
 import {
   Alert,
   DeviceEventEmitter,
+  Keyboard,
   StyleSheet,
   TextInput,
   TouchableOpacity,
@@ -54,6 +55,9 @@ const AddWalletScreen = (props) => {
     if (fetchingAndSavingAddress || !name || !address) {
       return;
     }
+
+    Keyboard.dismiss();
+
     let balance = 0;
     let transactions = [];
     try {
@@ -150,6 +154,7 @@ const AddWalletScreen = (props) => {
                   placeholderTextColor={Colors.white}
                   onChangeText={setEnteredAddress}
                   value={address}
+                  editable={!fetchingAndSavingAddress}
                 ></TextInput>
               </View>
 
