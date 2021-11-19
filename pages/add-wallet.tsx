@@ -18,7 +18,7 @@ import { Colors, PathNames, UPDATE_WALLETS_EVENT } from "~/constants";
 import { insertItemToLocalDBTableWallets } from "~/db";
 import { useIsMounted } from "~/hooks/mounted";
 import { UPDATE_WALLETS_EVENT_TYPE } from "~/hooks/update-local-wallet-balances";
-import { ActiveLanguageContext, AppConfigContext } from "~/models/context";
+import { ActiveLanguageContext } from "~/models/context";
 import { fetchAddress } from "~/services/fetch-address";
 import { Texts } from "~/texts";
 import SubPageHeader from "../components/sub-page-header";
@@ -26,7 +26,6 @@ import SubPageHeader from "../components/sub-page-header";
 const AddWalletScreen = (props) => {
   const [activeLanguage] = useContext(ActiveLanguageContext);
   const mounted = useIsMounted();
-  const appConfig = useContext(AppConfigContext);
   const [nameChangeAllowed, setNameChangeAllowed] = useState(true);
   const [name, setName] = useState("");
   const [currency, setCurrency] = useState("");
@@ -59,11 +58,7 @@ const AddWalletScreen = (props) => {
     let transactions = [];
     try {
       setFetchingAndSavingAddress(true);
-      const fetchedAddress = await fetchAddress(
-        address.trim(),
-        name.trim(),
-        appConfig
-      );
+      const fetchedAddress = await fetchAddress(address.trim(), name.trim());
       balance = fetchedAddress.balance;
       transactions = fetchedAddress.transactions;
     } catch (err) {
@@ -100,7 +95,11 @@ const AddWalletScreen = (props) => {
           UPDATE_WALLETS_EVENT,
           UPDATE_WALLETS_EVENT_TYPE.Add
         );
-        props.navigation.goBack();
+        if (connectedToId !== undefined) {
+          props.navigation.goBack();
+        } else {
+          props.navigation.navigate(PathNames.home);
+        }
       } catch (err) {
         setFetchingAndSavingAddress(false);
         console.error("Insert Wallet into DB failed");

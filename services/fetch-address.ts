@@ -1,5 +1,5 @@
+import { Config } from "~/config";
 import { ITransactions } from "~/db";
-import { IConfig } from "~/models/config";
 
 interface IFetchHeader {
   headers?: {
@@ -13,17 +13,14 @@ const RIPPLE_UNIT = 1000000;
 const ETHEREUM_UNIT = 1000000000000000000;
 const DEFAULT_UNIT = 100000000;
 
-export const fetchAddress = (
-  address: string,
-  name: string,
-  appConfig: IConfig
-) => {
-  let url = appConfig.urls.main;
+export const fetchAddress = (address: string, name: string) => {
   const fetchHeaders: IFetchHeader = {};
   const lowerCaseName = name.toLowerCase();
 
-  if (appConfig.urls[lowerCaseName]) {
-    url = appConfig.urls[lowerCaseName];
+  let url = Config.urls.main;
+  const configUrls = Config.urls as { [key: string]: string };
+  if (configUrls[lowerCaseName]) {
+    url = configUrls[lowerCaseName] as string;
   } else {
     url = url.replace("${name}", lowerCaseName);
   }

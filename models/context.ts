@@ -1,5 +1,4 @@
 import React from "react";
-import { IConfig } from "../models/config";
 import { MarketData } from "./market-data";
 
 export enum SupportedLanguages {
@@ -12,15 +11,8 @@ export enum SupportedCurrencies {
   EUR = "eur",
 }
 
-export const defaultConfig: IConfig = {
-  supported: [],
-  urls: {},
-};
-
 export const DefaultLanguage = SupportedLanguages.EN;
 export const DefaultCurrency = SupportedCurrencies.USD;
-
-export const AppConfigContext = React.createContext<IConfig>(defaultConfig);
 
 export const ActiveLanguageContext = React.createContext<
   [SupportedLanguages, React.Dispatch<React.SetStateAction<SupportedLanguages>>]

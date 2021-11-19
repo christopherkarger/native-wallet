@@ -1,4 +1,4 @@
-import { useContext, useEffect } from "react";
+import { useEffect } from "react";
 import { DeviceEventEmitter } from "react-native";
 import { MAX_FETCHING_ADDRESSES, UPDATE_WALLETS_EVENT } from "~/constants";
 import {
@@ -7,7 +7,6 @@ import {
   selectLocalDBTableWallets,
   updateItemBalanceToLocalDBTableWallets,
 } from "~/db";
-import { AppConfigContext } from "~/models/context";
 import { fetchAddress } from "../services/fetch-address";
 import { waitTime } from "../services/helper";
 
@@ -18,8 +17,6 @@ export enum UPDATE_WALLETS_EVENT_TYPE {
 }
 
 export const useUpdateLocalWalletBalances = async () => {
-  const appConfig = useContext(AppConfigContext);
-
   const update = async () => {
     const localWallets = await selectLocalDBTableWallets().catch(() => {});
 
@@ -49,8 +46,7 @@ export const useUpdateLocalWalletBalances = async () => {
             await waitTime(1000);
             const fetchedAddress = await fetchAddress(
               wallet.address,
-              wallet.name,
-              appConfig
+              wallet.name
             );
             updateItemBalanceToLocalDBTableWallets(
               wallet.id,

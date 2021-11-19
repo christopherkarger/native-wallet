@@ -4,7 +4,6 @@ import * as Localization from "expo-localization";
 import { StatusBar } from "expo-status-bar";
 import React, { useEffect, useState } from "react";
 import { LogBox, StyleSheet } from "react-native";
-import { Config } from "./config";
 import { Fonts, USD_CRYPTO } from "./constants";
 import {
   ILocalMarket,
@@ -16,7 +15,6 @@ import {
 import {
   ActiveCurrencyContext,
   ActiveLanguageContext,
-  AppConfigContext,
   DefaultCurrency,
   DefaultLanguage,
   MarketDataContext,
@@ -176,12 +174,10 @@ export default function App() {
         <ActiveLanguageContext.Provider
           value={[activeLanguage, setActiveLanguage]}
         >
-          <AppConfigContext.Provider value={Config}>
-            <MarketDataContext.Provider value={marketData}>
-              <StatusBar style={statusBarStyle} />
-              <Main />
-            </MarketDataContext.Provider>
-          </AppConfigContext.Provider>
+          <MarketDataContext.Provider value={marketData}>
+            <StatusBar style={statusBarStyle} />
+            <Main />
+          </MarketDataContext.Provider>
         </ActiveLanguageContext.Provider>
       </USDPriceContext.Provider>
     </ActiveCurrencyContext.Provider>

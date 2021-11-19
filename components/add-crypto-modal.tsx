@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React from "react";
 import {
   FlatList,
   Image,
@@ -8,13 +8,12 @@ import {
 } from "react-native";
 import Modal from "~/components/modal";
 import AppText from "~/components/text";
+import { Config } from "~/config";
 import { Colors, Fonts } from "~/constants";
-import { AppConfigContext } from "~/models/context";
 import { CryptoIcon } from "~/models/crypto-icon";
 import { randomString } from "~/services/helper";
 
 const AddCryptoModal = (props) => {
-  const appConfig = useContext(AppConfigContext);
   return (
     <Modal
       style={styles.modalWrapper}
@@ -24,7 +23,7 @@ const AddCryptoModal = (props) => {
       }}
     >
       <FlatList
-        data={appConfig.supported}
+        data={Config.supported}
         keyExtractor={(_, index) => randomString(index)}
         renderItem={({ item, index }) => {
           const icon = new CryptoIcon(item.name);
