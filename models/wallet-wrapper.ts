@@ -39,4 +39,8 @@ export class WalletWrapper {
         return Colors.transparent;
     }
   }
+
+  get isCoinWallet() {
+    return this.wallets.some((w) => w.isCoinWallet);
+  }
 }

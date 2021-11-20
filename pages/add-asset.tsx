@@ -32,7 +32,10 @@ const AddAssetScreen = (props) => {
             <AppText style={styles.addHeadline}>
               {Texts.addCoinHeadline[activeLanguage]}
             </AppText>
-            <Button style={styles.addAssetButton} onPress={() => {}}>
+            <Button
+              style={styles.addAssetButton}
+              onPress={() => props.navigation.navigate(PathNames.addCoin)}
+            >
               <AppText>{Texts.addCoin[activeLanguage]}</AppText>
             </Button>
           </View>

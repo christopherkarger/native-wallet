@@ -17,7 +17,7 @@ export const Texts = {
   },
   addCoin: {
     de: "Coin hinzufügen",
-    en: "Add a coin",
+    en: "Add coin",
   },
   tryOutApp: {
     de: "App testen?",
@@ -51,6 +51,10 @@ export const Texts = {
     de: "Neues Wallet anlegen",
     en: "Add new wallet",
   },
+  addNewCoin: {
+    de: "Neuen Coin hinzufügen",
+    en: "Add new coin",
+  },
   chooseCrypto: {
     de: "Wähle eine Kryptowährung",
     en: "Choose a crypto",
@@ -70,6 +74,10 @@ export const Texts = {
   addAddressToWallet: {
     de: "Adresse zu diesem Wallet hinzufügen",
     en: "Add address to this wallet",
+  },
+  addCoinToWallet: {
+    de: "Coin zu diesem Wallet hinzufügen",
+    en: "Add coin to this wallet",
   },
   wallet: {
     de: "Wallet",
@@ -126,5 +134,13 @@ export const Texts = {
   addWalletErrorText: {
     de: "Korregiere die Adresse oder versuche es bitte erneut.",
     en: "Please correct the address or try it again.",
+  },
+  addedAt: {
+    de: "Hinzugefügt am",
+    en: "Added at",
+  },
+  pricePerCoin: {
+    de: "Preis pro coin",
+    en: "Price per coin",
   },
 };

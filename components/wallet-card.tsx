@@ -48,10 +48,15 @@ const WalletCard = (props) => {
       useForeground={true}
       background={TouchableNativeFeedback.Ripple(Colors.ripple, false)}
       onPress={() => {
-        props.navigation.navigate(PathNames.singleWallet, {
-          data: props.data,
-          index: props.index,
-        });
+        props.navigation.navigate(
+          props.data.isCoinWallet
+            ? PathNames.singleCoin
+            : PathNames.singleWallet,
+          {
+            data: props.data,
+            index: props.index,
+          }
+        );
       }}
     >
       <View

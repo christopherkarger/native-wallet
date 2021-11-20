@@ -1,7 +1,5 @@
-import { MaterialIcons } from "@expo/vector-icons";
 import React, { useContext, useEffect, useState } from "react";
 import {
-  Alert,
   DeviceEventEmitter,
   Keyboard,
   StyleSheet,
@@ -19,30 +17,25 @@ import { Colors, PathNames, UPDATE_WALLETS_EVENT } from "~/constants";
 import { insertItemToLocalDBTableWallets } from "~/db";
 import { useIsMounted } from "~/hooks/mounted";
 import { UPDATE_WALLETS_EVENT_TYPE } from "~/hooks/update-local-wallet-balances";
-import { ActiveLanguageContext, MarketDataContext } from "~/models/context";
+import {
+  ActiveLanguageContext,
+  MarketDataContext,
+  SupportedLanguages,
+} from "~/models/context";
 import { MarketData } from "~/models/market-data";
-import { fetchAddress } from "~/services/fetch-address";
 import { Texts } from "~/texts";
 import SubPageHeader from "../components/sub-page-header";
 
-const AddWalletScreen = (props) => {
+const AddCoinScreen = (props) => {
   const [activeLanguage] = useContext(ActiveLanguageContext);
   const mounted = useIsMounted();
   const [nameChangeAllowed, setNameChangeAllowed] = useState(true);
   const [name, setName] = useState("");
   const [currency, setCurrency] = useState("");
-  const [address, setEnteredAddress] = useState("");
+  const [balance, setBalance] = useState("");
   const [showModal, setShowModal] = useState(false);
-  const [fetchingAndSavingAddress, setFetchingAndSavingAddress] =
-    useState(false);
   const [connectedToId, setConnectedToId] = useState<number>();
   const marketData: MarketData = useContext(MarketDataContext);
-
-  useEffect(() => {
-    if (props.route.params && props.route.params.address) {
-      setEnteredAddress(props.route.params.address);
-    }
-  }, [props.route.params]);
 
   useEffect(() => {
     if (props.route.params && props.route.params.isAddingTo) {
@@ -53,34 +46,20 @@ const AddWalletScreen = (props) => {
     }
   }, []);
 
-  const addWallet = async () => {
+  const addCoin = async () => {
     Keyboard.dismiss();
 
-    if (fetchingAndSavingAddress || !name || !address) {
+    if (!name || !balance) {
       return;
     }
 
-    let balance = 0;
-    let transactions = [];
-    try {
-      setFetchingAndSavingAddress(true);
-      const fetchedAddress = await fetchAddress(address.trim(), name);
-      balance = fetchedAddress.balance;
-      transactions = fetchedAddress.transactions;
-    } catch (err) {
-      console.error(err);
-      setFetchingAndSavingAddress(false);
-      Alert.alert(
-        Texts.addWalletErrorHeadline[activeLanguage],
-        Texts.addWalletErrorText[activeLanguage],
-        [
-          {
-            text: "OK",
-            onPress: () => {},
-          },
-        ],
-        { cancelable: false }
-      );
+    let balanceInput = balance.trim();
+
+    if (activeLanguage === SupportedLanguages.DE) {
+      balanceInput.replace(",", ".");
+    }
+    if (isNaN(+balanceInput)) {
+      // Alert not a number
       return;
     }
 
@@ -90,14 +69,11 @@ const AddWalletScreen = (props) => {
         await insertItemToLocalDBTableWallets({
           name: name,
           currency: currency,
-          balance: balance,
-          isCoinWallet: false,
+          balance: +balanceInput,
+          isCoinWallet: true,
           isDemoAddress: false,
           addedAt: new Date().getTime(),
           coinPrice: marketItem ? marketItem.data.price : undefined,
-          address: address.trim(),
-          lastFetched: new Date().getTime(),
-          transactions: transactions,
           connectedToId: connectedToId,
         });
         DeviceEventEmitter.emit(
@@ -110,7 +86,6 @@ const AddWalletScreen = (props) => {
           props.navigation.navigate(PathNames.home);
         }
       } catch (err) {
-        setFetchingAndSavingAddress(false);
         console.error("Insert Wallet into DB failed");
         console.error(err);
       }
@@ -123,7 +98,7 @@ const AddWalletScreen = (props) => {
         <DismissKeyboard>
           <View style={styles.page}>
             <SubPageHeader navigation={props.navigation}>
-              {Texts.addNewWallet[activeLanguage]}
+              {Texts.addNewCoin[activeLanguage]}
             </SubPageHeader>
 
             <View style={styles.inner}>
@@ -142,36 +117,21 @@ const AddWalletScreen = (props) => {
                 </View>
               </TouchableOpacity>
               <View>
-                <View style={styles.qrCodeButtonWrapper}>
-                  <TouchableOpacity
-                    disabled={props.disabled}
-                    onPress={() =>
-                      props.navigation.navigate(PathNames.scanCode)
-                    }
-                    style={styles.qrCodeButton}
-                  >
-                    <MaterialIcons name="qr-code" size={24} color="white" />
-                  </TouchableOpacity>
-                </View>
                 <TextInput
                   style={styles.cryptoInput}
-                  placeholder={Texts.address[activeLanguage]}
+                  placeholder={Texts.balance[activeLanguage]}
                   placeholderTextColor={Colors.white}
-                  onChangeText={setEnteredAddress}
-                  value={address}
-                  editable={!fetchingAndSavingAddress}
+                  onChangeText={setBalance}
+                  value={balance}
+                  keyboardType="numeric"
                 ></TextInput>
               </View>
 
               <Button
-                onPress={() => addWallet()}
-                style={styles.addWallet}
-                disabled={!name || !address || fetchingAndSavingAddress}
-                text={
-                  fetchingAndSavingAddress
-                    ? Texts.loadingWallet[activeLanguage]
-                    : Texts.addWallet[activeLanguage]
-                }
+                onPress={() => addCoin()}
+                style={styles.addCoin}
+                disabled={!name || !balance}
+                text={Texts.addCoin[activeLanguage]}
               ></Button>
             </View>
           </View>
@@ -210,19 +170,9 @@ const styles = StyleSheet.create({
     paddingRight: 50,
     marginBottom: 20,
   },
-  addWallet: {
+  addCoin: {
     marginTop: 5,
-  },
-  qrCodeButtonWrapper: {
-    position: "absolute",
-    top: 5,
-    right: 0,
-    zIndex: 1,
-  },
-  qrCodeButton: {
-    borderRadius: 0,
-    padding: 10,
   },
 });
 
-export default AddWalletScreen;
+export default AddCoinScreen;

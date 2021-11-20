@@ -14,10 +14,12 @@ import {
   createLocalDBTableWallets,
 } from "~/db";
 import AddAssetScreen from "./add-asset";
+import AddCoinScreen from "./add-coin";
 import AddWalletScreen from "./add-wallet";
 import BottomTabs from "./bottom-tabs";
 import MarketdataItem from "./market-data-item";
-import SingleWallet from "./single-wallet";
+import SingleCoinWalletScreen from "./single-coin-wallet";
+import SingleWalletScreen from "./single-wallet";
 import Transactions from "./transactions";
 
 const Stack = createStackNavigator();
@@ -63,18 +65,25 @@ const Main = () => {
           }}
         >
           <Stack.Screen name={PathNames.home} component={BottomTabs} />
+
           <Stack.Screen name={PathNames.addAsset} component={AddAssetScreen} />
           <Stack.Screen
             name={PathNames.addWallet}
             component={AddWalletScreen}
           />
+          <Stack.Screen name={PathNames.addCoin} component={AddCoinScreen} />
+
           <Stack.Screen
             name={PathNames.marketDataItem}
             component={MarketdataItem}
           />
           <Stack.Screen
             name={PathNames.singleWallet}
-            component={SingleWallet}
+            component={SingleWalletScreen}
+          />
+          <Stack.Screen
+            name={PathNames.singleCoin}
+            component={SingleCoinWalletScreen}
           />
           <Stack.Screen
             name={PathNames.transactions}

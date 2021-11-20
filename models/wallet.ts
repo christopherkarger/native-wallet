@@ -8,6 +8,8 @@ export interface IWalletInput {
   readonly balance: number;
   readonly isCoinWallet: boolean;
   readonly isDemoAddress: boolean;
+  readonly addedAt?: number;
+  readonly coinPrice?: number;
   readonly address?: string;
   readonly lastFetched?: number;
   readonly transactions?: ITransactions[];
@@ -22,6 +24,8 @@ export class Wallet {
   readonly isCoinWallet: boolean;
   readonly isDemoAddress: boolean;
   readonly icon: CryptoIcon;
+  readonly addedAt?: number;
+  readonly coinPrice?: number;
   readonly address?: string;
   readonly lastFetched?: number;
   readonly transactions?: ITransactions[];
@@ -34,6 +38,8 @@ export class Wallet {
     this.balance = x.balance;
     this.lastFetched = x.lastFetched;
     this.isCoinWallet = x.isCoinWallet;
+    this.addedAt = x.addedAt;
+    this.coinPrice = x.coinPrice;
     this.address = x.address;
     this.transactions = x.transactions;
     this.isDemoAddress = x.isDemoAddress;
@@ -49,6 +55,8 @@ export class Wallet {
       balance: this.balance,
       isCoinWallet: this.isCoinWallet,
       isDemoAddress: this.isDemoAddress,
+      addedAt: this.addedAt,
+      coinPrice: this.coinPrice,
       address: this.address,
       lastFetched: this.lastFetched,
       transactions: this.transactions?.map((t) => ({
