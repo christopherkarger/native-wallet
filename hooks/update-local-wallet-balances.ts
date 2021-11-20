@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { DeviceEventEmitter } from "react-native";
-import { MAX_FETCHING_ADDRESSES, UPDATE_WALLETS_EVENT } from "~/constants";
+import { UPDATE_WALLETS_EVENT } from "~/constants";
 import {
   saveLocalDBTableAddressUpdate,
   selectLocalDBTableAddressUpdate,
@@ -8,13 +8,15 @@ import {
   updateItemBalanceToLocalDBTableWallets,
 } from "~/db";
 import { fetchAddress } from "../services/fetch-address";
-import { waitTime } from "../services/helper";
+import { datesAreEqual, waitTime } from "../services/helper";
 
 export enum UPDATE_WALLETS_EVENT_TYPE {
   Update,
   Add,
   Delete,
 }
+
+const MAX_FETCHING_ADDRESSES = 500;
 
 export const useUpdateLocalWalletBalances = async () => {
   const update = async () => {
@@ -58,7 +60,10 @@ export const useUpdateLocalWalletBalances = async () => {
             console.error(err);
           }
 
-          await updateLocalAdressUpdateTable(addressUpdate);
+          await saveLocalDBTableAddressUpdate(
+            addressUpdate.date,
+            addressUpdate.count + 1
+          );
         }
       }
 
@@ -75,9 +80,13 @@ export const useUpdateLocalWalletBalances = async () => {
     try {
       const addressUpdate = await selectLocalDBTableAddressUpdate();
       if (addressUpdate && addressUpdate.rows.length) {
+        const now = new Date();
+        const lastUpdated = new Date(addressUpdate.rows._array[0].date);
+        const sameDay = datesAreEqual(lastUpdated, now);
+
         return {
-          count: addressUpdate.rows._array[0].count,
-          date: addressUpdate.rows._array[0].date,
+          count: sameDay ? addressUpdate.rows._array[0].count : 0,
+          date: sameDay ? lastUpdated.getTime() : now.getTime(),
         };
       }
     } catch (err) {
@@ -91,26 +100,6 @@ export const useUpdateLocalWalletBalances = async () => {
       count: 0,
       date: today.getTime(),
     };
-  };
-
-  const updateLocalAdressUpdateTable = async (localAddressUpdate: {
-    count: number;
-    date: number;
-  }) => {
-    const today = new Date();
-    const lastUpdated = new Date(localAddressUpdate.date);
-
-    today.setHours(0, 0, 0, 0);
-    lastUpdated.setHours(0, 0, 0, 0);
-
-    const isSameDay = today.getTime() === lastUpdated.getTime();
-    try {
-      const date = isSameDay ? lastUpdated.getTime() : today.getTime();
-      const count = isSameDay ? localAddressUpdate.count + 1 : 1;
-      await saveLocalDBTableAddressUpdate(date, count);
-    } catch (err) {
-      console.error(err);
-    }
   };
 
   useEffect(() => {

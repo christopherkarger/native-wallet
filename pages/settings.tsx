@@ -10,6 +10,7 @@ import { PathNames, UPDATE_WALLETS_EVENT } from "~/constants";
 import {
   resetLocalDbWallets,
   saveSettingsToLocalDBTableSettings,
+  selectLocalDBTableAddressUpdate,
   selectLocalDBTableWallets,
 } from "~/db";
 import { useIsMounted } from "~/hooks/mounted";
@@ -33,6 +34,8 @@ const SettingsScreen = (props) => {
   const [isDemoAccount, setIsDemoAccount] = useState(false);
   const isFocused = useIsFocused();
   const mounted = useIsMounted();
+  const [updated, setUpdated] = useState(0);
+  const [updatedDate, setUpdatedDate] = useState(0);
 
   const deleteDemo = useCallback(async () => {
     if (isDeletingDemoAccount) {
@@ -92,6 +95,12 @@ const SettingsScreen = (props) => {
       return;
     }
     (async () => {
+      const addressUpdate = await selectLocalDBTableAddressUpdate();
+      if (addressUpdate && addressUpdate.rows.length) {
+        setUpdated(addressUpdate.rows._array[0].count);
+        setUpdatedDate(addressUpdate.rows._array[0].date);
+      }
+
       const localWallets = await selectLocalDBTableWallets().catch(() => {});
 
       if (mounted.current) {
@@ -162,6 +171,9 @@ const SettingsScreen = (props) => {
               <AppText>{Texts.deleteDemo[activeLanguage]}</AppText>
             </Button>
           )}
+
+          <AppText>Updatet: {updated}</AppText>
+          <AppText>Date: {new Date(updatedDate).toDateString()}</AppText>
         </View>
       </SafeArea>
     </GradientView>

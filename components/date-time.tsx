@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import { ActiveLanguageContext, SupportedLanguages } from "~/models/context";
-import { dateIsToday } from "~/services/helper";
+import { datesAreEqual } from "~/services/helper";
 import { Texts } from "~/texts";
 import AppText from "./text";
 
@@ -43,7 +43,7 @@ export const DateTime = (props) => {
     d.getMinutes() < 10 ? "0" : ""
   }${d.getMinutes()}`;
 
-  const isToday = dateIsToday(d);
+  const isToday = datesAreEqual(d, new Date());
 
   return (
     <AppText style={props.style}>

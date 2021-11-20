@@ -14,12 +14,10 @@ export const randomString = (index = 0) => {
   return Math.random().toString(36).substr(2, 5) + index.toString();
 };
 
-export const dateIsToday = (date: Date) => {
-  const now = new Date();
-
+export const datesAreEqual = (date1: Date, date2: Date) => {
   return (
-    now.getDate() === date.getDate() &&
-    now.getMonth() === date.getMonth() &&
-    now.getFullYear() === date.getFullYear()
+    date1.getDate() === date2.getDate() &&
+    date1.getMonth() === date2.getMonth() &&
+    date1.getFullYear() === date2.getFullYear()
   );
 };
