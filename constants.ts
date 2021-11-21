@@ -4,7 +4,8 @@ export const isAndroid = Platform.OS === "android";
 export const isIOS = Platform.OS === "ios";
 
 export const UPDATE_WALLETS_EVENT = "event.updateWallets";
-export const USD_CRYPTO = "Tether";
+
+export const EURO_STABLECOIN = "Tether EURt";
 
 export const PathNames = {
   homeTab: "homeTab",

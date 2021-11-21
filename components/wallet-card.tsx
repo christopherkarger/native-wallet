@@ -3,8 +3,8 @@ import { Image, StyleSheet, TouchableNativeFeedback, View } from "react-native";
 import {
   ActiveCurrencyContext,
   ActiveLanguageContext,
+  EURPriceContext,
   MarketDataContext,
-  USDPriceContext,
 } from "~/models/context";
 import { CurrencyIcon } from "~/models/currency-icon";
 import { MarketData } from "~/models/market-data";
@@ -17,7 +17,7 @@ import { Colors, Fonts, PathNames } from "../constants";
 import AppText from "./text";
 
 const WalletCard = (props) => {
-  const dollarPrice = useContext(USDPriceContext);
+  const euroPrice = useContext(EURPriceContext);
   const [activeLanguage] = useContext(ActiveLanguageContext);
   const [activeCurrency] = useContext(ActiveCurrencyContext);
   const data = props.data.wallets[0];
@@ -29,7 +29,7 @@ const WalletCard = (props) => {
       number: calcTotalBalance(marketData, [props.data]),
       language: activeLanguage,
       currency: activeCurrency,
-      dollarPrice: dollarPrice,
+      euroPrice: euroPrice,
     });
   };
   const [walletBalance, setWalletBalance] = useState(getWalletBalance());

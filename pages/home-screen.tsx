@@ -9,8 +9,8 @@ import { useUpdateLocalWalletBalances } from "~/hooks/update-local-wallet-balanc
 import {
   ActiveCurrencyContext,
   ActiveLanguageContext,
+  EURPriceContext,
   MarketDataContext,
-  USDPriceContext,
 } from "~/models/context";
 import { CurrencyIcon } from "~/models/currency-icon";
 import { MarketData } from "~/models/market-data";
@@ -25,7 +25,7 @@ import WalletList from "../components/wallet-list";
 import { Colors, Fonts, UPDATE_WALLETS_EVENT } from "../constants";
 
 const HomeScreen = (props) => {
-  const dollarPrice = useContext(USDPriceContext);
+  const euroPrice = useContext(EURPriceContext);
   const [activeLanguage] = useContext(ActiveLanguageContext);
   const [activeCurrency] = useContext(ActiveCurrencyContext);
   const [loading, setLoading] = useState(true);
@@ -49,10 +49,10 @@ const HomeScreen = (props) => {
         number: calcTotalBalance(marketData, walletsData),
         language: activeLanguage,
         currency: activeCurrency,
-        dollarPrice: dollarPrice,
+        euroPrice: euroPrice,
       })
     );
-  }, [marketData, walletsData, activeLanguage, activeCurrency, dollarPrice]);
+  }, [marketData, walletsData, activeLanguage, activeCurrency, euroPrice]);
 
   const updateWallets = async () => {
     if (!mounted.current) {

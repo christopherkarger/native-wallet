@@ -22,7 +22,7 @@ export const MarketDataContext = React.createContext<MarketData>(
   new MarketData([])
 );
 
-export const USDPriceContext = React.createContext<number>(0);
+export const EURPriceContext = React.createContext<number>(0);
 
 export const ActiveCurrencyContext = React.createContext<
   [

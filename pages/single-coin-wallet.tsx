@@ -24,8 +24,8 @@ import { UPDATE_WALLETS_EVENT_TYPE } from "~/hooks/update-local-wallet-balances"
 import {
   ActiveCurrencyContext,
   ActiveLanguageContext,
+  EURPriceContext,
   MarketDataContext,
-  USDPriceContext,
 } from "~/models/context";
 import { CurrencyIcon } from "~/models/currency-icon";
 import { MarketData } from "~/models/market-data";
@@ -41,7 +41,7 @@ import { Texts } from "~/texts";
 import AppText from "../components/text";
 
 const SingleCoinWalletScreen = (props) => {
-  const dollarPrice = useContext(USDPriceContext);
+  const euroPrice = useContext(EURPriceContext);
   const [activeLanguage] = useContext(ActiveLanguageContext);
   const [activeCurrency] = useContext(ActiveCurrencyContext);
   const [walletWrapper, setWalletWrapper] = useState<WalletWrapper>(
@@ -85,7 +85,7 @@ const SingleCoinWalletScreen = (props) => {
           number: calcTotalBalance(marketData, [walletWrapper]),
           language: activeLanguage,
           currency: activeCurrency,
-          dollarPrice: dollarPrice,
+          euroPrice: euroPrice,
         })
       );
     }
@@ -165,7 +165,7 @@ const SingleCoinWalletScreen = (props) => {
                           number: item.coinPrice,
                           language: activeLanguage,
                           currency: activeCurrency,
-                          dollarPrice: dollarPrice,
+                          euroPrice: euroPrice,
                         })}{" "}
                         {CurrencyIcon.icon(activeCurrency)}
                       </AppText>

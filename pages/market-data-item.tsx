@@ -13,8 +13,8 @@ import { useIsMounted } from "~/hooks/mounted";
 import {
   ActiveCurrencyContext,
   ActiveLanguageContext,
+  EURPriceContext,
   MarketDataContext,
-  USDPriceContext,
 } from "~/models/context";
 import { CurrencyIcon } from "~/models/currency-icon";
 import {
@@ -39,7 +39,7 @@ const MarketdataItem = (props) => {
   if (!props.route?.params?.item) {
     throw new Error("maket data item not provied");
   }
-  const dollarPrice = useContext(USDPriceContext);
+  const euroPrice = useContext(EURPriceContext);
   const [activeLanguage] = useContext(ActiveLanguageContext);
   const [activeCurrency] = useContext(ActiveCurrencyContext);
   const marketData: MarketData = useContext(MarketDataContext);
@@ -103,7 +103,7 @@ const MarketdataItem = (props) => {
             number: listProps.item.price,
             language: activeLanguage,
             currency: activeCurrency,
-            dollarPrice: dollarPrice,
+            euroPrice: euroPrice,
           })}{" "}
           {CurrencyIcon.icon(activeCurrency)}
         </AppText>
@@ -138,7 +138,7 @@ const MarketdataItem = (props) => {
                       number: price,
                       language: activeLanguage,
                       currency: activeCurrency,
-                      dollarPrice: dollarPrice,
+                      euroPrice: euroPrice,
                     })}{" "}
                     {CurrencyIcon.icon(activeCurrency)}
                   </AppText>

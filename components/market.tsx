@@ -12,7 +12,7 @@ import { LineChart } from "react-native-svg-charts";
 import {
   ActiveCurrencyContext,
   ActiveLanguageContext,
-  USDPriceContext,
+  EURPriceContext,
 } from "~/models/context";
 import { CryptoIcon } from "~/models/crypto-icon";
 import { CurrencyIcon } from "~/models/currency-icon";
@@ -29,7 +29,7 @@ import AppText from "./text";
 
 const Market = (props) => {
   const marketData = props.data as MarketData;
-  const dollarPrice = useContext(USDPriceContext);
+  const euroPrice = useContext(EURPriceContext);
   const [activeLanguage] = useContext(ActiveLanguageContext);
   const [activeCurrency] = useContext(ActiveCurrencyContext);
 
@@ -89,7 +89,7 @@ const Market = (props) => {
                 number: listProps.item.data.price,
                 language: activeLanguage,
                 currency: activeCurrency,
-                dollarPrice: dollarPrice,
+                euroPrice: euroPrice,
               })}{" "}
               {CurrencyIcon.icon(activeCurrency)}
             </AppText>

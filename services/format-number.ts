@@ -10,7 +10,7 @@ export interface IFormatNumber {
 
 export interface IFormatCurrency extends IFormatNumber {
   currency: SupportedCurrencies;
-  dollarPrice: number;
+  euroPrice: number;
 }
 
 export const switchNumeralLocal = (language: string) => {
@@ -53,8 +53,8 @@ export const formatNumberWithCurrency = (x: IFormatCurrency) => {
   return formatNumber({
     ...x,
     number:
-      x.currency === SupportedCurrencies.USD
-        ? x.number * (x.number / (x.number * x.dollarPrice))
+      x.currency === SupportedCurrencies.EUR
+        ? x.number * (x.number / (x.number * x.euroPrice))
         : x.number,
   });
 };

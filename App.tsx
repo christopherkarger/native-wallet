@@ -4,9 +4,8 @@ import * as Localization from "expo-localization";
 import { StatusBar } from "expo-status-bar";
 import React, { useEffect, useState } from "react";
 import { LogBox, StyleSheet } from "react-native";
-import { Fonts, USD_CRYPTO } from "./constants";
+import { EURO_STABLECOIN, Fonts } from "./constants";
 import {
-  ILocalMarket,
   saveMarketToLocalDBTableMarket,
   saveSettingsToLocalDBTableSettings,
   selectLocalDBTableMarket,
@@ -17,12 +16,12 @@ import {
   ActiveLanguageContext,
   DefaultCurrency,
   DefaultLanguage,
+  EURPriceContext,
   MarketDataContext,
   SupportedCurrencies,
   SupportedLanguages,
-  USDPriceContext,
 } from "./models/context";
-import { MarketData } from "./models/market-data";
+import { localMarketDataToClass, MarketData } from "./models/market-data";
 import Main from "./pages/main";
 import { fetchMarketData } from "./services/fetch-marketdata";
 import { firebaseDB } from "./services/firebase-init";
@@ -95,26 +94,6 @@ export default function App() {
     });
   };
 
-  const localMarketDataToClass = (localMarketData: ILocalMarket[]) => {
-    return new MarketData(
-      localMarketData.map((item) => {
-        return {
-          name: item.name,
-          data: {
-            lastFetched: item.lastFetched,
-            price: item.price,
-            rank: item.rank,
-            currency: item.currency,
-            history: item.history ? JSON.parse(item.history) : [],
-            lastDayHistory: item.lastDayHistory
-              ? JSON.parse(item.lastDayHistory)
-              : [],
-          },
-        };
-      })
-    );
-  };
-
   useEffect(() => {
     let dbConnection: firebaseDB | undefined;
     (async () => {
@@ -123,7 +102,7 @@ export default function App() {
         if (localMarket && localMarket.rows.length) {
           const localMarketData = localMarket.rows._array;
           const m = localMarketDataToClass(localMarketData);
-          const tether = m.findItemByName(USD_CRYPTO);
+          const tether = m.findItemByName(EURO_STABLECOIN);
           if (tether) {
             setUSDPrice(tether.data.price);
           }
@@ -140,7 +119,7 @@ export default function App() {
           dbConnection = db;
         }
         if (data) {
-          const tether = data.findItemByName(USD_CRYPTO);
+          const tether = data.findItemByName(EURO_STABLECOIN);
           if (tether) {
             setUSDPrice(tether.data.price);
           }
@@ -170,7 +149,7 @@ export default function App() {
 
   return (
     <ActiveCurrencyContext.Provider value={[activeCurrency, setActiveCurrency]}>
-      <USDPriceContext.Provider value={USDPrice}>
+      <EURPriceContext.Provider value={USDPrice}>
         <ActiveLanguageContext.Provider
           value={[activeLanguage, setActiveLanguage]}
         >
@@ -179,7 +158,7 @@ export default function App() {
             <Main />
           </MarketDataContext.Provider>
         </ActiveLanguageContext.Provider>
-      </USDPriceContext.Provider>
+      </EURPriceContext.Provider>
     </ActiveCurrencyContext.Provider>
   );
 }
