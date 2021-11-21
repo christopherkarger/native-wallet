@@ -1,5 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import {
+  Alert,
   DeviceEventEmitter,
   Keyboard,
   StyleSheet,
@@ -56,10 +57,26 @@ const AddCoinScreen = (props) => {
     let balanceInput = balance.trim();
 
     if (activeLanguage === SupportedLanguages.DE) {
-      balanceInput.replace(",", ".");
+      balanceInput = balanceInput.replace(",", ".");
     }
+
     if (isNaN(+balanceInput)) {
-      // Alert not a number
+      Alert.alert(
+        "",
+        Texts.enterNumber[activeLanguage],
+        [
+          {
+            text: Texts.abort[activeLanguage],
+            onPress: () => {},
+            style: "cancel",
+          },
+          {
+            text: "OK",
+            onPress: () => {},
+          },
+        ],
+        { cancelable: false }
+      );
       return;
     }
 

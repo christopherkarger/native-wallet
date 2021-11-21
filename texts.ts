@@ -143,4 +143,8 @@ export const Texts = {
     de: "Preis pro coin",
     en: "Price per coin",
   },
+  enterNumber: {
+    de: "Bitte geben Sie eine Zahl ein.",
+    en: "Please enter a number.",
+  },
 };
