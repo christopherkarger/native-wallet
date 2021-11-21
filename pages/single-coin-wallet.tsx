@@ -15,7 +15,10 @@ import SafeArea from "~/components/safe-area";
 import SubPageHeader from "~/components/sub-page-header";
 import { TextButton } from "~/components/text-button";
 import { Colors, Fonts, PathNames, UPDATE_WALLETS_EVENT } from "~/constants";
-import { deleteItemFromLocalDBTableWallets } from "~/db";
+import {
+  deleteItemFromLocalDBTableWallets,
+  selectLocalDBTableWallets,
+} from "~/db";
 import { useIsMounted } from "~/hooks/mounted";
 import { UPDATE_WALLETS_EVENT_TYPE } from "~/hooks/update-local-wallet-balances";
 import {
@@ -33,6 +36,7 @@ import {
   formatNumber,
   formatNumberWithCurrency,
 } from "~/services/format-number";
+import { getWalletWrapper } from "~/services/getWalletWrapper";
 import { Texts } from "~/texts";
 import AppText from "../components/text";
 
@@ -46,6 +50,33 @@ const SingleCoinWalletScreen = (props) => {
   const [moneyBalance, setMoneyBalance] = useState("0");
   const marketData: MarketData = useContext(MarketDataContext);
   const mounted = useIsMounted();
+
+  useEffect(() => {
+    const subscription = DeviceEventEmitter.addListener(
+      UPDATE_WALLETS_EVENT,
+      async (event) => {
+        if (
+          event == UPDATE_WALLETS_EVENT_TYPE.Update ||
+          event == UPDATE_WALLETS_EVENT_TYPE.Add
+        ) {
+          const localWallets = await selectLocalDBTableWallets().catch(
+            () => {}
+          );
+          if (localWallets && localWallets.rows.length) {
+            const walletWrapper = getWalletWrapper(localWallets.rows._array);
+
+            if (props.route.params.index !== undefined && mounted.current) {
+              setWalletWrapper(walletWrapper[props.route.params.index]);
+            }
+          }
+        }
+      }
+    );
+
+    return () => {
+      subscription.remove();
+    };
+  }, []);
 
   useEffect(() => {
     if (mounted.current) {
