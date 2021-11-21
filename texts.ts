@@ -140,7 +140,7 @@ export const Texts = {
     en: "Added at",
   },
   pricePerCoin: {
-    de: "Preis pro coin",
+    de: "Preis pro Coin",
     en: "Price per coin",
   },
   enterNumber: {

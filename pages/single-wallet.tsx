@@ -163,24 +163,6 @@ const SingleWalletScreen = (props) => {
               >
                 <View style={styles.singleWalletWrapper}>
                   <View style={styles.walletInner}>
-                    {item.address && (
-                      <View>
-                        <AppText>{Texts.address[activeLanguage]}</AppText>
-                        <AppText style={styles.address}>{item.address}</AppText>
-                      </View>
-                    )}
-
-                    {item.lastFetched && (
-                      <View style={styles.updated}>
-                        <AppText>{Texts.updated[activeLanguage]}:</AppText>
-                        <DateTime
-                          style={styles.updatedDate}
-                          date={item.lastFetched}
-                          withTime={true}
-                        ></DateTime>
-                      </View>
-                    )}
-
                     <AppText>{Texts.balance[activeLanguage]}</AppText>
                     <AppText style={styles.balance}>
                       {formatNumber({
@@ -190,6 +172,24 @@ const SingleWalletScreen = (props) => {
                       })}{" "}
                       {item.currency}
                     </AppText>
+
+                    {item.address && (
+                      <View style={[styles.wrapper, styles.addressWrapper]}>
+                        <AppText>{Texts.address[activeLanguage]}</AppText>
+                        <AppText style={styles.address}>{item.address}</AppText>
+                      </View>
+                    )}
+
+                    {item.lastFetched && (
+                      <View style={styles.wrapper}>
+                        <AppText>{Texts.updated[activeLanguage]}:</AppText>
+                        <DateTime
+                          style={styles.updatedDate}
+                          date={item.lastFetched}
+                          withTime={true}
+                        ></DateTime>
+                      </View>
+                    )}
 
                     {item.address && (
                       <TextButton
@@ -317,7 +317,6 @@ const styles = StyleSheet.create({
   },
   address: {
     fontFamily: Fonts.bold,
-    marginBottom: 20,
   },
   deleteWalletButton: {
     marginLeft: "auto",
@@ -341,9 +340,12 @@ const styles = StyleSheet.create({
     right: 0,
     padding: 13,
   },
-  updated: {
+  wrapper: {
     flexDirection: "row",
-    marginBottom: 20,
+    marginTop: 20,
+  },
+  addressWrapper: {
+    flexDirection: "column",
   },
   updatedDate: {
     marginLeft: 5,

@@ -138,28 +138,6 @@ const SingleCoinWalletScreen = (props) => {
             return (
               <View style={styles.singleWalletWrapper}>
                 <View style={styles.walletInner}>
-                  <View style={styles.wrapper}>
-                    <AppText>{Texts.addedAt[activeLanguage]}:</AppText>
-                    <DateTime
-                      style={styles.addedInfo}
-                      date={item.addedAt}
-                      withTime={true}
-                    ></DateTime>
-                  </View>
-
-                  <View style={styles.wrapper}>
-                    <AppText>{Texts.pricePerCoin[activeLanguage]}:</AppText>
-                    <AppText style={styles.addedInfo}>
-                      {formatNumberWithCurrency({
-                        number: item.coinPrice,
-                        language: activeLanguage,
-                        currency: activeCurrency,
-                        dollarPrice: dollarPrice,
-                      })}{" "}
-                      {CurrencyIcon.icon(activeCurrency)}
-                    </AppText>
-                  </View>
-
                   <AppText>{Texts.balance[activeLanguage]}</AppText>
                   <AppText style={styles.balance}>
                     {formatNumber({
@@ -169,6 +147,30 @@ const SingleCoinWalletScreen = (props) => {
                     })}{" "}
                     {item.currency}
                   </AppText>
+
+                  <View style={styles.wrapper}>
+                    <AppText>{Texts.addedAt[activeLanguage]}:</AppText>
+                    <DateTime
+                      style={styles.addedInfo}
+                      date={item.addedAt}
+                      withTime={true}
+                    ></DateTime>
+                  </View>
+
+                  {item.coinPrice !== undefined && (
+                    <View style={styles.wrapper}>
+                      <AppText>{Texts.pricePerCoin[activeLanguage]}:</AppText>
+                      <AppText style={styles.addedInfo}>
+                        {formatNumberWithCurrency({
+                          number: item.coinPrice,
+                          language: activeLanguage,
+                          currency: activeCurrency,
+                          dollarPrice: dollarPrice,
+                        })}{" "}
+                        {CurrencyIcon.icon(activeCurrency)}
+                      </AppText>
+                    </View>
+                  )}
                 </View>
 
                 <TextButton
@@ -277,10 +279,9 @@ const styles = StyleSheet.create({
     right: 0,
     padding: 13,
   },
-
   wrapper: {
     flexDirection: "row",
-    marginBottom: 20,
+    marginTop: 20,
   },
   addedInfo: {
     marginLeft: 5,

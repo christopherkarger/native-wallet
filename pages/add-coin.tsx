@@ -186,6 +186,8 @@ const styles = StyleSheet.create({
     paddingLeft: 12,
     paddingRight: 50,
     marginBottom: 20,
+    height: 50,
+    justifyContent: "center",
   },
   addCoin: {
     marginTop: 5,
