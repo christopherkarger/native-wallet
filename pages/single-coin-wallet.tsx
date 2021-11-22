@@ -157,7 +157,7 @@ const SingleCoinWalletScreen = (props) => {
                     ></DateTime>
                   </View>
 
-                  {item.coinPrice !== undefined && (
+                  {item.coinPrice !== null && item.coinPrice !== undefined && (
                     <View style={styles.wrapper}>
                       <AppText>{Texts.pricePerCoin[activeLanguage]}:</AppText>
                       <AppText style={styles.addedInfo}>

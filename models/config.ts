@@ -6,6 +6,6 @@ export enum SupportedCryptos {
   Litecoin = "Litecoin",
   Dash = "Dash",
   Ripple = "Ripple",
-  Sandbox = "The Sandbox",
+  "The Sandbox" = "The Sandbox",
   Decentraland = "Decentraland",
 }
