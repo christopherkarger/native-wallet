@@ -181,28 +181,28 @@ const styles = StyleSheet.create({
     minWidth: 130,
   },
   coinLogo: {
-    width: 36,
-    height: 36,
+    width: 34,
+    height: 34,
   },
   name: {
-    fontSize: 16,
-    marginLeft: 12,
+    fontSize: 15,
+    marginLeft: 10,
   },
   currency: {
     fontSize: 14,
-    marginLeft: 12,
+    marginLeft: 10,
     color: Colors.grey,
   },
   priceWrapper: {
     alignItems: "flex-end",
-    minWidth: 110,
+    minWidth: 100,
   },
   price: {
     fontFamily: Fonts.bold,
     fontSize: 17,
   },
   chartWrapper: {
-    width: 60,
+    width: 55,
     height: 30,
   },
   chart: {

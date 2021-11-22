@@ -22,7 +22,7 @@ export class CryptoIcon {
         return require("~/node_modules/cryptocurrency-icons/128/color/xrp.png");
       case SupportedCryptos.Decentraland:
         return require("~/node_modules/cryptocurrency-icons/128/color/mana.png");
-      case SupportedCryptos.Sandbox:
+      case SupportedCryptos["The Sandbox"]:
         return require("~/node_modules/cryptocurrency-icons/128/color/sand.png");
 
       default:
