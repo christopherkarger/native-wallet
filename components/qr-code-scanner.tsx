@@ -74,12 +74,12 @@ const styles = StyleSheet.create({
     borderRadius: 30,
   },
   container: {
-    height: Dimensions.get("window").height,
-    width: Dimensions.get("window").width,
+    flex: 1,
     backgroundColor: Colors.bgDark,
   },
   scanner: {
-    flex: 1,
+    height: Dimensions.get("window").height,
+    width: Dimensions.get("window").width,
     flexDirection: "column",
   },
 });
