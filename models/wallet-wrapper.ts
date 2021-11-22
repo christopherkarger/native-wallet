@@ -36,7 +36,7 @@ export class WalletWrapper {
       case SupportedCryptos.Ripple:
         return Colors.cryptos.ripple;
       case SupportedCryptos["The Sandbox"]:
-        return Colors.cryptos.sandbox;
+        return Colors.cryptos.theSandbox;
       case SupportedCryptos.Decentraland:
         return Colors.cryptos.decentraland;
       default:
