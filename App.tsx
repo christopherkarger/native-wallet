@@ -78,8 +78,9 @@ export default function App() {
           localDeviceLanguage.includes(SupportedLanguages.DE);
 
         if (isGerman) {
-          // If there are no saved settings and the device language is german
+          // If there are no saved settings and the device language is german and currebcy to EUR
           setActiveLanguage(SupportedLanguages.DE);
+          setActiveCurrency(SupportedCurrencies.EUR);
         }
 
         saveSettingsToLocalDBTableSettings({
