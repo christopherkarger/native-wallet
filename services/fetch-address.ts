@@ -1,4 +1,4 @@
-import { Config } from "~/config";
+import { SupportedUrls } from "~/config";
 import { ITransactions } from "~/db";
 
 interface IFetchHeader {
@@ -17,8 +17,8 @@ export const fetchAddress = (address: string, name: string) => {
   const fetchHeaders: IFetchHeader = {};
   const lowerCaseName = name.toLowerCase();
 
-  let url = Config.urls.main;
-  const configUrls = Config.urls as { [key: string]: string };
+  let url = SupportedUrls.main;
+  const configUrls = SupportedUrls as { [key: string]: string };
   if (configUrls[lowerCaseName]) {
     url = configUrls[lowerCaseName] as string;
   } else {

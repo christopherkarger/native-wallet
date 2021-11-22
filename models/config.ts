@@ -1,17 +1,3 @@
-interface ICrypto {
-  name: string;
-  currency: string;
-}
-
-interface ICryptoUrls {
-  [key: string]: string;
-}
-
-export interface IConfig {
-  supported: ICrypto[];
-  urls: ICryptoUrls;
-}
-
 export enum SupportedCryptos {
   Bitcoin = "Bitcoin",
   Ethereum = "Ethereum",
@@ -20,4 +6,6 @@ export enum SupportedCryptos {
   Litecoin = "Litecoin",
   Dash = "Dash",
   Ripple = "Ripple",
+  Sandbox = "The Sandbox",
+  Decentraland = "Decentraland",
 }

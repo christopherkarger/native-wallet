@@ -20,6 +20,10 @@ export class CryptoIcon {
         return require("~/node_modules/cryptocurrency-icons/128/color/dash.png");
       case SupportedCryptos.Ripple:
         return require("~/node_modules/cryptocurrency-icons/128/color/xrp.png");
+      case SupportedCryptos.Decentraland:
+        return require("~/node_modules/cryptocurrency-icons/128/color/mana.png");
+      case SupportedCryptos.Sandbox:
+        return require("~/node_modules/cryptocurrency-icons/128/color/sand.png");
 
       default:
         return require("~/node_modules/cryptocurrency-icons/128/color/generic.png");

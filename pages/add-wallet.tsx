@@ -15,6 +15,7 @@ import DismissKeyboard from "~/components/dismiss-keyboard";
 import GradientView from "~/components/gradient-view";
 import SafeArea from "~/components/safe-area";
 import AppText from "~/components/text";
+import { SupportedWallets } from "~/config";
 import { Colors, PathNames, UPDATE_WALLETS_EVENT } from "~/constants";
 import { insertItemToLocalDBTableWallets } from "~/db";
 import { useIsMounted } from "~/hooks/mounted";
@@ -178,6 +179,7 @@ const AddWalletScreen = (props) => {
         </DismissKeyboard>
       </SafeArea>
       <AddCryptoModal
+        data={SupportedWallets}
         show={showModal}
         onClose={() => {
           setShowModal(false);

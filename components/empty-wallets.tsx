@@ -1,6 +1,6 @@
 import React, { useContext, useState } from "react";
 import { Image, StyleSheet, View } from "react-native";
-import { Config } from "~/config";
+import { SupportedWallets } from "~/config";
 import { insertItemToLocalDBTableWallets } from "~/db";
 import { ActiveLanguageContext } from "~/models/context";
 import { Texts } from "~/texts";
@@ -18,7 +18,7 @@ const EmptyWallets = (props) => {
       return;
     }
     setCreatingDemo(true);
-    for (const coin of Config.supported) {
+    for (const coin of SupportedWallets) {
       try {
         const amount = Math.random() * 10;
         await insertItemToLocalDBTableWallets({

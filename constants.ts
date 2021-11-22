@@ -56,5 +56,7 @@ export const Colors = {
     litecoin: "#BFBBBB",
     dash: "#008CE7",
     ripple: "#23282F",
+    sandbox: "#08ACEF",
+    decentraland: "#FF2C55",
   },
 };

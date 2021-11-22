@@ -8,7 +8,6 @@ import {
 } from "react-native";
 import Modal from "~/components/modal";
 import AppText from "~/components/text";
-import { Config } from "~/config";
 import { Colors, Fonts } from "~/constants";
 import { CryptoIcon } from "~/models/crypto-icon";
 import { randomString } from "~/services/helper";
@@ -23,7 +22,7 @@ const AddCryptoModal = (props) => {
       }}
     >
       <FlatList
-        data={Config.supported}
+        data={props.data}
         keyExtractor={(_, index) => randomString(index)}
         renderItem={({ item, index }) => {
           const icon = new CryptoIcon(item.name);

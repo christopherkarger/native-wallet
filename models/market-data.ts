@@ -1,5 +1,5 @@
-import { EURO_STABLECOIN } from "~/constants";
 import { ILocalMarket } from "~/db";
+import { SupportedCryptos } from "./config";
 
 export interface IMarketDataItem {
   name: string;
@@ -39,7 +39,7 @@ export class MarketData {
       .sort((a, b) => {
         return a.data.rank - b.data.rank;
       })
-      .filter((m) => m.name !== EURO_STABLECOIN);
+      .filter((m) => Object.keys(SupportedCryptos).find((x) => x === m.name));
   }
 }
 
