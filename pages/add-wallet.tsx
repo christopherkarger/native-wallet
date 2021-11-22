@@ -217,13 +217,13 @@ const styles = StyleSheet.create({
   },
   qrCodeButtonWrapper: {
     position: "absolute",
-    top: 5,
-    right: 0,
+    top: 2,
+    right: 1,
     zIndex: 1,
   },
   qrCodeButton: {
     borderRadius: 0,
-    padding: 10,
+    padding: 11,
   },
 });
 

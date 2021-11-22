@@ -133,15 +133,19 @@ const AddCoinScreen = (props) => {
                   </AppText>
                 </View>
               </TouchableOpacity>
-              <View>
+              <View style={styles.coinInputWrapper}>
                 <TextInput
                   style={styles.cryptoInput}
-                  placeholder={Texts.balance[activeLanguage]}
+                  placeholder={"0"}
                   placeholderTextColor={Colors.white}
                   onChangeText={setBalance}
                   value={balance}
                   keyboardType="numeric"
                 ></TextInput>
+
+                {!!currency && (
+                  <AppText style={styles.inputCurrency}>{currency}</AppText>
+                )}
               </View>
 
               <Button
@@ -184,13 +188,21 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     paddingVertical: 12,
     paddingLeft: 12,
-    paddingRight: 50,
+    paddingRight: 60,
     marginBottom: 20,
     height: 50,
     justifyContent: "center",
   },
   addCoin: {
     marginTop: 5,
+  },
+  coinInputWrapper: {
+    position: "relative",
+  },
+  inputCurrency: {
+    position: "absolute",
+    right: 15,
+    top: 16,
   },
 });
 
