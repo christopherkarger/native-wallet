@@ -39,6 +39,34 @@ export const SupportedCoins = [
     currency: "MANA",
     name: "Decentraland",
   },
+  {
+    currency: "SOL",
+    name: "Solana",
+  },
+  {
+    currency: "DOT",
+    name: "Polkadot",
+  },
+  {
+    currency: "AVAX",
+    name: "Avalanche",
+  },
+  {
+    currency: "LINK",
+    name: "Chainlink",
+  },
+  {
+    currency: "ALGO",
+    name: "Algorand",
+  },
+  {
+    currency: "MATIC",
+    name: "Polygon",
+  },
+  {
+    currency: "VET",
+    name: "VeChain",
+  },
 ];
 
 export const SupportedUrls = {

@@ -39,6 +39,23 @@ export class WalletWrapper {
         return Colors.cryptos.theSandbox;
       case SupportedCryptos.Decentraland:
         return Colors.cryptos.decentraland;
+      case SupportedCryptos["Binance Coin"]:
+        return Colors.cryptos.binanceCoin;
+      case SupportedCryptos.Solana:
+        return Colors.cryptos.solana;
+      case SupportedCryptos.Polkadot:
+        return Colors.cryptos.polkadot;
+      case SupportedCryptos.Avalanche:
+        return Colors.cryptos.avalanche;
+      case SupportedCryptos.Chainlink:
+        return Colors.cryptos.chainlink;
+      case SupportedCryptos.Algorand:
+        return Colors.cryptos.algorand;
+      case SupportedCryptos.Polygon:
+        return Colors.cryptos.polygon;
+      case SupportedCryptos.VeChain:
+        return Colors.cryptos.veChain;
+
       default:
         return Colors.transparent;
     }

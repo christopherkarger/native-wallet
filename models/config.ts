@@ -8,4 +8,12 @@ export enum SupportedCryptos {
   Ripple = "Ripple",
   "The Sandbox" = "The Sandbox",
   Decentraland = "Decentraland",
+  "Binance Coin" = "Binance Coin",
+  Solana = "Solana",
+  Polkadot = "Polkadot",
+  Avalanche = "Avalanche",
+  Chainlink = "Chainlink",
+  Algorand = "Algorand",
+  Polygon = "Polygon",
+  VeChain = "VeChain",
 }
