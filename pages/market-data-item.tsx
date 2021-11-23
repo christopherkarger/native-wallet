@@ -125,6 +125,7 @@ const MarketdataItem = (props) => {
           data={listData}
           keyExtractor={(_, index) => randomString(index)}
           renderItem={memoizedListItem}
+          showsVerticalScrollIndicator={false}
           ListHeaderComponent={
             <>
               <View style={styles.header}>

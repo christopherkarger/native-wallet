@@ -123,6 +123,7 @@ const Market = (props) => {
       keyExtractor={(_, index) => randomString(index)}
       keyboardShouldPersistTaps="handled"
       renderItem={memoizedListItem}
+      showsVerticalScrollIndicator={false}
       ListHeaderComponent={
         <>
           {props.ListHeaderComponent}

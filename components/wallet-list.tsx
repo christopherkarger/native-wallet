@@ -24,6 +24,7 @@ const Wallets = (props) => {
       data={props.data}
       keyExtractor={(_, index) => randomString(index)}
       renderItem={memoizedListItem}
+      showsHorizontalScrollIndicator={false}
     ></FlatList>
   );
 };

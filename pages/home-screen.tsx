@@ -38,9 +38,7 @@ const HomeScreen = (props) => {
 
   useEffect(() => {
     updateWallets();
-    DeviceEventEmitter.addListener(UPDATE_WALLETS_EVENT, (event) => {
-      updateWallets();
-    });
+    DeviceEventEmitter.addListener(UPDATE_WALLETS_EVENT, updateWallets);
   }, []);
 
   useEffect(() => {
