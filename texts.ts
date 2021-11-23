@@ -21,7 +21,7 @@ export const Texts = {
   },
   tryOutApp: {
     de: "App testen?",
-    en: "Want to try out the app?",
+    en: "Test the app?",
   },
   demoAccount: {
     de: "Demo Account",

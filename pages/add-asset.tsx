@@ -6,7 +6,7 @@ import SafeArea from "~/components/safe-area";
 import SubPageHeader from "~/components/sub-page-header";
 import AppText from "~/components/text";
 import { SupportedCoins, SupportedWallets } from "~/config";
-import { PathNames } from "~/constants";
+import { Colors, PathNames } from "~/constants";
 import { ActiveLanguageContext } from "~/models/context";
 import { Texts } from "~/texts";
 
@@ -24,11 +24,10 @@ const AddAssetScreen = (props) => {
               {Texts.addWalletHeadline[activeLanguage]}
             </AppText>
             <AppText style={styles.subHeadline}>
-              ( {SupportedWallets.length}{" "}
+              {SupportedWallets.length}{" "}
               {SupportedWallets.length === 1
                 ? Texts.supportedCryptocurrency[activeLanguage]
-                : Texts.supportedCryptocurrencies[activeLanguage]}{" "}
-              )
+                : Texts.supportedCryptocurrencies[activeLanguage]}
             </AppText>
             <Button
               style={styles.addAssetButton}
@@ -41,11 +40,10 @@ const AddAssetScreen = (props) => {
               {Texts.addCoinHeadline[activeLanguage]}
             </AppText>
             <AppText style={styles.subHeadline}>
-              ( {SupportedCoins.length}{" "}
+              {SupportedCoins.length}{" "}
               {SupportedCoins.length === 0
                 ? Texts.supportedCryptocurrency[activeLanguage]
-                : Texts.supportedCryptocurrencies[activeLanguage]}{" "}
-              )
+                : Texts.supportedCryptocurrencies[activeLanguage]}
             </AppText>
             <Button
               style={styles.addAssetButton}
@@ -78,6 +76,7 @@ const styles = StyleSheet.create({
   },
   subHeadline: {
     marginBottom: 25,
+    color: Colors.grey,
   },
 });
 
