@@ -147,4 +147,12 @@ export const Texts = {
     de: "Bitte geben Sie eine Zahl ein.",
     en: "Please enter a number.",
   },
+  supportedCryptocurrency: {
+    de: "unterstützte Kryptowährung",
+    en: "supported cryptocurrency",
+  },
+  supportedCryptocurrencies: {
+    de: "unterstützte Kryptowährungen",
+    en: "supported cryptocurrencies",
+  },
 };
