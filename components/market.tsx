@@ -47,7 +47,8 @@ const Market = (props) => {
       <View
         style={[
           styles.itemWrapper,
-          marketData?.items && listProps.index === marketData.items.length - 1
+          marketData?.items &&
+          listProps.index === marketData.itemsByMarketCap.length - 1
             ? styles.lastItemWrapper
             : {},
         ]}

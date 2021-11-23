@@ -25,6 +25,7 @@ import {
   SupportedLanguages,
 } from "~/models/context";
 import { MarketData } from "~/models/market-data";
+import { waitTime } from "~/services/helper";
 import { Texts } from "~/texts";
 import SubPageHeader from "../components/sub-page-header";
 
@@ -98,6 +99,10 @@ const AddCoinScreen = (props) => {
           UPDATE_WALLETS_EVENT,
           UPDATE_WALLETS_EVENT_TYPE.Add
         );
+
+        // Wait till homescreen updates the wallets to avoid wallets flash
+        await waitTime(100);
+
         if (connectedToId !== undefined) {
           props.navigation.goBack();
         } else {
