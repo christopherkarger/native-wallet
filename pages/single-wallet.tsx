@@ -214,7 +214,7 @@ const SingleWalletScreen = (props) => {
                       onPress={() => {
                         Alert.alert(
                           "",
-                          Texts.deleteAddressHeadline[activeLanguage],
+                          Texts.deleteAddressMessage[activeLanguage],
                           [
                             {
                               text: Texts.abort[activeLanguage],

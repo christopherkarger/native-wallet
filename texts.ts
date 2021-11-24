@@ -83,9 +83,13 @@ export const Texts = {
     de: "Wallet",
     en: "wallet",
   },
-  deleteAddressHeadline: {
+  deleteAddressMessage: {
     de: "Möchtest du wirklich diese Adresse löschen?",
     en: "Really want to delete this address?",
+  },
+  deleteCoinMessage: {
+    de: "Möchtest du wirklich diesen Coin löschen?",
+    en: "Really want to delete this coin?",
   },
   abort: {
     de: "Abbrechen",

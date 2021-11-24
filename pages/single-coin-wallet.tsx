@@ -178,7 +178,7 @@ const SingleCoinWalletScreen = (props) => {
                   onPress={() => {
                     Alert.alert(
                       "",
-                      Texts.deleteAddressHeadline[activeLanguage],
+                      Texts.deleteCoinMessage[activeLanguage],
                       [
                         {
                           text: Texts.abort[activeLanguage],
