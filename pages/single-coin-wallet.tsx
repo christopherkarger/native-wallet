@@ -208,9 +208,17 @@ const SingleCoinWalletScreen = (props) => {
                 source={walletWrapper.wallets[0].icon.path}
               ></Image>
 
-              <View style={styles.headerPriceWrapper}>
-                <AppText style={styles.headerPrice}>
+              <View style={styles.headerBalanceWrapper}>
+                <AppText style={styles.headerBalance}>
                   {moneyBalance} {CurrencyIcon.icon(activeCurrency)}
+                </AppText>
+                <AppText style={styles.totalCurrencyBalance}>
+                  {formatNumber({
+                    number: walletWrapper.totalBalance,
+                    decimal: "000000",
+                    language: activeLanguage,
+                  })}{" "}
+                  {walletWrapper.wallets[0].currency}
                 </AppText>
               </View>
             </View>
@@ -256,13 +264,16 @@ const styles = StyleSheet.create({
     alignItems: "center",
     flexDirection: "row",
   },
-  headerPriceWrapper: {
+  headerBalanceWrapper: {
     justifyContent: "center",
     marginLeft: 20,
   },
-  headerPrice: {
+  headerBalance: {
     fontFamily: Fonts.bold,
     fontSize: 25,
+  },
+  totalCurrencyBalance: {
+    fontSize: 15,
   },
   logo: {
     width: 60,
