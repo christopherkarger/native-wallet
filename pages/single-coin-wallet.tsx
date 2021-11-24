@@ -1,5 +1,11 @@
 import { MaterialIcons } from "@expo/vector-icons";
-import React, { useCallback, useContext, useEffect, useState } from "react";
+import React, {
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 import {
   Alert,
   DeviceEventEmitter,
@@ -117,6 +123,75 @@ const SingleCoinWalletScreen = (props) => {
     [walletWrapper]
   );
 
+  const renderedListItem = (listProps) => {
+    return (
+      <View style={styles.singleWalletWrapper}>
+        <View style={styles.walletInner}>
+          <AppText>{Texts.balance[activeLanguage]}</AppText>
+          <AppText style={styles.balance}>
+            {formatNumber({
+              number: listProps.item.balance,
+              decimal: "000000",
+              language: activeLanguage,
+            })}{" "}
+            {listProps.item.currency}
+          </AppText>
+
+          <View style={styles.wrapper}>
+            <AppText>{Texts.addedAt[activeLanguage]}:</AppText>
+            <DateTime
+              style={styles.addedInfo}
+              date={listProps.item.addedAt}
+              withTime={true}
+            ></DateTime>
+          </View>
+
+          {listProps.item.coinPrice !== null &&
+            listProps.item.coinPrice !== undefined && (
+              <View style={styles.wrapper}>
+                <AppText>{Texts.pricePerCoin[activeLanguage]}:</AppText>
+                <AppText style={styles.addedInfo}>
+                  {formatNumberWithCurrency({
+                    number: listProps.item.coinPrice,
+                    language: activeLanguage,
+                    currency: activeCurrency,
+                    euroPrice: euroPrice,
+                  })}{" "}
+                  {CurrencyIcon.icon(activeCurrency)}
+                </AppText>
+              </View>
+            )}
+        </View>
+
+        <TextButton
+          style={styles.deleteWalletButton}
+          onPress={() => {
+            Alert.alert(
+              "",
+              Texts.deleteCoinMessage[activeLanguage],
+              [
+                {
+                  text: Texts.abort[activeLanguage],
+                  onPress: () => {},
+                  style: "cancel",
+                },
+                {
+                  text: "OK",
+                  onPress: () => {
+                    deleteItem(listProps.item, listProps.index);
+                  },
+                },
+              ],
+              { cancelable: false }
+            );
+          }}
+        >
+          <MaterialIcons name="delete" size={20} color="white" />
+        </TextButton>
+      </View>
+    );
+  };
+
   return (
     <GradientView>
       <SafeArea>
@@ -134,73 +209,10 @@ const SingleCoinWalletScreen = (props) => {
           keyboardShouldPersistTaps="handled"
           data={walletWrapper.wallets}
           keyExtractor={(_, index) => index.toString()}
-          renderItem={({ item, index }) => {
-            return (
-              <View style={styles.singleWalletWrapper}>
-                <View style={styles.walletInner}>
-                  <AppText>{Texts.balance[activeLanguage]}</AppText>
-                  <AppText style={styles.balance}>
-                    {formatNumber({
-                      number: item.balance,
-                      decimal: "000000",
-                      language: activeLanguage,
-                    })}{" "}
-                    {item.currency}
-                  </AppText>
-
-                  <View style={styles.wrapper}>
-                    <AppText>{Texts.addedAt[activeLanguage]}:</AppText>
-                    <DateTime
-                      style={styles.addedInfo}
-                      date={item.addedAt}
-                      withTime={true}
-                    ></DateTime>
-                  </View>
-
-                  {item.coinPrice !== null && item.coinPrice !== undefined && (
-                    <View style={styles.wrapper}>
-                      <AppText>{Texts.pricePerCoin[activeLanguage]}:</AppText>
-                      <AppText style={styles.addedInfo}>
-                        {formatNumberWithCurrency({
-                          number: item.coinPrice,
-                          language: activeLanguage,
-                          currency: activeCurrency,
-                          euroPrice: euroPrice,
-                        })}{" "}
-                        {CurrencyIcon.icon(activeCurrency)}
-                      </AppText>
-                    </View>
-                  )}
-                </View>
-
-                <TextButton
-                  style={styles.deleteWalletButton}
-                  onPress={() => {
-                    Alert.alert(
-                      "",
-                      Texts.deleteCoinMessage[activeLanguage],
-                      [
-                        {
-                          text: Texts.abort[activeLanguage],
-                          onPress: () => {},
-                          style: "cancel",
-                        },
-                        {
-                          text: "OK",
-                          onPress: () => {
-                            deleteItem(item, index);
-                          },
-                        },
-                      ],
-                      { cancelable: false }
-                    );
-                  }}
-                >
-                  <MaterialIcons name="delete" size={20} color="white" />
-                </TextButton>
-              </View>
-            );
-          }}
+          renderItem={useMemo(
+            () => renderedListItem,
+            [walletWrapper, activeLanguage, activeCurrency, euroPrice]
+          )}
           ListHeaderComponent={
             <View style={styles.header}>
               <Image

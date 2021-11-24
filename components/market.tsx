@@ -33,7 +33,7 @@ const Market = (props) => {
   const [activeLanguage] = useContext(ActiveLanguageContext);
   const [activeCurrency] = useContext(ActiveCurrencyContext);
 
-  const renderedMarketItem = (listProps) => {
+  const renderedListItem = (listProps) => {
     const icon = new CryptoIcon(listProps.item.name);
     const chartData = listProps.item.data.lastDayHistory.map((h) => h.price);
     const positiveTrend = chartData[0] < chartData[chartData.length - 1];
@@ -110,10 +110,6 @@ const Market = (props) => {
       </View>
     );
   };
-  const memoizedListItem = useMemo(
-    () => renderedMarketItem,
-    [props.data, activeLanguage, activeCurrency]
-  );
 
   return (
     <FlatList
@@ -122,7 +118,10 @@ const Market = (props) => {
       scrollEnabled={true}
       keyExtractor={(_, index) => randomString(index)}
       keyboardShouldPersistTaps="handled"
-      renderItem={memoizedListItem}
+      renderItem={useMemo(
+        () => renderedListItem,
+        [marketData, activeLanguage, activeCurrency]
+      )}
       showsVerticalScrollIndicator={false}
       ListHeaderComponent={
         <>

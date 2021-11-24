@@ -91,7 +91,7 @@ const MarketdataItem = (props) => {
     }
   }, [marketData, activeCurrency]);
 
-  const renderItem = (listProps) => {
+  const renderedListItem = (listProps) => {
     return (
       <View style={styles.chartDataListItem}>
         <DateTime
@@ -111,8 +111,6 @@ const MarketdataItem = (props) => {
     );
   };
 
-  const memoizedListItem = useMemo(() => renderItem, [chartView]);
-
   return (
     <GradientView>
       <SafeArea>
@@ -124,7 +122,7 @@ const MarketdataItem = (props) => {
           keyboardShouldPersistTaps="handled"
           data={listData}
           keyExtractor={(_, index) => randomString(index)}
-          renderItem={memoizedListItem}
+          renderItem={useMemo(() => renderedListItem, [chartView])}
           showsVerticalScrollIndicator={false}
           ListHeaderComponent={
             <>

@@ -1,5 +1,5 @@
 import { MaterialIcons } from "@expo/vector-icons";
-import React, { useContext, useState } from "react";
+import React, { useContext, useMemo, useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { FlatList } from "react-native-gesture-handler";
 import { DateTime } from "~/components/date-time";
@@ -19,6 +19,55 @@ const Transactions = (props) => {
   const [transactions] = useState(props.route.params.transactions);
   const [currency] = useState(props.route.params.currency);
   const [activeLanguage] = useContext(ActiveLanguageContext);
+
+  const renderedListItem = (listProps) => {
+    const positiveChange = +listProps.item.balance_change > 0;
+    return (
+      <View
+        style={[
+          styles.transactionItem,
+          listProps.index === 0 ? styles.noBorder : {},
+        ]}
+      >
+        <View style={styles.transactionItemInner}>
+          <MaterialIcons
+            style={styles.itemIcon}
+            name={positiveChange ? "arrow-circle-down" : "arrow-circle-up"}
+            size={40}
+            color={positiveChange ? Colors.lightBlue : Colors.purple}
+          />
+          <View style={styles.itemInfoWrapper}>
+            {listProps.item.time && (
+              <DateTime
+                style={styles.itemDate}
+                date={listProps.item.time}
+                withTime={true}
+              ></DateTime>
+            )}
+            <AppText style={styles.itemHash}>
+              {Texts.hash[activeLanguage]}
+            </AppText>
+            <AppText style={styles.itemHash}>
+              {listProps.item.hash ?? "-"}
+            </AppText>
+          </View>
+        </View>
+        <AppText
+          style={[
+            styles.amount,
+            positiveChange ? styles.amountPos : styles.amountNeg,
+          ]}
+        >
+          {formatNumber({
+            number: listProps.item.balance_change,
+            decimal: "00000000",
+            language: activeLanguage,
+          })}
+        </AppText>
+      </View>
+    );
+  };
+
   return (
     <GradientView>
       <SafeArea>
@@ -37,55 +86,7 @@ const Transactions = (props) => {
           keyboardShouldPersistTaps="handled"
           data={transactions}
           keyExtractor={(_, index) => index.toString()}
-          renderItem={({ item, index }) => {
-            const positiveChange = +item.balance_change > 0;
-            return (
-              <View
-                style={[
-                  styles.transactionItem,
-                  index === 0 ? styles.noBorder : {},
-                ]}
-              >
-                <View style={styles.transactionItemInner}>
-                  <MaterialIcons
-                    style={styles.itemIcon}
-                    name={
-                      positiveChange ? "arrow-circle-down" : "arrow-circle-up"
-                    }
-                    size={40}
-                    color={positiveChange ? Colors.lightBlue : Colors.purple}
-                  />
-                  <View style={styles.itemInfoWrapper}>
-                    {item.time && (
-                      <DateTime
-                        style={styles.itemDate}
-                        date={item.time}
-                        withTime={true}
-                      ></DateTime>
-                    )}
-                    <AppText style={styles.itemHash}>
-                      {Texts.hash[activeLanguage]}
-                    </AppText>
-                    <AppText style={styles.itemHash}>
-                      {item.hash ?? "-"}
-                    </AppText>
-                  </View>
-                </View>
-                <AppText
-                  style={[
-                    styles.amount,
-                    positiveChange ? styles.amountPos : styles.amountNeg,
-                  ]}
-                >
-                  {formatNumber({
-                    number: item.balance_change,
-                    decimal: "00000000",
-                    language: activeLanguage,
-                  })}
-                </AppText>
-              </View>
-            );
-          }}
+          renderItem={useMemo(() => renderedListItem, [activeLanguage])}
         ></FlatList>
       </SafeArea>
     </GradientView>

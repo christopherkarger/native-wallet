@@ -20,7 +20,7 @@ const Wallets = (props) => {
     };
   }, []);
 
-  const renderItem = (listProps) => (
+  const renderedListItem = (listProps) => (
     <WalletCard
       navigation={props.navigation}
       data={listProps.item}
@@ -28,8 +28,6 @@ const Wallets = (props) => {
       index={listProps.index}
     ></WalletCard>
   );
-
-  const memoizedListItem = useMemo(() => renderItem, [props.data]);
 
   return (
     <FlatList
@@ -44,7 +42,7 @@ const Wallets = (props) => {
       keyboardShouldPersistTaps="handled"
       data={props.data}
       keyExtractor={(_, index) => randomString(index)}
-      renderItem={memoizedListItem}
+      renderItem={useMemo(() => renderedListItem, [props.data])}
       showsHorizontalScrollIndicator={false}
     ></FlatList>
   );

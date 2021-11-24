@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 import {
   FlatList,
   Image,
@@ -13,6 +13,27 @@ import { CryptoIcon } from "~/models/crypto-icon";
 import { randomString } from "~/services/helper";
 
 const AddCryptoModal = (props) => {
+  const renderedListItem = (listProps) => {
+    const icon = new CryptoIcon(listProps.item.name);
+    return (
+      <TouchableOpacity
+        onPress={() => {
+          props.onSelect({
+            name: listProps.item.name,
+            currency: listProps.item.currency,
+          });
+        }}
+      >
+        <View style={styles.addCryptoItemWrapper}>
+          <Image style={styles.cryptoIcon} source={icon.path}></Image>
+          <AppText style={styles.addCryptoModalText}>
+            {listProps.item.name}
+          </AppText>
+        </View>
+      </TouchableOpacity>
+    );
+  };
+
   return (
     <Modal
       style={styles.modalWrapper}
@@ -24,24 +45,7 @@ const AddCryptoModal = (props) => {
       <FlatList
         data={props.data}
         keyExtractor={(_, index) => randomString(index)}
-        renderItem={({ item, index }) => {
-          const icon = new CryptoIcon(item.name);
-          return (
-            <TouchableOpacity
-              onPress={() => {
-                props.onSelect({
-                  name: item.name,
-                  currency: item.currency,
-                });
-              }}
-            >
-              <View style={styles.addCryptoItemWrapper}>
-                <Image style={styles.cryptoIcon} source={icon.path}></Image>
-                <AppText style={styles.addCryptoModalText}>{item.name}</AppText>
-              </View>
-            </TouchableOpacity>
-          );
-        }}
+        renderItem={useMemo(() => renderedListItem, [])}
       ></FlatList>
     </Modal>
   );
