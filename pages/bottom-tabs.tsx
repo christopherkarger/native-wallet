@@ -1,4 +1,4 @@
-import { MaterialIcons } from "@expo/vector-icons";
+import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import React from "react";
 import { StyleSheet, View } from "react-native";
@@ -25,8 +25,8 @@ const BottomTabs = () => {
           component={HomeScreen}
           options={{
             tabBarIcon: ({ focused }) => (
-              <MaterialIcons
-                name="account-balance-wallet"
+              <Ionicons
+                name="ios-wallet-outline"
                 size={25}
                 color={focused ? Colors.lightBlue : Colors.white}
               />
@@ -53,9 +53,9 @@ const BottomTabs = () => {
           component={SettingsScreen}
           options={{
             tabBarIcon: ({ focused }) => (
-              <MaterialIcons
-                name="settings"
-                size={25}
+              <Ionicons
+                name="ios-settings-outline"
+                size={24}
                 color={focused ? Colors.lightBlue : Colors.white}
               />
             ),

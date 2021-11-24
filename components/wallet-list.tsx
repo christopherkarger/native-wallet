@@ -1,9 +1,25 @@
-import React, { useMemo } from "react";
-import { FlatList, StyleSheet } from "react-native";
+import React, { useEffect, useMemo } from "react";
+import { DeviceEventEmitter, FlatList, StyleSheet } from "react-native";
+import { UPDATE_WALLETS_EVENT } from "~/constants";
 import { randomString } from "~/services/helper";
 import WalletCard from "./wallet-card";
 
 const Wallets = (props) => {
+  let flatListRef: FlatList<any> | null;
+
+  useEffect(() => {
+    const sub = DeviceEventEmitter.addListener(UPDATE_WALLETS_EVENT, () => {
+      flatListRef?.scrollToIndex({
+        animated: false,
+        index: 0,
+      });
+    });
+
+    return () => {
+      sub.remove();
+    };
+  }, []);
+
   const renderItem = (listProps) => (
     <WalletCard
       navigation={props.navigation}
@@ -17,6 +33,11 @@ const Wallets = (props) => {
 
   return (
     <FlatList
+      ref={(list) => {
+        if (list) {
+          flatListRef = list;
+        }
+      }}
       style={styles.wallets}
       horizontal={true}
       contentContainerStyle={{ paddingRight: 20, paddingLeft: 20 }}
