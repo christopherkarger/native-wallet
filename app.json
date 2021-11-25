@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "Coinatix",
-    "slug": "crypto-wallet",
+    "slug": "coinatix",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -18,10 +18,14 @@
       "**/*"
     ],
     "ios": {
+      "bundleIdentifier": "com.christopherk1986.coinatix",
+      "buildNumber": "1.0.0",
       "supportsTablet": true
     },
     "android": {
-      "package": "com.christopherk1986.nativewallet"
+      "package": "com.christopherk1986.coinatix",
+      "versionCode": 1,
+      "permissions": ["CAMERA"]
     },
     "web": {
       "favicon": "./assets/favicon.png"

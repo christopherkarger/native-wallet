@@ -6,6 +6,7 @@
     "build:android": "expo build:android",
     "ios": "expo start --ios",
     "web": "expo start --web",
+    "fetch-androin-keystore": "expo fetch:android:keystore",
     "eject": "expo eject"
   },
   "dependencies": {
