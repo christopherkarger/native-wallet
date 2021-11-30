@@ -20,7 +20,6 @@ export const PathNames = {
   scanCode: "scan-code",
   marketDataItem: "market-data-item",
   settings: "settings",
-  transactions: "transactions",
 };
 
 export const Fonts = {

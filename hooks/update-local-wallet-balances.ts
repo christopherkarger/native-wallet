@@ -53,8 +53,7 @@ export const useUpdateLocalWalletBalances = async () => {
             updateItemBalanceToLocalDBTableWallets(
               wallet.id,
               fetchedAddress.balance,
-              new Date().getTime(),
-              fetchedAddress.transactions
+              new Date().getTime()
             );
           } catch (err) {
             console.error(err);

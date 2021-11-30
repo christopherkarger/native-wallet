@@ -29,14 +29,6 @@ const EmptyWallets = (props) => {
           isDemoAddress: true,
           lastFetched: new Date().getTime(),
           address: `gfde43dFFxb7hdmddsa7767d`,
-          transactions: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((e, i) => {
-            const change = Math.random() * e;
-            return {
-              balance_change: Math.random() >= 0.5 ? change * -1 : change,
-              time: `${new Date(new Date().setDate(new Date().getDate() - i))}`,
-              hash: "gfde43dFFxb7hdmddsa7767dgfde43dFFxb",
-            };
-          }),
         });
       } catch (err) {
         console.error(err);

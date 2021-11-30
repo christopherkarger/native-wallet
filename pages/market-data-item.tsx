@@ -97,6 +97,7 @@ const MarketdataItem = (props) => {
         <DateTime
           date={listProps.item.date}
           hourView={chartView === ChartView.hours}
+          withTime={true}
         ></DateTime>
         <AppText>
           {formatNumberWithCurrency({

@@ -41,14 +41,12 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    //backgroundColor: "red",
   },
   modalView: {
     backgroundColor: "white",
     borderRadius: 20,
     paddingHorizontal: 10,
     paddingVertical: 10,
-    //width: "80%",
     shadowColor: "#000",
     overflow: "hidden",
     shadowOffset: {

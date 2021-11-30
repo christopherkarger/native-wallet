@@ -62,12 +62,11 @@ const AddWalletScreen = (props) => {
     }
 
     let balance = 0;
-    let transactions = [];
+
     try {
       setFetchingAndSavingAddress(true);
       const fetchedAddress = await fetchAddress(address.trim(), name);
       balance = fetchedAddress.balance;
-      transactions = fetchedAddress.transactions;
     } catch (err) {
       console.error(err);
       setFetchingAndSavingAddress(false);
@@ -98,7 +97,6 @@ const AddWalletScreen = (props) => {
           coinPrice: marketItem ? marketItem.data.price : undefined,
           address: address.trim(),
           lastFetched: new Date().getTime(),
-          transactions: transactions,
           connectedToId: connectedToId,
         });
         DeviceEventEmitter.emit(

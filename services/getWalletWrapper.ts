@@ -17,7 +17,6 @@ export const getWalletWrapper = (localWalletsArr: ILocalWallet[]) => {
         coinPrice: w.coinPrice,
         address: w.address,
         lastFetched: w.lastFetched,
-        transactions: w.transactions ? JSON.parse(w.transactions) : undefined,
         connectedToId: w.connectedToId,
       });
     });
@@ -37,7 +36,6 @@ export const getWalletWrapper = (localWalletsArr: ILocalWallet[]) => {
           coinPrice: w.coinPrice,
           address: w.address,
           lastFetched: w.lastFetched,
-          transactions: w.transactions ? JSON.parse(w.transactions) : undefined,
           connectedToId: w.connectedToId,
         }),
         ...connectedWallets.filter((e) => e.connectedToId === w.id),

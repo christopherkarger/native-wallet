@@ -11,7 +11,6 @@ import {
   DeviceEventEmitter,
   Image,
   StyleSheet,
-  TouchableNativeFeedback,
   View,
 } from "react-native";
 import { FlatList } from "react-native-gesture-handler";
@@ -130,94 +129,77 @@ const SingleWalletScreen = (props) => {
 
   const renderedListItem = (listProps) => {
     return (
-      <TouchableNativeFeedback
-        useForeground={true}
-        background={TouchableNativeFeedback.Ripple(Colors.ripple, false)}
-        onPress={(e) => {
-          props.navigation.navigate(PathNames.transactions, {
-            transactions: listProps.item.transactions ?? [],
-            currency: listProps.item.currency,
-          });
-        }}
-      >
-        <View style={styles.singleWalletWrapper}>
-          <View style={styles.walletInner}>
-            <AppText>{Texts.balance[activeLanguage]}</AppText>
-            <AppText style={styles.balance}>
-              {formatNumber({
-                number: listProps.item.balance,
-                decimal: "000000",
-                language: activeLanguage,
-              })}{" "}
-              {listProps.item.currency}
-            </AppText>
+      <View style={styles.singleWalletWrapper}>
+        <View style={styles.walletInner}>
+          <AppText>{Texts.balance[activeLanguage]}</AppText>
+          <AppText style={styles.balance}>
+            {formatNumber({
+              number: listProps.item.balance,
+              decimal: "000000",
+              language: activeLanguage,
+            })}{" "}
+            {listProps.item.currency}
+          </AppText>
 
-            {listProps.item.address && (
-              <View style={[styles.wrapper, styles.addressWrapper]}>
-                <AppText>{Texts.address[activeLanguage]}</AppText>
-                <AppText style={styles.address}>
-                  {listProps.item.address}
-                </AppText>
-              </View>
-            )}
+          {listProps.item.address && (
+            <View style={[styles.wrapper, styles.addressWrapper]}>
+              <AppText>{Texts.address[activeLanguage]}</AppText>
+              <AppText style={styles.address}>{listProps.item.address}</AppText>
+            </View>
+          )}
 
-            {listProps.item.lastFetched && (
-              <View style={styles.wrapper}>
-                <AppText>{Texts.updated[activeLanguage]}:</AppText>
-                <DateTime
-                  style={styles.updatedDate}
-                  date={listProps.item.lastFetched}
-                  withTime={true}
-                ></DateTime>
-              </View>
-            )}
+          {listProps.item.lastFetched && (
+            <View style={styles.wrapper}>
+              <AppText>{Texts.updated[activeLanguage]}:</AppText>
+              <DateTime
+                style={styles.updatedDate}
+                date={listProps.item.lastFetched}
+                withTime={true}
+              ></DateTime>
+            </View>
+          )}
 
-            {listProps.item.address && (
-              <TextButton
-                style={styles.openQrCode}
-                onPress={() => {
-                  setQrCodeAdress(listProps.item.address);
-                  setQrCodeModalVisible(true);
-                }}
-              >
-                <MaterialIcons name="qr-code" size={24} color="white" />
-              </TextButton>
-            )}
-          </View>
-
-          <View style={styles.actionBar}>
-            <AppText style={styles.transactionsButtonText}>
-              {Texts.transactions[activeLanguage]}
-            </AppText>
-
+          {listProps.item.address && (
             <TextButton
-              style={styles.deleteWalletButton}
+              style={styles.openQrCode}
               onPress={() => {
-                Alert.alert(
-                  "",
-                  Texts.deleteAddressMessage[activeLanguage],
-                  [
-                    {
-                      text: Texts.abort[activeLanguage],
-                      onPress: () => {},
-                      style: "cancel",
-                    },
-                    {
-                      text: "OK",
-                      onPress: () => {
-                        deleteItem(listProps.item, listProps.index);
-                      },
-                    },
-                  ],
-                  { cancelable: false }
-                );
+                setQrCodeAdress(listProps.item.address);
+                setQrCodeModalVisible(true);
               }}
             >
-              <MaterialIcons name="delete" size={20} color="white" />
+              <MaterialIcons name="qr-code" size={24} color="white" />
             </TextButton>
-          </View>
+          )}
         </View>
-      </TouchableNativeFeedback>
+
+        <View style={styles.actionBar}>
+          <TextButton
+            style={styles.deleteWalletButton}
+            onPress={() => {
+              Alert.alert(
+                "",
+                Texts.deleteAddressMessage[activeLanguage],
+                [
+                  {
+                    text: Texts.abort[activeLanguage],
+                    onPress: () => {},
+                    style: "cancel",
+                  },
+                  {
+                    text: "OK",
+                    onPress: () => {
+                      deleteItem(listProps.item, listProps.index);
+                    },
+                  },
+                ],
+                { cancelable: false }
+              );
+            }}
+          >
+            <MaterialIcons name="delete" size={20} color="white" />
+          </TextButton>
+        </View>
+      </View>
     );
   };
 
@@ -343,12 +325,6 @@ const styles = StyleSheet.create({
     marginLeft: "auto",
     paddingHorizontal: 15,
     paddingVertical: 10,
-  },
-  transactionsButtonText: {
-    paddingVertical: 10,
-    paddingLeft: 15,
-    paddingRight: 40,
-    fontFamily: Fonts.bold,
   },
   actionBar: {
     paddingVertical: 5,

@@ -1,20 +1,22 @@
 import { SupportedUrls } from "~/config";
-import { ITransactions } from "~/db";
+import { SupportedCryptos } from "~/models/config";
+import { fetchAvalanche } from "./fetch-avalanche";
+import { fetchSolana } from "./fetch-solana";
 
-interface IFetchHeader {
-  headers?: {
-    [key: string]: string;
-  };
-}
-
-const MAX_TRANSACTIONS = 20;
 const CARDANO_UNIT = 1000000;
 const RIPPLE_UNIT = 1000000;
 const ETHEREUM_UNIT = 1000000000000000000;
 const DEFAULT_UNIT = 100000000;
 
 export const fetchAddress = (address: string, name: string) => {
-  const fetchHeaders: IFetchHeader = {};
+  if (name === SupportedCryptos.Avalanche) {
+    return fetchAvalanche(address, name);
+  }
+
+  if (name === SupportedCryptos.Solana) {
+    return fetchSolana(address, name);
+  }
+
   const lowerCaseName = name.toLowerCase();
 
   let url = SupportedUrls.main;
@@ -27,14 +29,13 @@ export const fetchAddress = (address: string, name: string) => {
 
   url = url.replace("${address}", address);
 
-  return fetch(url, fetchHeaders).then((response) =>
+  return fetch(url).then((response) =>
     response.json().then((res) => {
       if (!res?.data) {
         throw new Error("response data missing");
       }
 
       let balance: number;
-      let transactions: ITransactions[] = [];
 
       const walletAddress =
         res.data[address] || res.data[address.toLowerCase()];
@@ -45,25 +46,20 @@ export const fetchAddress = (address: string, name: string) => {
 
       switch (lowerCaseName) {
         case "cardano":
-          transactions = getCardanoTransactions(walletAddress, address);
           balance = getCardanoBalance(walletAddress);
           break;
         case "ripple":
-          transactions = getRippleTransactions(walletAddress, address);
           balance = getRippleBalance(walletAddress);
           break;
         case "ethereum":
-          transactions = getEthereumTransactions(walletAddress, address);
           balance = getEthereumBalance(walletAddress);
           break;
         default:
-          transactions = getDefaultTransactions(walletAddress);
           balance = getDefaultBalance(walletAddress);
       }
 
       return {
         balance,
-        transactions,
       };
     })
   );
@@ -126,102 +122,4 @@ const getDefaultBalance = (walletAddress: any) => {
 
   // Balance returned in satoshis
   return +walletAddress.address.balance / DEFAULT_UNIT;
-};
-
-/**
- * Get Ethreum Transactions
- */
-const getEthereumTransactions = (walletAddress: any, address: string) => {
-  const transactions = walletAddress.calls || [];
-  return transactions.slice(0, MAX_TRANSACTIONS).map((c) => {
-    const val = c.value / ETHEREUM_UNIT;
-
-    const amount =
-      c.recipient.trim().toLowerCase() === address.toLowerCase()
-        ? val
-        : val * -1;
-    return {
-      balance_change: amount,
-      hash: c.transaction_hash,
-      time: c.time,
-    };
-  });
-};
-
-/**
- * Gets cardano transactions
- */
-const getCardanoTransactions = (
-  walletAddress: any,
-  address: string
-): ITransactions[] => {
-  const tx = walletAddress.address?.caTxList || [];
-  return tx.slice(0, MAX_TRANSACTIONS).map((t) => {
-    let outputs = 0;
-    let inputs = 0;
-    t.ctbInputs.forEach((i) => {
-      if (i.ctaAddress === address) {
-        inputs += +i.ctaAmount.getCoin;
-      }
-    });
-
-    t.ctbOutputs.forEach((o) => {
-      if (o.ctaAddress === address) {
-        outputs += +o.ctaAmount.getCoin;
-      }
-    });
-
-    return {
-      balance_change: (outputs - inputs) / CARDANO_UNIT,
-      time: `${t.ctbTimeIssued * 1000}`,
-      hash: t.ctbId,
-    };
-  });
-};
-
-/**
- * Gets ripple transactions
- */
-const getRippleTransactions = (
-  walletAddress: any,
-  address: string
-): ITransactions[] => {
-  const transactions = walletAddress.transactions?.transactions || [];
-  return transactions
-    .slice(0, MAX_TRANSACTIONS)
-    .filter(
-      (t) =>
-        !!t.tx &&
-        !!t.tx.Amount &&
-        !!t.tx.Account &&
-        !!t.tx.Amount &&
-        !isNaN(t.tx.Amount)
-    )
-    .map((t) => {
-      let balanceChange = t.tx.Amount / RIPPLE_UNIT;
-      balanceChange =
-        t.tx.Account.trim().toLowerCase() === address.toLowerCase()
-          ? balanceChange
-          : balanceChange * -1;
-
-      return {
-        balance_change: balanceChange,
-        hash: t.tx.hash,
-        // Ripple time starts at 1/1/2000
-        // https://bitcoin.stackexchange.com/questions/23061/ripple-ledger-time-format
-        time: t.tx.date ? `${(t.tx.date + 946684800) * 1000}` : undefined,
-      };
-    });
-};
-
-/**
- * Get default transactions
- */
-const getDefaultTransactions = (walletAddress: any): ITransactions[] => {
-  const transactions = walletAddress.transactions || [];
-  return transactions.slice(0, MAX_TRANSACTIONS).map((t) => ({
-    balance_change: t.balance_change / DEFAULT_UNIT,
-    hash: t.hash,
-    time: t.time,
-  }));
 };

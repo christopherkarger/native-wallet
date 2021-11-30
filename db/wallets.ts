@@ -5,12 +5,6 @@ import { db } from "./db";
 
 const tableWallets = "wallets";
 
-export interface ITransactions {
-  balance_change?: number;
-  hash?: string;
-  time?: string;
-}
-
 export interface ILocalWallet {
   readonly id: number;
   readonly name: string;
@@ -22,7 +16,6 @@ export interface ILocalWallet {
   readonly coinPrice?: number;
   readonly address?: string;
   readonly lastFetched?: number;
-  readonly transactions?: string;
   readonly connectedToId?: number;
 }
 
@@ -36,7 +29,6 @@ interface IWalletInsertInput {
   readonly coinPrice?: number;
   readonly address?: string;
   readonly lastFetched?: number;
-  readonly transactions?: ITransactions[];
   readonly connectedToId?: number;
 }
 
@@ -56,7 +48,7 @@ export const createLocalDBTableWallets = () => {
   return new Promise<ISQLResult>((resolve, reject) => {
     db.transaction((tx) => {
       tx.executeSql(
-        `CREATE TABLE IF NOT EXISTS ${tableWallets} (id INTEGER PRIMARY KEY NOT NULL, name TEXT NOT NULL, currency TEXT NOT NULL, balance INTEGER NOT NULL, isCoinWallet INTEGER NOT NULL, isDemoAddress INTEGER NOT NULL, addedAt INTEGER, coinPrice INTEGER, address TEXT, lastFetched INTEGER, transactions TEXT, connectedToId INTEGER);`,
+        `CREATE TABLE IF NOT EXISTS ${tableWallets} (id INTEGER PRIMARY KEY NOT NULL, name TEXT NOT NULL, currency TEXT NOT NULL, balance INTEGER NOT NULL, isCoinWallet INTEGER NOT NULL, isDemoAddress INTEGER NOT NULL, addedAt INTEGER, coinPrice INTEGER, address TEXT, lastFetched INTEGER, connectedToId INTEGER);`,
         [],
         (_, result) => {
           resolve(<ISQLResult>result);
@@ -74,7 +66,7 @@ export const insertItemToLocalDBTableWallets = (x: IWalletInsertInput) => {
   return new Promise<ISQLResult>((resolve, reject) => {
     db.transaction((tx) => {
       tx.executeSql(
-        `INSERT INTO ${tableWallets} (name, currency, balance, isCoinWallet, isDemoAddress, addedAt, coinPrice, address, lastFetched, transactions, connectedToId) VALUES (?,?,?,?,?,?,?,?,?,?,?);`,
+        `INSERT INTO ${tableWallets} (name, currency, balance, isCoinWallet, isDemoAddress, addedAt, coinPrice, address, lastFetched, connectedToId) VALUES (?,?,?,?,?,?,?,?,?,?);`,
         [
           x.name,
           x.currency,
@@ -85,7 +77,6 @@ export const insertItemToLocalDBTableWallets = (x: IWalletInsertInput) => {
           x.coinPrice,
           x.address,
           x.lastFetched,
-          x.transactions ? JSON.stringify(x.transactions) : undefined,
           x.connectedToId,
         ],
         (_, result) => {
@@ -157,14 +148,13 @@ const deleteAllFromLocalDBTableWallets = () => {
 export const updateItemBalanceToLocalDBTableWallets = (
   id: number,
   balance: number,
-  lastFetched: number,
-  transactions: ITransactions[]
+  lastFetched: number
 ) => {
   return new Promise<SQLite.SQLResultSet>((resolve, reject) => {
     db.transaction((tx) => {
       tx.executeSql(
-        `UPDATE ${tableWallets} SET balance = ?, lastFetched = ?, transactions = ? WHERE id = ?`,
-        [balance, lastFetched, JSON.stringify(transactions), id],
+        `UPDATE ${tableWallets} SET balance = ?, lastFetched = ? WHERE id = ?`,
+        [balance, lastFetched, id],
         (_, result) => {
           resolve(result);
         },

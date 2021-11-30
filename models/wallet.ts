@@ -1,4 +1,3 @@
-import { ITransactions } from "~/db";
 import { CryptoIcon } from "./crypto-icon";
 
 export interface IWalletInput {
@@ -12,7 +11,6 @@ export interface IWalletInput {
   readonly coinPrice?: number;
   readonly address?: string;
   readonly lastFetched?: number;
-  readonly transactions?: ITransactions[];
   readonly connectedToId?: number;
 }
 
@@ -28,7 +26,6 @@ export class Wallet {
   readonly coinPrice?: number;
   readonly address?: string;
   readonly lastFetched?: number;
-  readonly transactions?: ITransactions[];
   readonly connectedToId?: number;
 
   constructor(x: IWalletInput) {
@@ -41,7 +38,6 @@ export class Wallet {
     this.addedAt = x.addedAt;
     this.coinPrice = x.coinPrice;
     this.address = x.address;
-    this.transactions = x.transactions;
     this.isDemoAddress = x.isDemoAddress;
     this.connectedToId = x.connectedToId;
     this.icon = new CryptoIcon(this.name);
@@ -59,11 +55,6 @@ export class Wallet {
       coinPrice: this.coinPrice,
       address: this.address,
       lastFetched: this.lastFetched,
-      transactions: this.transactions?.map((t) => ({
-        balance_change: t.balance_change,
-        hash: t.hash,
-        time: t.time,
-      })),
       connectedToId: this.connectedToId,
     });
   }

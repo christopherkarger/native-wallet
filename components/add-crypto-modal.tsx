@@ -27,7 +27,8 @@ const AddCryptoModal = (props) => {
         <View style={styles.addCryptoItemWrapper}>
           <Image style={styles.cryptoIcon} source={icon.path}></Image>
           <AppText style={styles.addCryptoModalText}>
-            {listProps.item.name}
+            {listProps.item.name}{" "}
+            {listProps.item.info ? `(${listProps.item.info})` : ""}
           </AppText>
         </View>
       </TouchableOpacity>
