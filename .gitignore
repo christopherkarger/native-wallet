@@ -13,3 +13,5 @@ web-build/
 .DS_Store
 
 my-upload-key.keystore
+
+firebase-config.ts
