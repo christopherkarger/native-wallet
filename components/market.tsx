@@ -72,7 +72,7 @@ const Market = (props) => {
               </AppText>
             </View>
           </View>
-          {Dimensions.get("window").width >= 300 && (
+          {Dimensions.get("window").width >= 350 && (
             <View style={styles.chartWrapper}>
               <LineChart
                 style={styles.chart}

@@ -14,11 +14,11 @@ export const SupportedWallets = [
   {
     currency: "SOL",
     name: "Solana",
-    info: "X-Chain",
   },
   {
     currency: "AVAX",
     name: "Avalanche",
+    info: "X-Chain",
   },
   {
     currency: "DOGE",
@@ -36,14 +36,19 @@ export const SupportedWallets = [
     currency: "XRP",
     name: "Ripple",
   },
+  {
+    currency: "SHIB",
+    name: "SHIBA INU",
+  },
+  {
+    currency: "MATIC",
+    name: "Polygon",
+  },
 ];
 
 export const SupportedCoins = [
   ...SupportedWallets,
-  {
-    currency: "SAND",
-    name: "The Sandbox",
-  },
+
   {
     currency: "MANA",
     name: "Decentraland",
@@ -61,17 +66,23 @@ export const SupportedCoins = [
     name: "Algorand",
   },
   {
-    currency: "MATIC",
-    name: "Polygon",
-  },
-  {
     currency: "VET",
     name: "VeChain",
+  },
+  {
+    currency: "LUNA",
+    name: "Terra",
+  },
+  {
+    currency: "SAND",
+    name: "The Sandbox",
   },
 ];
 
 export const SupportedUrls = {
   main: "https://api.blockchair.com/${name}/dashboards/address/${address}",
+  erc20:
+    "https://api.blockchair.com/ethereum/erc-20/${tokenAddress}/dashboards/address/${address}  ",
   cardano: "https://api.blockchair.com/cardano/raw/address/${address}",
   ripple: "https://api.blockchair.com/ripple/raw/account/${address}",
   avalancheX: "https://api.avax.network/ext/bc/X",

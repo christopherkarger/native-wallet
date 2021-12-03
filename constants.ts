@@ -65,5 +65,7 @@ export const Colors = {
     algorand: "#000000",
     polygon: "#6F41D8",
     veChain: "#18BDFF",
+    shibaInu: "#e63017",
+    terra: "#0a1c73",
   },
 };

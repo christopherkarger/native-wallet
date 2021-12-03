@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React, { useContext, useEffect, useMemo, useState } from "react";
 import {
   FlatList,
   Image,
@@ -9,10 +9,38 @@ import {
 import Modal from "~/components/modal";
 import AppText from "~/components/text";
 import { Colors, Fonts } from "~/constants";
+import { MarketDataContext } from "~/models/context";
 import { CryptoIcon } from "~/models/crypto-icon";
+import { MarketData } from "~/models/market-data";
 import { randomString } from "~/services/helper";
 
+interface IModalData {
+  name: string;
+  currency: string;
+  info?: string;
+}
+
 const AddCryptoModal = (props) => {
+  const marketData: MarketData = useContext(MarketDataContext);
+  const [modalData, setModalData] = useState<IModalData[]>();
+
+  useEffect(() => {
+    const modalData = props.data as IModalData[];
+    const market = marketData.itemsByMarketCap.map((m) => ({
+      currency: m.data.currency,
+      rank: m.data.rank,
+    }));
+
+    setModalData(
+      modalData.sort((a, b) => {
+        return (
+          market.findIndex((m) => m.currency === a.currency) -
+          market.findIndex((m) => m.currency === b.currency)
+        );
+      })
+    );
+  }, [props.data]);
+
   const renderedListItem = (listProps) => {
     const icon = new CryptoIcon(listProps.item.name);
     return (
@@ -44,7 +72,7 @@ const AddCryptoModal = (props) => {
       }}
     >
       <FlatList
-        data={props.data}
+        data={modalData}
         keyExtractor={(_, index) => randomString(index)}
         renderItem={useMemo(() => renderedListItem, [])}
       ></FlatList>

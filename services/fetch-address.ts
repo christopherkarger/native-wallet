@@ -1,6 +1,7 @@
 import { SupportedUrls } from "~/config";
 import { SupportedCryptos } from "~/models/config";
 import { fetchAvalanche } from "./fetch-avalanche";
+import { fetchERC20 } from "./fetch-erc20";
 import { fetchSolana } from "./fetch-solana";
 
 const CARDANO_UNIT = 1000000;
@@ -15,6 +16,13 @@ export const fetchAddress = (address: string, name: string) => {
 
   if (name === SupportedCryptos.Solana) {
     return fetchSolana(address, name);
+  }
+
+  if (
+    name === SupportedCryptos["SHIBA INU"] ||
+    name === SupportedCryptos.Polygon
+  ) {
+    return fetchERC20(address, name);
   }
 
   const lowerCaseName = name.toLowerCase();

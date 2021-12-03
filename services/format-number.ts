@@ -70,7 +70,7 @@ export const formatNumber = (x: IFormatNumber): string => {
   if (x.decimal) {
     formatedNumber = numeral(num).format(`0,00.[${x.decimal}]`);
   } else if (num < 1) {
-    formatedNumber = numeral(num).format("0,00.[0000]");
+    formatedNumber = numeral(num).format("0,00.[0000000]");
   } else if (
     formatedNumber.split(x.language === SupportedLanguages.DE ? "," : ".")[1]
       ?.length === 1

@@ -55,6 +55,10 @@ export class WalletWrapper {
         return Colors.cryptos.polygon;
       case SupportedCryptos.VeChain:
         return Colors.cryptos.veChain;
+      case SupportedCryptos["SHIBA INU"]:
+        return Colors.cryptos.shibaInu;
+      case SupportedCryptos.Terra:
+        return Colors.cryptos.terra;
 
       default:
         return Colors.transparent;
