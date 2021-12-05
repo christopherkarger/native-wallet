@@ -8,6 +8,7 @@ const Toggle = (props) => {
   return (
     <View style={styles.toggleWrapper}>
       <TouchableOpacity
+        disabled={props.active[0]}
         style={[
           styles.toggleButton,
           props.active[0] ? styles.toggleButtonActive : {},
@@ -25,6 +26,7 @@ const Toggle = (props) => {
       </TouchableOpacity>
 
       <TouchableOpacity
+        disabled={props.active[1]}
         style={[
           styles.toggleButton,
           props.active[1] ? styles.toggleButtonActive : {},

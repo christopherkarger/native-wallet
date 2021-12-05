@@ -26,8 +26,6 @@ import { Texts } from "~/texts";
 import Toggle from "../components/toggle";
 
 const SettingsScreen = (props) => {
-  let isDeletingDemoAccount = false;
-
   const [activeLanguage, setActiveLanguage] = useContext(ActiveLanguageContext);
   const [activeCurrency, setActiveCurrency] = useContext(ActiveCurrencyContext);
   const [isDemoAccount, setIsDemoAccount] = useState(false);
@@ -35,10 +33,6 @@ const SettingsScreen = (props) => {
   const mounted = useIsMounted();
 
   const deleteDemo = useCallback(async () => {
-    if (isDeletingDemoAccount) {
-      return;
-    }
-    isDeletingDemoAccount = true;
     try {
       await resetLocalDbWallets();
       DeviceEventEmitter.emit(
@@ -50,39 +44,26 @@ const SettingsScreen = (props) => {
       props.navigation.navigate(PathNames.homeTab);
     } catch (err) {
       console.error(err);
-    } finally {
-      isDeletingDemoAccount = false;
     }
   }, []);
 
   const changeLanguage = useCallback(
     (language: SupportedLanguages) => {
-      if (activeLanguage === language) {
-        return;
-      }
-      (async () => {
-        switchNumeralLocal(language);
-        setActiveLanguage(language);
-        await saveSettingsToLocalDBTableSettings({
-          activeLanguage: language,
-        });
-      })();
+      setActiveLanguage(language);
+      switchNumeralLocal(language);
+      saveSettingsToLocalDBTableSettings({
+        activeLanguage: language,
+      });
     },
     [activeLanguage]
   );
 
   const changeCurrency = useCallback(
     (currency: SupportedCurrencies) => {
-      if (currency === activeCurrency) {
-        return;
-      }
-
-      (async () => {
-        setActiveCurrency(currency);
-        await saveSettingsToLocalDBTableSettings({
-          activeCurrency: currency,
-        });
-      })();
+      setActiveCurrency(currency);
+      saveSettingsToLocalDBTableSettings({
+        activeCurrency: currency,
+      });
     },
     [activeCurrency]
   );

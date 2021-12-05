@@ -67,5 +67,6 @@ export const Colors = {
     veChain: "#18BDFF",
     shibaInu: "#e63017",
     terra: "#0a1c73",
+    mina: "#8470F0",
   },
 };

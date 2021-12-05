@@ -18,4 +18,5 @@ export enum SupportedCryptos {
   VeChain = "VeChain",
   "SHIBA INU" = "SHIBA INU",
   Terra = "Terra",
+  Mina = "Mina",
 }

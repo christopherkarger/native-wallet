@@ -77,6 +77,10 @@ export const SupportedCoins = [
     currency: "SAND",
     name: "The Sandbox",
   },
+  {
+    currency: "MINA",
+    name: "Mina",
+  },
 ];
 
 export const SupportedUrls = {

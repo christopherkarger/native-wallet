@@ -44,6 +44,8 @@ export class CryptoIcon {
         return require("~/images/coins/shib.png");
       case SupportedCryptos.Terra:
         return require("~/images/coins/luna.png");
+      case SupportedCryptos.Mina:
+        return require("~/images/coins/mina.png");
 
       default:
         return require("~/node_modules/cryptocurrency-icons/128/color/generic.png");

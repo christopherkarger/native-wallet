@@ -59,6 +59,8 @@ export class WalletWrapper {
         return Colors.cryptos.shibaInu;
       case SupportedCryptos.Terra:
         return Colors.cryptos.terra;
+      case SupportedCryptos.Mina:
+        return Colors.cryptos.mina;
 
       default:
         return Colors.transparent;
