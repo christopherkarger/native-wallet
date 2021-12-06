@@ -1,24 +1,41 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { Colors, Fonts } from "~/constants";
 import AppText from "./text";
 
+let toggleTimeout: NodeJS.Timeout | undefined;
+const THRESHOLD = 150;
+
 const Toggle = (props) => {
+  const [active, setActive] = useState<boolean[]>([]);
+
+  useEffect(() => {
+    setActive(props.active);
+  }, []);
+
   return (
     <View style={styles.toggleWrapper}>
       <TouchableOpacity
-        disabled={props.active[0]}
+        disabled={active[0]}
         style={[
           styles.toggleButton,
-          props.active[0] ? styles.toggleButtonActive : {},
+          active[0] ? styles.toggleButtonActive : {},
         ]}
-        onPress={() => props.toggle(0)}
+        onPress={() => {
+          setActive([true, false]);
+          if (toggleTimeout) {
+            clearTimeout(toggleTimeout);
+          }
+          toggleTimeout = setTimeout(() => {
+            props.toggle(0);
+          }, THRESHOLD);
+        }}
       >
         <AppText
           style={[
             styles.toggleButtonText,
-            props.active[0] ? styles.toggleButtonActiveText : {},
+            active[0] ? styles.toggleButtonActiveText : {},
           ]}
         >
           {props.text[0]}
@@ -26,17 +43,25 @@ const Toggle = (props) => {
       </TouchableOpacity>
 
       <TouchableOpacity
-        disabled={props.active[1]}
+        disabled={active[1]}
         style={[
           styles.toggleButton,
-          props.active[1] ? styles.toggleButtonActive : {},
+          active[1] ? styles.toggleButtonActive : {},
         ]}
-        onPress={() => props.toggle(1)}
+        onPress={() => {
+          setActive([false, true]);
+          if (toggleTimeout) {
+            clearTimeout(toggleTimeout);
+          }
+          toggleTimeout = setTimeout(() => {
+            props.toggle(1);
+          }, THRESHOLD);
+        }}
       >
         <AppText
           style={[
             styles.toggleButtonText,
-            props.active[1] ? styles.toggleButtonActiveText : {},
+            active[1] ? styles.toggleButtonActiveText : {},
           ]}
         >
           {props.text[1]}
