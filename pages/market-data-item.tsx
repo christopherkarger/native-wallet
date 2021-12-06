@@ -37,7 +37,7 @@ enum ChartView {
 
 const MarketdataItem = (props) => {
   if (!props.route?.params?.item) {
-    throw new Error("maket data item not provied");
+    throw new Error("maket data item not provided");
   }
   const euroPrice = useContext(EURPriceContext);
   const [activeLanguage] = useContext(ActiveLanguageContext);

@@ -31,6 +31,10 @@ export const Texts = {
     de: "Demo löschen",
     en: "Delete demo",
   },
+  yourPortfolio: {
+    de: "Dein Portfolio",
+    en: "Your portfolio",
+  },
   portfolio: {
     de: "Portfolio",
     en: "Portfolio",

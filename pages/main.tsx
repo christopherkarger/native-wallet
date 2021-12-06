@@ -13,6 +13,7 @@ import AddCoinScreen from "./add-coin";
 import AddWalletScreen from "./add-wallet";
 import BottomTabs from "./bottom-tabs";
 import MarketdataItem from "./market-data-item";
+import PortfolioOverview from "./portfolio-overview";
 import SingleCoinWalletScreen from "./single-coin-wallet";
 import SingleWalletScreen from "./single-wallet";
 
@@ -56,6 +57,11 @@ const Main = () => {
             component={AddWalletScreen}
           />
           <Stack.Screen name={PathNames.addCoin} component={AddCoinScreen} />
+
+          <Stack.Screen
+            name={PathNames.portfolioOverview}
+            component={PortfolioOverview}
+          />
 
           <Stack.Screen
             name={PathNames.marketDataItem}

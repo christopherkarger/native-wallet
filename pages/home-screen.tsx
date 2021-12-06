@@ -1,5 +1,7 @@
+import { FontAwesome5 } from "@expo/vector-icons";
 import React, { useContext, useEffect, useState } from "react";
 import { DeviceEventEmitter, StyleSheet, View } from "react-native";
+import { TouchableOpacity } from "react-native-gesture-handler";
 import GradientView from "~/components/gradient-view";
 import Market from "~/components/market";
 import SafeArea from "~/components/safe-area";
@@ -22,7 +24,7 @@ import { Texts } from "~/texts";
 import EmptyWallets from "../components/empty-wallets";
 import AppText from "../components/text";
 import WalletList from "../components/wallet-list";
-import { Colors, Fonts, UPDATE_WALLETS_EVENT } from "../constants";
+import { Colors, Fonts, PathNames, UPDATE_WALLETS_EVENT } from "../constants";
 
 const HomeScreen = (props) => {
   const euroPrice = useContext(EURPriceContext);
@@ -102,6 +104,24 @@ const HomeScreen = (props) => {
                   <AppText style={styles.balance}>
                     {totalBalance} {CurrencyIcon.icon(activeCurrency)}
                   </AppText>
+                  <View style={styles.showPortfolioButtonWrapper}>
+                    <TouchableOpacity
+                      onPress={() => {
+                        props.navigation.navigate(
+                          PathNames.portfolioOverview,
+                          walletsData
+                        );
+                      }}
+                    >
+                      <View style={styles.showPortfolioButton}>
+                        <FontAwesome5
+                          name="chart-pie"
+                          size={24}
+                          color={Colors.white}
+                        />
+                      </View>
+                    </TouchableOpacity>
+                  </View>
                 </View>
                 <View>
                   <WalletList
@@ -121,6 +141,7 @@ const HomeScreen = (props) => {
 
 const styles = StyleSheet.create({
   inner: {
+    position: "relative",
     marginLeft: 20,
     marginRight: 20,
   },
@@ -164,6 +185,19 @@ const styles = StyleSheet.create({
     position: "absolute",
     top: 4,
     left: 5,
+  },
+  showPortfolioButtonWrapper: {
+    position: "absolute",
+    top: 0,
+    right: 0,
+    borderRadius: 50,
+    overflow: "hidden",
+  },
+  showPortfolioButton: {
+    width: 50,
+    height: 50,
+    alignItems: "center",
+    justifyContent: "center",
   },
 });
 
