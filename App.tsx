@@ -6,10 +6,11 @@ import React, { useEffect, useState } from "react";
 import { LogBox, StyleSheet } from "react-native";
 import { EURO_STABLECOIN, Fonts } from "./constants";
 import {
+  getSettings,
   saveMarketToLocalDBTableMarket,
-  saveSettingsToLocalDBTableSettings,
+  saveSettingsActiveCurrency,
+  saveSettingsActiveLanguage,
   selectLocalDBTableMarket,
-  selectLocalDBTableSettings,
 } from "./db";
 import {
   ActiveCurrencyContext,
@@ -39,17 +40,7 @@ export default function App() {
 
   const preload = () => {
     return Promise.all([
-      selectLocalDBTableSettings()
-        .then((res) => {
-          // If settings are already in database
-          if (res && res.rows.length) {
-            return res.rows._array[0];
-          }
-        })
-        .catch(() => {
-          console.error("could not select local settings");
-          return undefined;
-        }),
+      getSettings(),
       Localization.getLocalizationAsync()
         .then((res) => res.locale)
         .catch(() => {
@@ -83,14 +74,12 @@ export default function App() {
           setActiveCurrency(SupportedCurrencies.EUR);
         }
 
-        saveSettingsToLocalDBTableSettings({
-          activeCurrency: isGerman
-            ? SupportedCurrencies.EUR
-            : SupportedCurrencies.USD,
-          activeLanguage: isGerman
-            ? SupportedLanguages.DE
-            : SupportedLanguages.EN,
-        });
+        saveSettingsActiveLanguage(
+          isGerman ? SupportedLanguages.DE : SupportedLanguages.EN
+        );
+        saveSettingsActiveCurrency(
+          isGerman ? SupportedCurrencies.EUR : SupportedCurrencies.USD
+        );
       }
     });
   };

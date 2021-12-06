@@ -1,119 +1,36 @@
-import * as SQLite from "expo-sqlite";
-import {
-  DefaultCurrency,
-  DefaultLanguage,
-  SupportedCurrencies,
-  SupportedLanguages,
-} from "~/models/context";
-import { db } from "./db";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { SupportedCurrencies, SupportedLanguages } from "~/models/context";
 
-const tableSettings = "settings";
-
-export interface ILocalSettings {
-  id: number;
-  activeLanguage: string;
-  activeCurrency: string;
-}
-
-interface ISQLResult extends SQLite.SQLResultSet {
-  rows: {
-    _array: ILocalSettings[];
-    length: number;
-    item(index: number): any;
-  };
-}
-
-export const createLocalDBTableSettings = () => {
-  return new Promise<ISQLResult>((resolve, reject) => {
-    db.transaction((tx) => {
-      tx.executeSql(
-        `CREATE TABLE IF NOT EXISTS ${tableSettings} (id INTEGER PRIMARY KEY NOT NULL, activeLanguage TEXT NOT NULL, activeCurrency TEXT NOT NULL);`,
-        [],
-        (_, result) => {
-          resolve(<ISQLResult>result);
-        },
-        (_, error) => {
-          reject(error);
-          return true;
-        }
-      );
-    });
-  });
-};
-
-interface ISaveSettings {
-  activeLanguage?: SupportedLanguages;
-  activeCurrency?: SupportedCurrencies;
-}
-
-export const saveSettingsToLocalDBTableSettings = async (x: ISaveSettings) => {
-  const settings = await selectLocalDBTableSettings();
-  if (settings && settings.rows.length) {
-    const localSettings = settings.rows._array[0] as ILocalSettings;
-    await db.transaction((tx) => {
-      tx.executeSql(
-        `UPDATE ${tableSettings} SET activeLanguage = ?, activeCurrency = ? WHERE id = ${localSettings.id};`,
-        [
-          x.activeLanguage ?? localSettings.activeLanguage,
-          x.activeCurrency ?? localSettings.activeCurrency,
-        ],
-        (_, result) => {},
-        (_, error) => {
-          console.error(error);
-          return true;
-        }
-      );
-    });
-  } else {
-    await db.transaction((tx) => {
-      tx.executeSql(
-        `INSERT INTO ${tableSettings} (activeLanguage, activeCurrency) VALUES (?,?);`,
-        [
-          x.activeLanguage ?? DefaultLanguage,
-          x.activeCurrency ?? DefaultCurrency,
-        ],
-        (_, result) => {},
-        (_, error) => {
-          console.error(error);
-          return true;
-        }
-      );
-    });
+export const saveSettingsActiveLanguage = async (
+  language: SupportedLanguages
+) => {
+  try {
+    await AsyncStorage.setItem("@settings_language", language);
+  } catch (err) {
+    console.error(err);
   }
 };
 
-export const dropLocalDBTableSettings = () => {
-  return new Promise<ISQLResult>((resolve, reject) => {
-    db.transaction((tx) => {
-      tx.executeSql(
-        `DROP TABLE ${tableSettings}`,
-        [],
-        (_, result) => {
-          resolve(<ISQLResult>result);
-        },
-        (_, error) => {
-          reject(error);
-          return true;
-        }
-      );
-    });
-  });
+export const saveSettingsActiveCurrency = async (
+  currency: SupportedCurrencies
+) => {
+  try {
+    await AsyncStorage.setItem("@settings_currency", currency);
+  } catch (err) {
+    console.error(err);
+  }
 };
 
-export const selectLocalDBTableSettings = () => {
-  return new Promise<ISQLResult>((resolve, reject) => {
-    db.transaction((tx) => {
-      tx.executeSql(
-        `SELECT * FROM ${tableSettings};`,
-        [],
-        (_, result) => {
-          resolve(<ISQLResult>result);
-        },
-        (_, error) => {
-          reject(error);
-          return true;
-        }
-      );
-    });
-  });
+export const getSettings = async () => {
+  try {
+    const activeLanguage = await AsyncStorage.getItem("@settings_language");
+    const activeCurrency = await AsyncStorage.getItem("@settings_currency");
+
+    return {
+      activeLanguage,
+      activeCurrency,
+    };
+  } catch (err) {
+    console.error(err);
+  }
 };

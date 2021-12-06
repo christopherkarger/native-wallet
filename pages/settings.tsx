@@ -9,7 +9,8 @@ import AppText from "~/components/text";
 import { PathNames, UPDATE_WALLETS_EVENT } from "~/constants";
 import {
   resetLocalDbWallets,
-  saveSettingsToLocalDBTableSettings,
+  saveSettingsActiveCurrency,
+  saveSettingsActiveLanguage,
   selectLocalDBTableWallets,
 } from "~/db";
 import { useIsMounted } from "~/hooks/mounted";
@@ -51,9 +52,7 @@ const SettingsScreen = (props) => {
     (language: SupportedLanguages) => {
       setActiveLanguage(language);
       switchNumeralLocal(language);
-      saveSettingsToLocalDBTableSettings({
-        activeLanguage: language,
-      });
+      saveSettingsActiveLanguage(language);
     },
     [activeLanguage]
   );
@@ -61,9 +60,7 @@ const SettingsScreen = (props) => {
   const changeCurrency = useCallback(
     (currency: SupportedCurrencies) => {
       setActiveCurrency(currency);
-      saveSettingsToLocalDBTableSettings({
-        activeCurrency: currency,
-      });
+      saveSettingsActiveCurrency(currency);
     },
     [activeCurrency]
   );

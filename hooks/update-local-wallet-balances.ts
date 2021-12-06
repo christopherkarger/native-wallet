@@ -2,8 +2,8 @@ import { useEffect } from "react";
 import { DeviceEventEmitter } from "react-native";
 import { UPDATE_WALLETS_EVENT } from "~/constants";
 import {
-  saveLocalDBTableAddressUpdate,
-  selectLocalDBTableAddressUpdate,
+  getAddressUpdate,
+  saveAddressUpdate,
   selectLocalDBTableWallets,
   updateItemBalanceToLocalDBTableWallets,
 } from "~/db";
@@ -59,10 +59,7 @@ export const useUpdateLocalWalletBalances = async () => {
             console.error(err);
           }
 
-          await saveLocalDBTableAddressUpdate(
-            addressUpdate.date,
-            addressUpdate.count + 1
-          );
+          await saveAddressUpdate(addressUpdate.date, addressUpdate.count + 1);
         }
       }
 
@@ -77,14 +74,15 @@ export const useUpdateLocalWalletBalances = async () => {
 
   const localAddressUpdate = async () => {
     try {
-      const addressUpdate = await selectLocalDBTableAddressUpdate();
-      if (addressUpdate && addressUpdate.rows.length) {
+      const addressUpdate = await getAddressUpdate();
+
+      if (addressUpdate) {
         const now = new Date();
-        const lastUpdated = new Date(addressUpdate.rows._array[0].date);
+        const lastUpdated = new Date(addressUpdate.date);
         const sameDay = datesAreEqual(lastUpdated, now);
 
         return {
-          count: sameDay ? addressUpdate.rows._array[0].count : 0,
+          count: sameDay ? addressUpdate.count : 0,
           date: sameDay ? lastUpdated.getTime() : now.getTime(),
         };
       }

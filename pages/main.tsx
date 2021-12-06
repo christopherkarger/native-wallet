@@ -7,12 +7,7 @@ import React from "react";
 import GradientView from "~/components/gradient-view";
 import QrCodeScanner from "~/components/qr-code-scanner";
 import { Colors, PathNames } from "~/constants";
-import {
-  createLocalDBTableAddressUpdate,
-  createLocalDBTableMarket,
-  createLocalDBTableSettings,
-  createLocalDBTableWallets,
-} from "~/db";
+import { createLocalDBTableMarket, createLocalDBTableWallets } from "~/db";
 import AddAssetScreen from "./add-asset";
 import AddCoinScreen from "./add-coin";
 import AddWalletScreen from "./add-wallet";
@@ -31,16 +26,6 @@ createLocalDBTableMarket().catch((err) => {
 createLocalDBTableWallets().catch((err) => {
   console.error(err);
   console.warn("Local DB Table wallets could not be created");
-});
-
-createLocalDBTableSettings().catch((err) => {
-  console.error(err);
-  console.warn("Local DB Table settings could not be created");
-});
-
-createLocalDBTableAddressUpdate().catch((err) => {
-  console.error(err);
-  console.warn("Local DB Table address-update could not be created");
 });
 
 const AppTheme = {
