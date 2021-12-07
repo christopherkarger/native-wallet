@@ -48,7 +48,7 @@ const PortfolioOverview = (props) => {
     const subscription = DeviceEventEmitter.addListener(
       UPDATE_WALLETS_EVENT,
       async (event) => {
-        if (event == UPDATE_WALLETS_EVENT_TYPE.Update) {
+        if (event === UPDATE_WALLETS_EVENT_TYPE.Update) {
           const localWallets = await selectLocalDBTableWallets().catch(
             () => {}
           );

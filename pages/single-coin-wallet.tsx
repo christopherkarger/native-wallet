@@ -62,8 +62,8 @@ const SingleCoinWalletScreen = (props) => {
       UPDATE_WALLETS_EVENT,
       async (event) => {
         if (
-          event == UPDATE_WALLETS_EVENT_TYPE.Update ||
-          event == UPDATE_WALLETS_EVENT_TYPE.Add
+          event === UPDATE_WALLETS_EVENT_TYPE.Update ||
+          event === UPDATE_WALLETS_EVENT_TYPE.Add
         ) {
           const localWallets = await selectLocalDBTableWallets().catch(
             () => {}
