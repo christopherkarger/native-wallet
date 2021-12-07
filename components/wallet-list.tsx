@@ -43,6 +43,7 @@ const Wallets = (props) => {
       data={props.data}
       keyExtractor={(_, index) => randomString(index)}
       renderItem={useMemo(() => renderedListItem, [props.data])}
+      initialNumToRender={4}
       showsHorizontalScrollIndicator={false}
     ></FlatList>
   );

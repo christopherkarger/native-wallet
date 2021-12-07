@@ -109,7 +109,7 @@ const HomeScreen = (props) => {
                       onPress={() => {
                         props.navigation.navigate(
                           PathNames.portfolioOverview,
-                          walletsData
+                          walletsData.map((w) => w.clone())
                         );
                       }}
                     >

@@ -70,4 +70,8 @@ export class WalletWrapper {
   get isCoinWallet() {
     return this.wallets.some((w) => w.isCoinWallet);
   }
+
+  clone(): WalletWrapper {
+    return new WalletWrapper(this.wallets.map((w) => w.clone()));
+  }
 }
