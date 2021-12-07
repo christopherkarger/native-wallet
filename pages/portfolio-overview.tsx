@@ -5,7 +5,7 @@ import GradientView from "~/components/gradient-view";
 import SafeArea from "~/components/safe-area";
 import SubPageHeader from "~/components/sub-page-header";
 import AppText from "~/components/text";
-import { Colors } from "~/constants";
+import { Colors, Fonts } from "~/constants";
 import {
   ActiveCurrencyContext,
   ActiveLanguageContext,
@@ -46,7 +46,6 @@ const PortfolioOverview = (props) => {
     );
 
     const data: any[] = [];
-
     walletWrapper.map((w, i) => {
       const itemBalance = calcTotalBalance(marketData, [w]);
       const percentage = (itemBalance / portfolioBalance) * 100;
@@ -136,7 +135,17 @@ const PortfolioOverview = (props) => {
           ListHeaderComponent={() => {
             return (
               <View style={styles.chartWrapper}>
+                <AppText style={styles.totalBalance}>
+                  {formatNumberWithCurrency({
+                    number: calcTotalBalance(marketData, props.route?.params),
+                    language: activeLanguage,
+                    currency: activeCurrency,
+                    euroPrice: euroPrice,
+                  })}{" "}
+                  {CurrencyIcon.icon(activeCurrency)}
+                </AppText>
                 <PieChart
+                  animate={true}
                   padAngle={0}
                   innerRadius={"40%"}
                   style={{ height: 200 }}
@@ -152,14 +161,13 @@ const PortfolioOverview = (props) => {
 };
 
 const styles = StyleSheet.create({
-  chart: {
-    justifyContent: "center",
-    flex: 1,
-    width: "100%",
-    height: 200,
+  totalBalance: {
+    textAlign: "center",
+    marginBottom: 20,
+    fontSize: 27,
+    fontFamily: Fonts.bold,
   },
   chartWrapper: {
-    paddingTop: 20,
     marginBottom: 20,
   },
   itemWrapper: {
