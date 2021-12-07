@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useMemo, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { FlatList, StyleSheet, View } from "react-native";
 import { PieChart } from "react-native-svg-charts";
 import GradientView from "~/components/gradient-view";
@@ -65,7 +65,7 @@ const PortfolioOverview = (props) => {
     setChartData(data);
   }, []);
 
-  const renderedListItem = (listProps) => {
+  const RenderedListItem = (listProps) => {
     const allWalletWrapper = props.route?.params as WalletWrapper[];
     const walletWrapper = listProps.item as WalletWrapper;
     const itemBalance = calcTotalBalance(marketData, [walletWrapper]);
@@ -100,7 +100,13 @@ const PortfolioOverview = (props) => {
         </View>
         <View style={styles.rightWrapper}>
           <AppText>
-            {percentage < 0.1 ? "< 0.1" : percentage.toFixed(2)}%
+            {percentage < 0.1
+              ? "< 0.1"
+              : formatNumber({
+                  number: percentage,
+                  language: activeLanguage,
+                })}
+            %
           </AppText>
           <AppText style={styles.grey}>
             {formatNumberWithCurrency({
@@ -131,7 +137,7 @@ const PortfolioOverview = (props) => {
             paddingLeft: 20,
           }}
           keyExtractor={(_, index) => randomString(index)}
-          renderItem={useMemo(() => renderedListItem, [props.data])}
+          renderItem={(props) => RenderedListItem(props)}
           ListHeaderComponent={() => {
             return (
               <View style={styles.chartWrapper}>
