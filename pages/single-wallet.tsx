@@ -277,7 +277,7 @@ const SingleWalletScreen = (props) => {
                     id: walletWrapper.wallets[0].id,
                   });
                 }}
-                text={Texts.addAddressToWallet[activeLanguage]}
+                text={Texts.addAddress[activeLanguage]}
               ></Button>
 
               <Button
@@ -289,7 +289,7 @@ const SingleWalletScreen = (props) => {
                     id: walletWrapper.wallets[0].id,
                   });
                 }}
-                text={Texts.addCoinToWallet[activeLanguage]}
+                text={Texts.addCoin[activeLanguage]}
               ></Button>
             </View>
           }

@@ -1,11 +1,11 @@
 export const Texts = {
   addAsset: {
-    de: "Asset anlegen",
-    en: "Add asset",
+    de: "Neues Wallet",
+    en: "New Wallet",
   },
   addWalletHeadline: {
-    de: "Eine physiche Wallet Adresse hinzufügen",
-    en: "Add a physical wallet address",
+    de: "Eine physiche Adresse hinzufügen",
+    en: "Add a physical address",
   },
   addWallet: {
     de: "Wallet hinzufügen",
@@ -52,7 +52,7 @@ export const Texts = {
     en: "Updated",
   },
   addNewWallet: {
-    de: "Neues Wallet anlegen",
+    de: "Neues Wallet hinzufügen",
     en: "Add new wallet",
   },
   addNewCoin: {
@@ -75,14 +75,11 @@ export const Texts = {
     de: "Entfernen",
     en: "Delete",
   },
-  addAddressToWallet: {
+  addAddress: {
     de: "Adresse hinzufügen",
     en: "Add address",
   },
-  addCoinToWallet: {
-    de: "Coin hinzufügen",
-    en: "Add coin",
-  },
+
   wallet: {
     de: "Wallet",
     en: "wallet",
@@ -148,7 +145,7 @@ export const Texts = {
     en: "Price per coin",
   },
   enterNumber: {
-    de: "Bitte geben Sie eine Zahl ein.",
+    de: "Bitte gib eine Zahl ein.",
     en: "Please enter a number.",
   },
   supportedCryptocurrency: {

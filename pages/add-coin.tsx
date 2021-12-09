@@ -109,7 +109,7 @@ const AddCoinScreen = (props) => {
         <DismissKeyboard>
           <View style={styles.page}>
             <SubPageHeader navigation={props.navigation}>
-              {Texts.addNewCoin[activeLanguage]}
+              {Texts.addNewWallet[activeLanguage]}
             </SubPageHeader>
 
             <View style={styles.inner}>
