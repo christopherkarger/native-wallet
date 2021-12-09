@@ -146,7 +146,7 @@ const AddCoinScreen = (props) => {
                 onPress={() => addCoin()}
                 style={styles.addCoin}
                 disabled={!name || !balance}
-                text={Texts.addCoin[activeLanguage]}
+                text={Texts.addWallet[activeLanguage]}
               ></Button>
             </View>
           </View>
