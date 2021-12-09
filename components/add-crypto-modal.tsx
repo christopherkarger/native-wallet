@@ -56,7 +56,9 @@ const AddCryptoModal = (props) => {
           <Image style={styles.cryptoIcon} source={icon.path}></Image>
           <AppText style={styles.addCryptoModalText}>
             {listProps.item.name}{" "}
-            {listProps.item.info ? `(${listProps.item.info})` : ""}
+            {props.showCryptoInfo && listProps.item.info
+              ? `(${listProps.item.info})`
+              : ""}
           </AppText>
         </View>
       </TouchableOpacity>

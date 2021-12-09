@@ -203,6 +203,7 @@ const AddWalletScreen = (props) => {
       <AddCryptoModal
         data={SupportedWallets}
         show={showCryptoModal}
+        showCryptoInfo={true}
         onClose={() => {
           setShowCryptoModal(false);
         }}
