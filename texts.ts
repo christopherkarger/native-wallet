@@ -76,12 +76,12 @@ export const Texts = {
     en: "Delete",
   },
   addAddressToWallet: {
-    de: "Adresse zu diesem Wallet hinzufügen",
-    en: "Add address to this wallet",
+    de: "Adresse hinzufügen",
+    en: "Add address",
   },
   addCoinToWallet: {
-    de: "Coin zu diesem Wallet hinzufügen",
-    en: "Add coin to this wallet",
+    de: "Coin hinzufügen",
+    en: "Add coin",
   },
   wallet: {
     de: "Wallet",
@@ -162,5 +162,21 @@ export const Texts = {
   supportedCryptocurrencies: {
     de: "unterstützte Kryptowährungen",
     en: "supported cryptocurrencies",
+  },
+  walletExistsHeadline: {
+    de: "Du hast schon ein ${name} wallet",
+    en: "You already have a ${name} wallet",
+  },
+  walletExistsSubheadline: {
+    de: "Möchtest du ein Neues anlegen, oder zum bestehenden hinzufügen?",
+    en: "Would you like to create a new one, or add it to the existing one?",
+  },
+  walletExistsActionCreateNew: {
+    de: "Neues anlegen",
+    en: "Create new",
+  },
+  add: {
+    de: "Hinzufügen",
+    en: "Add",
   },
 };

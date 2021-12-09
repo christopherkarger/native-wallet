@@ -10,6 +10,7 @@ import {
   View,
 } from "react-native";
 import AddCryptoModal from "~/components/add-crypto-modal";
+import AlertModal from "~/components/alert-modal";
 import Button from "~/components/button";
 import DismissKeyboard from "~/components/dismiss-keyboard";
 import GradientView from "~/components/gradient-view";
@@ -17,7 +18,7 @@ import SafeArea from "~/components/safe-area";
 import AppText from "~/components/text";
 import { SupportedWallets } from "~/config";
 import { Colors, PathNames, UPDATE_WALLETS_EVENT } from "~/constants";
-import { insertItemToLocalDBTableWallets } from "~/db";
+import { getExistingWalletId, insertItemToLocalDBTableWallets } from "~/db";
 import { useIsMounted } from "~/hooks/mounted";
 import { UPDATE_WALLETS_EVENT_TYPE } from "~/hooks/update-local-wallet-balances";
 import { ActiveLanguageContext, MarketDataContext } from "~/models/context";
@@ -33,7 +34,9 @@ const AddWalletScreen = (props) => {
   const [name, setName] = useState("");
   const [currency, setCurrency] = useState("");
   const [address, setEnteredAddress] = useState("");
-  const [showModal, setShowModal] = useState(false);
+  const [showCryptoModal, setShowCryptoModal] = useState(false);
+  const [existingWallet, setExistingWallet] =
+    useState<{ name: string; id: number }>();
   const [fetchingAndSavingAddress, setFetchingAndSavingAddress] =
     useState(false);
   const [connectedToId, setConnectedToId] = useState<number>();
@@ -103,10 +106,10 @@ const AddWalletScreen = (props) => {
           UPDATE_WALLETS_EVENT,
           UPDATE_WALLETS_EVENT_TYPE.Add
         );
-        if (connectedToId !== undefined) {
-          props.navigation.goBack();
-        } else {
+        if (nameChangeAllowed) {
           props.navigation.navigate(PathNames.home);
+        } else {
+          props.navigation.goBack();
         }
       } catch (err) {
         setFetchingAndSavingAddress(false);
@@ -130,7 +133,7 @@ const AddWalletScreen = (props) => {
                 disabled={!nameChangeAllowed}
                 onPress={() => {
                   if (nameChangeAllowed) {
-                    setShowModal(true);
+                    setShowCryptoModal(true);
                   }
                 }}
               >
@@ -176,16 +179,45 @@ const AddWalletScreen = (props) => {
           </View>
         </DismissKeyboard>
       </SafeArea>
+
+      <AlertModal
+        show={existingWallet !== undefined}
+        headline={Texts.walletExistsHeadline[activeLanguage].replace(
+          "${name}",
+          existingWallet?.name ?? ""
+        )}
+        subHeadline={Texts.walletExistsSubheadline[activeLanguage]}
+        confirmText={Texts.add[activeLanguage]}
+        cancelText={Texts.walletExistsActionCreateNew[activeLanguage]}
+        onConfirm={() => {
+          if (existingWallet) {
+            setConnectedToId(existingWallet.id);
+          }
+          setExistingWallet(undefined);
+        }}
+        onCancel={() => {
+          setExistingWallet(undefined);
+        }}
+      ></AlertModal>
+
       <AddCryptoModal
         data={SupportedWallets}
-        show={showModal}
+        show={showCryptoModal}
         onClose={() => {
-          setShowModal(false);
+          setShowCryptoModal(false);
         }}
-        onSelect={(selected: { name: string; currency: string }) => {
+        onSelect={async (selected: { name: string; currency: string }) => {
+          setShowCryptoModal(false);
+          const walletId = await getExistingWalletId(selected.name);
+
+          if (walletId !== undefined) {
+            setExistingWallet({
+              name: selected.name,
+              id: walletId,
+            });
+          }
           setName(selected.name);
           setCurrency(selected.currency);
-          setShowModal(false);
         }}
       ></AddCryptoModal>
     </GradientView>

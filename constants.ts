@@ -16,7 +16,6 @@ export const PathNames = {
   addCoin: "add-coin",
   addAsset: "add-asset",
   singleWallet: "single-wallet",
-  singleCoin: "single-coin",
   scanCode: "scan-code",
   marketDataItem: "market-data-item",
   settings: "settings",

@@ -269,3 +269,19 @@ export const deleteItemFromLocalDBTableWallets = (
     return deleteMainItemFromLocalDBTableWallets(item, walletWrapper);
   }
 };
+
+export const getExistingWalletId = async (name: string) => {
+  const localWallets = await selectLocalDBTableWallets().catch(() => {});
+  if (localWallets && localWallets.rows.length) {
+    const wallets = localWallets.rows._array.filter((l) => {
+      return (
+        l.name === name &&
+        (l.connectedToId === null || l.connectedToId === undefined)
+      );
+    });
+
+    if (wallets.length === 1) {
+      return wallets[0].id;
+    }
+  }
+};

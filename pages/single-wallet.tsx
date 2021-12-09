@@ -54,6 +54,7 @@ const SingleWalletScreen = (props) => {
   const [walletWrapper, setWalletWrapper] = useState<WalletWrapper>(
     props.route.params.data
   );
+
   const [moneyBalance, setMoneyBalance] = useState("0");
   const marketData: MarketData = useContext(MarketDataContext);
   const mounted = useIsMounted();
@@ -135,6 +136,7 @@ const SingleWalletScreen = (props) => {
           <AppText style={styles.balance}>
             {formatNumber({
               number: listProps.item.balance,
+              decimal: "000000",
               language: activeLanguage,
             })}{" "}
             {listProps.item.currency}
@@ -157,6 +159,34 @@ const SingleWalletScreen = (props) => {
               ></DateTime>
             </View>
           )}
+
+          {listProps.item.isCoinWallet && (
+            <View style={styles.wrapper}>
+              <AppText>{Texts.addedAt[activeLanguage]}:</AppText>
+              <DateTime
+                style={styles.addedInfo}
+                date={listProps.item.addedAt}
+                withTime={true}
+              ></DateTime>
+            </View>
+          )}
+
+          {listProps.item.isCoinWallet &&
+            listProps.item.coinPrice !== null &&
+            listProps.item.coinPrice !== undefined && (
+              <View style={styles.wrapper}>
+                <AppText>{Texts.pricePerCoin[activeLanguage]}:</AppText>
+                <AppText style={styles.addedInfo}>
+                  {formatNumberWithCurrency({
+                    number: listProps.item.coinPrice,
+                    language: activeLanguage,
+                    currency: activeCurrency,
+                    euroPrice: euroPrice,
+                  })}{" "}
+                  {CurrencyIcon.icon(activeCurrency)}
+                </AppText>
+              </View>
+            )}
 
           {listProps.item.address && (
             <TextButton
@@ -255,6 +285,7 @@ const SingleWalletScreen = (props) => {
           ListFooterComponent={
             <View>
               <Button
+                style={styles.addAddressButton}
                 onPress={() => {
                   props.navigation.navigate(PathNames.addWallet, {
                     isAddingTo: true,
@@ -264,6 +295,18 @@ const SingleWalletScreen = (props) => {
                   });
                 }}
                 text={Texts.addAddressToWallet[activeLanguage]}
+              ></Button>
+
+              <Button
+                onPress={() => {
+                  props.navigation.navigate(PathNames.addCoin, {
+                    isAddingTo: true,
+                    currency: walletWrapper.wallets[0].currency,
+                    name: walletWrapper.wallets[0].name,
+                    id: walletWrapper.wallets[0].id,
+                  });
+                }}
+                text={Texts.addCoinToWallet[activeLanguage]}
               ></Button>
             </View>
           }
@@ -346,6 +389,13 @@ const styles = StyleSheet.create({
   updatedDate: {
     marginLeft: 5,
     fontFamily: Fonts.bold,
+  },
+  addedInfo: {
+    marginLeft: 5,
+    fontFamily: Fonts.bold,
+  },
+  addAddressButton: {
+    marginBottom: 20,
   },
 });
 

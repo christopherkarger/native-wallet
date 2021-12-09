@@ -1,6 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
 import {
-  Alert,
   DeviceEventEmitter,
   Keyboard,
   StyleSheet,
@@ -9,6 +8,7 @@ import {
   View,
 } from "react-native";
 import AddCryptoModal from "~/components/add-crypto-modal";
+import AlertModal from "~/components/alert-modal";
 import Button from "~/components/button";
 import DismissKeyboard from "~/components/dismiss-keyboard";
 import GradientView from "~/components/gradient-view";
@@ -16,7 +16,7 @@ import SafeArea from "~/components/safe-area";
 import AppText from "~/components/text";
 import { SupportedCoins } from "~/config";
 import { Colors, PathNames, UPDATE_WALLETS_EVENT } from "~/constants";
-import { insertItemToLocalDBTableWallets } from "~/db";
+import { getExistingWalletId, insertItemToLocalDBTableWallets } from "~/db";
 import { useIsMounted } from "~/hooks/mounted";
 import { UPDATE_WALLETS_EVENT_TYPE } from "~/hooks/update-local-wallet-balances";
 import {
@@ -39,6 +39,9 @@ const AddCoinScreen = (props) => {
   const [showModal, setShowModal] = useState(false);
   const [connectedToId, setConnectedToId] = useState<number>();
   const marketData: MarketData = useContext(MarketDataContext);
+  const [showIsNotANumberAlert, setShowIsNotANumberAlert] = useState(false);
+  const [existingWallet, setExistingWallet] =
+    useState<{ name: string; id: number }>();
 
   useEffect(() => {
     if (props.route.params && props.route.params.isAddingTo) {
@@ -63,22 +66,7 @@ const AddCoinScreen = (props) => {
     }
 
     if (isNaN(+balanceInput)) {
-      Alert.alert(
-        "",
-        Texts.enterNumber[activeLanguage],
-        [
-          {
-            text: Texts.abort[activeLanguage],
-            onPress: () => {},
-            style: "cancel",
-          },
-          {
-            text: "OK",
-            onPress: () => {},
-          },
-        ],
-        { cancelable: false }
-      );
+      setShowIsNotANumberAlert(true);
       return;
     }
 
@@ -103,10 +91,10 @@ const AddCoinScreen = (props) => {
         // Wait till homescreen updates the wallets to avoid wallets flash
         await waitTime(100);
 
-        if (connectedToId !== undefined) {
-          props.navigation.goBack();
-        } else {
+        if (nameChangeAllowed) {
           props.navigation.navigate(PathNames.home);
+        } else {
+          props.navigation.goBack();
         }
       } catch (err) {
         console.error("Insert Wallet into DB failed");
@@ -170,12 +158,51 @@ const AddCoinScreen = (props) => {
         onClose={() => {
           setShowModal(false);
         }}
-        onSelect={(selected: { name: string; currency: string }) => {
+        onSelect={async (selected: { name: string; currency: string }) => {
+          setShowModal(false);
+          const walletId = await getExistingWalletId(selected.name);
+          if (walletId !== undefined) {
+            setExistingWallet({
+              name: selected.name,
+              id: walletId,
+            });
+          }
           setName(selected.name);
           setCurrency(selected.currency);
-          setShowModal(false);
         }}
       ></AddCryptoModal>
+
+      <AlertModal
+        show={existingWallet !== undefined}
+        headline={Texts.walletExistsHeadline[activeLanguage].replace(
+          "${name}",
+          existingWallet?.name ?? ""
+        )}
+        subHeadline={Texts.walletExistsSubheadline[activeLanguage]}
+        confirmText={Texts.add[activeLanguage]}
+        cancelText={Texts.walletExistsActionCreateNew[activeLanguage]}
+        onConfirm={() => {
+          if (existingWallet) {
+            setConnectedToId(existingWallet.id);
+          }
+          setExistingWallet(undefined);
+        }}
+        onCancel={() => {
+          setExistingWallet(undefined);
+        }}
+      ></AlertModal>
+
+      <AlertModal
+        show={showIsNotANumberAlert}
+        headline={Texts.enterNumber[activeLanguage]}
+        confirmText={"OK"}
+        onConfirm={() => {
+          setShowIsNotANumberAlert(false);
+        }}
+        onCancel={() => {
+          setShowIsNotANumberAlert(false);
+        }}
+      ></AlertModal>
     </GradientView>
   );
 };
