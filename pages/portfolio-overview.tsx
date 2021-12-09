@@ -104,15 +104,10 @@ const PortfolioOverview = (props) => {
     return (
       <TouchableOpacity
         onPress={() => {
-          props.navigation.navigate(
-            walletWrapper.isCoinWallet
-              ? PathNames.singleCoin
-              : PathNames.singleWallet,
-            {
-              data: walletWrapper,
-              index: listProps.index,
-            }
-          );
+          props.navigation.navigate(PathNames.singleWallet, {
+            data: walletWrapper,
+            index: listProps.index,
+          });
         }}
       >
         <View
