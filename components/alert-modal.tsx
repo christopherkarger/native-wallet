@@ -25,7 +25,17 @@ const AlertModal = (props) => {
                 props.onConfirm();
               }}
             >
-              <AppText style={[styles.text, styles.confirm]}>
+              <AppText
+                style={[
+                  styles.button,
+                  styles.text,
+                  props.highlightButton === 1 ||
+                  props.highlightButton === undefined
+                    ? styles.highlight
+                    : {},
+                  styles.confirm,
+                ]}
+              >
                 {props.confirmText}
               </AppText>
             </TouchableOpacity>
@@ -36,7 +46,14 @@ const AlertModal = (props) => {
                 props.onCancel();
               }}
             >
-              <AppText style={[styles.text, styles.cancel]}>
+              <AppText
+                style={[
+                  styles.button,
+                  styles.text,
+                  props.highlightButton === 2 ? styles.highlight : {},
+                  styles.cancel,
+                ]}
+              >
                 {props.cancelText}
               </AppText>
             </TouchableOpacity>
@@ -62,18 +79,17 @@ const styles = StyleSheet.create({
   subHeadline: {
     fontSize: 15,
   },
-  confirm: {
-    backgroundColor: Colors.lightBlue,
-    color: Colors.white,
+  button: {
     paddingHorizontal: 10,
     paddingVertical: 8,
     marginRight: 15,
   },
-  cancel: {
-    paddingHorizontal: 10,
-    paddingVertical: 8,
-    marginLeft: 15,
+  highlight: {
+    backgroundColor: Colors.lightBlue,
+    color: Colors.white,
   },
+  confirm: {},
+  cancel: {},
   modalWrapper: {
     width: "80%",
   },

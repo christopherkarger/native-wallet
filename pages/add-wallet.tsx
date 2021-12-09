@@ -1,7 +1,6 @@
 import { MaterialIcons } from "@expo/vector-icons";
 import React, { useContext, useEffect, useState } from "react";
 import {
-  Alert,
   DeviceEventEmitter,
   Keyboard,
   StyleSheet,
@@ -41,6 +40,7 @@ const AddWalletScreen = (props) => {
     useState(false);
   const [connectedToId, setConnectedToId] = useState<number>();
   const marketData: MarketData = useContext(MarketDataContext);
+  const [errorAddingWalletModal, setErrorAddingWalletModal] = useState(false);
 
   useEffect(() => {
     if (props.route.params && props.route.params.address) {
@@ -73,17 +73,7 @@ const AddWalletScreen = (props) => {
     } catch (err) {
       console.error(err);
       setFetchingAndSavingAddress(false);
-      Alert.alert(
-        Texts.addWalletErrorHeadline[activeLanguage],
-        Texts.addWalletErrorText[activeLanguage],
-        [
-          {
-            text: "OK",
-            onPress: () => {},
-          },
-        ],
-        { cancelable: false }
-      );
+      setErrorAddingWalletModal(true);
       return;
     }
 
@@ -179,6 +169,16 @@ const AddWalletScreen = (props) => {
           </View>
         </DismissKeyboard>
       </SafeArea>
+
+      <AlertModal
+        show={errorAddingWalletModal}
+        headline={Texts.addWalletErrorHeadline[activeLanguage]}
+        subHeadline={Texts.addWalletErrorText[activeLanguage]}
+        confirmText={"OK"}
+        onConfirm={() => {
+          setErrorAddingWalletModal(false);
+        }}
+      ></AlertModal>
 
       <AlertModal
         show={existingWallet !== undefined}

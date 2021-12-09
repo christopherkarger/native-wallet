@@ -6,14 +6,9 @@ import React, {
   useMemo,
   useState,
 } from "react";
-import {
-  Alert,
-  DeviceEventEmitter,
-  Image,
-  StyleSheet,
-  View,
-} from "react-native";
+import { DeviceEventEmitter, Image, StyleSheet, View } from "react-native";
 import { FlatList } from "react-native-gesture-handler";
+import AlertModal from "~/components/alert-modal";
 import Button from "~/components/button";
 import { DateTime } from "~/components/date-time";
 import GradientView from "~/components/gradient-view";
@@ -61,6 +56,8 @@ const SingleWalletScreen = (props) => {
 
   const [qrCodeModalVisible, setQrCodeModalVisible] = useState(false);
   const [qrCodeAdress, setQrCodeAdress] = useState("");
+  const [toDeleteWallet, setToDeleteWallet] =
+    useState<{ item: Wallet; index: number }>();
 
   useEffect(() => {
     const subscription = DeviceEventEmitter.addListener(
@@ -205,24 +202,10 @@ const SingleWalletScreen = (props) => {
           <TextButton
             style={styles.deleteWalletButton}
             onPress={() => {
-              Alert.alert(
-                "",
-                Texts.deleteAddressMessage[activeLanguage],
-                [
-                  {
-                    text: Texts.abort[activeLanguage],
-                    onPress: () => {},
-                    style: "cancel",
-                  },
-                  {
-                    text: "OK",
-                    onPress: () => {
-                      deleteItem(listProps.item, listProps.index);
-                    },
-                  },
-                ],
-                { cancelable: false }
-              );
+              setToDeleteWallet({
+                item: listProps.item,
+                index: listProps.index,
+              });
             }}
           >
             <MaterialIcons name="delete" size={20} color="white" />
@@ -312,6 +295,22 @@ const SingleWalletScreen = (props) => {
           }
         ></FlatList>
       </SafeArea>
+      <AlertModal
+        show={toDeleteWallet !== undefined}
+        headline={Texts.deleteMessage[activeLanguage]}
+        cancelText={Texts.abort[activeLanguage]}
+        highlightButton={2}
+        confirmText={"OK"}
+        onConfirm={() => {
+          if (toDeleteWallet) {
+            deleteItem(toDeleteWallet.item, toDeleteWallet.index);
+          }
+          setToDeleteWallet(undefined);
+        }}
+        onCancel={() => {
+          setToDeleteWallet(undefined);
+        }}
+      ></AlertModal>
     </GradientView>
   );
 };
