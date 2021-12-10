@@ -7,7 +7,7 @@ import React from "react";
 import GradientView from "~/components/gradient-view";
 import QrCodeScanner from "~/components/qr-code-scanner";
 import { Colors, PathNames } from "~/constants";
-import { createLocalDBTableMarket, createLocalDBTableWallets } from "~/db";
+import { createLocalDBTableWallets } from "~/db";
 import AddAssetScreen from "./add-asset";
 import AddCoinScreen from "./add-coin";
 import AddWalletScreen from "./add-wallet";
@@ -17,11 +17,6 @@ import PortfolioOverview from "./portfolio-overview";
 import SingleWalletScreen from "./single-wallet";
 
 const Stack = createStackNavigator();
-
-createLocalDBTableMarket().catch((err) => {
-  console.error(err);
-  console.warn("Local DB Table market could not be created");
-});
 
 createLocalDBTableWallets().catch((err) => {
   console.error(err);

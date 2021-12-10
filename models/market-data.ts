@@ -1,4 +1,3 @@
-import { ILocalMarket } from "~/db";
 import { SupportedCryptos } from "./config";
 
 export interface IMarketDataItem {
@@ -42,23 +41,3 @@ export class MarketData {
       .filter((m) => Object.keys(SupportedCryptos).find((x) => x === m.name));
   }
 }
-
-export const localMarketDataToClass = (localMarketData: ILocalMarket[]) => {
-  return new MarketData(
-    localMarketData.map((item) => {
-      return {
-        name: item.name,
-        data: {
-          lastFetched: item.lastFetched,
-          price: item.price,
-          rank: item.rank,
-          currency: item.currency,
-          history: item.history ? JSON.parse(item.history) : [],
-          lastDayHistory: item.lastDayHistory
-            ? JSON.parse(item.lastDayHistory)
-            : [],
-        },
-      };
-    })
-  );
-};

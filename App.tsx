@@ -6,11 +6,11 @@ import React, { useEffect, useState } from "react";
 import { LogBox, StyleSheet } from "react-native";
 import { EURO_STABLECOIN, Fonts } from "./constants";
 import {
+  getLocalStorageMarketData,
   getSettings,
-  saveMarketToLocalDBTableMarket,
+  saveMarketDataToStorage,
   saveSettingsActiveCurrency,
   saveSettingsActiveLanguage,
-  selectLocalDBTableMarket,
 } from "./db";
 import {
   ActiveCurrencyContext,
@@ -22,7 +22,7 @@ import {
   SupportedCurrencies,
   SupportedLanguages,
 } from "./models/context";
-import { localMarketDataToClass, MarketData } from "./models/market-data";
+import { MarketData } from "./models/market-data";
 import Main from "./pages/main";
 import { fetchMarketData } from "./services/fetch-marketdata";
 import { firebaseDB } from "./services/firebase-init";
@@ -88,16 +88,14 @@ export default function App() {
     let dbConnection: firebaseDB | undefined;
     (async () => {
       try {
-        const localMarket = await selectLocalDBTableMarket();
-        if (localMarket && localMarket.rows.length) {
-          const localMarketData = localMarket.rows._array;
-          const m = localMarketDataToClass(localMarketData);
-          const tether = m.findItemByName(EURO_STABLECOIN);
+        const localMarket = await getLocalStorageMarketData();
+        if (localMarket) {
+          const tether = localMarket.findItemByName(EURO_STABLECOIN);
           if (tether) {
             setUSDPrice(tether.data.price);
           }
           if (marketData.items.length === 0) {
-            setMarketData(m);
+            setMarketData(localMarket);
           }
         }
       } catch (err) {
@@ -114,7 +112,7 @@ export default function App() {
             setUSDPrice(tether.data.price);
           }
           setMarketData(data);
-          saveMarketToLocalDBTableMarket(data);
+          saveMarketDataToStorage(data);
         }
       });
     })();

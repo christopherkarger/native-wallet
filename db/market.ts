@@ -1,133 +1,24 @@
-import * as SQLite from "expo-sqlite";
-import { MarketData } from "~/models/market-data";
-import { db } from "./db";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { IMarketDataItem, MarketData } from "~/models/market-data";
 
-const tableMarket = "market";
-
-export interface ILocalMarket {
-  id: number;
-  name: string;
-  currency: string;
-  price: number;
-  lastFetched: number;
-  rank: number;
-  history?: string; // array stored as string
-  lastDayHistory?: string; // array stored as string
-}
-
-interface ISQLResult extends SQLite.SQLResultSet {
-  rows: {
-    _array: ILocalMarket[];
-    length: number;
-    item(index: number): any;
-  };
-}
-
-export const createLocalDBTableMarket = () => {
-  return new Promise<ISQLResult>((resolve, reject) => {
-    db.transaction((tx) => {
-      tx.executeSql(
-        `CREATE TABLE IF NOT EXISTS ${tableMarket} (id INTEGER PRIMARY KEY NOT NULL, name TEXT NOT NULL, price INTEGER NOT NULL, currency TEXT NOT NULL, rank INTEGER NOT NULL, lastFetched INTEGER NOT NULL, history TEXT NOT NULL, lastDayHistory TEXT NOT NULL);`,
-        [],
-        (_, result) => {
-          resolve(<ISQLResult>result);
-        },
-        (_, error) => {
-          reject(error);
-          return true;
-        }
-      );
-    });
-  });
-};
-
-export const resetLocalDBTableMarket = async () => {
-  await deleteAllRowsLocalDBTableMarket();
-};
-
-const deleteAllRowsLocalDBTableMarket = () => {
-  return new Promise<ISQLResult>((resolve, reject) => {
-    db.transaction((tx) => {
-      tx.executeSql(
-        `DELETE FROM ${tableMarket}`,
-        [],
-        (_, result) => {
-          resolve(<ISQLResult>result);
-        },
-        (_, error) => {
-          reject(error);
-          return true;
-        }
-      );
-    });
-  });
-};
-
-export const insertItemToLocalDBTableMarket = (
-  name: string,
-  price: number,
-  currency: string,
-  rank: number,
-  lastFetched: number,
-  history: string,
-  lastDayHistory: string
-) => {
-  return new Promise<ISQLResult>((resolve, reject) => {
-    db.transaction((tx) => {
-      tx.executeSql(
-        `INSERT INTO ${tableMarket} (name, price, currency, rank, lastFetched, history, lastDayHistory) VALUES (?,?,?,?,?,?,?);`,
-        [name, price, currency, rank, lastFetched, history, lastDayHistory],
-        (_, result) => {
-          resolve(<ISQLResult>result);
-        },
-        (_, error) => {
-          reject(error);
-          return true;
-        }
-      );
-    });
-  });
-};
-
-export const selectLocalDBTableMarket = () => {
-  return new Promise<ISQLResult>((resolve, reject) => {
-    db.transaction((tx) => {
-      tx.executeSql(
-        `SELECT * FROM ${tableMarket}`,
-        [],
-        (_, result) => {
-          resolve(<ISQLResult>result);
-        },
-        (_, error) => {
-          reject(error);
-          return true;
-        }
-      );
-    });
-  });
-};
-
-export const saveMarketToLocalDBTableMarket = async (data: MarketData) => {
+export const saveMarketDataToStorage = async (marketData: MarketData) => {
   try {
-    await resetLocalDBTableMarket();
+    await AsyncStorage.setItem(
+      "@market_data",
+      JSON.stringify(marketData.items)
+    );
   } catch (err) {
     console.error(err);
-    return;
   }
+};
 
-  for (const m of data.items) {
-    try {
-      await insertItemToLocalDBTableMarket(
-        m.name,
-        m.data.price,
-        m.data.currency,
-        m.data.rank,
-        m.data.lastFetched,
-        JSON.stringify(m.data.history),
-        JSON.stringify(m.data.lastDayHistory)
-      );
-    } catch (err) {
-      console.error(err);
+export const getLocalStorageMarketData = async () => {
+  try {
+    const markeData = await AsyncStorage.getItem("@market_data");
+    if (markeData) {
+      return new MarketData(JSON.parse(markeData) as IMarketDataItem[]);
     }
+  } catch (err) {
+    console.error(err);
   }
 };
