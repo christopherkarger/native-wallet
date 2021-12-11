@@ -2,7 +2,7 @@
   "expo": {
     "name": "Coinatix",
     "slug": "coinatix",
-    "version": "1.0.6",
+    "version": "1.0.7",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "splash": {
@@ -19,12 +19,12 @@
     ],
     "ios": {
       "bundleIdentifier": "com.christopherk1986.coinatix",
-      "buildNumber": "1.0.6",
+      "buildNumber": "1.0.7",
       "supportsTablet": true
     },
     "android": {
       "package": "com.christopherk1986.coinatix",
-      "versionCode": 7,
+      "versionCode": 8,
       "permissions": ["CAMERA"]
     },
     "web": {

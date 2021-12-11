@@ -44,7 +44,6 @@ export const DateTime = (props) => {
   }${d.getMinutes()}`;
 
   const isToday = datesAreEqual(d, new Date());
-
   return (
     <AppText style={props.style}>
       {props.hourView &&
@@ -52,7 +51,7 @@ export const DateTime = (props) => {
           isToday ? todayText : formatedDate
         }`}
       {!props.hourView && (isToday ? todayText : formatedDate)}
-      {props.withTime && ` - ${formatedTime}`}
+      {!props.hourView && props.withTime && ` - ${formatedTime}`}
     </AppText>
   );
 };

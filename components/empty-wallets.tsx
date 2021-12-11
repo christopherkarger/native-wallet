@@ -28,7 +28,7 @@ const EmptyWallets = (props) => {
           isCoinWallet: false,
           isDemoAddress: true,
           lastFetched: new Date().getTime(),
-          address: `gfde43dFFxb7hdmddsa7767d`,
+          address: `0xD3dcA6c100515a5D7941afDd2efcA21903ac8299`,
         });
       } catch (err) {
         console.error(err);
