@@ -25,11 +25,12 @@ export const getSettings = async () => {
   try {
     const activeLanguage = await AsyncStorage.getItem("@settings_language");
     const activeCurrency = await AsyncStorage.getItem("@settings_currency");
-
-    return {
-      activeLanguage,
-      activeCurrency,
-    };
+    if (activeLanguage && activeCurrency) {
+      return {
+        activeLanguage,
+        activeCurrency,
+      };
+    }
   } catch (err) {
     console.error(err);
   }

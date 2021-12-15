@@ -26,16 +26,20 @@ export const fetchMarketData = (
           rank: data[key].rank,
           currency: data[key].currency,
           history: data[key].history
-            ? data[key].history.map((item: IHistoryItem) => ({
-                date: item.date,
-                price: item.price,
-              }))
+            ? data[key].history
+                .map((item: IHistoryItem) => ({
+                  date: item.date,
+                  price: item.price,
+                }))
+                .filter((m) => m !== undefined || m !== null)
             : [],
           lastDayHistory: data[key].lastDayHistory
-            ? data[key].lastDayHistory.map((item: IHistoryItem) => ({
-                date: item.date,
-                price: item.price,
-              }))
+            ? data[key].lastDayHistory
+                .map((item: IHistoryItem) => ({
+                  date: item.date,
+                  price: item.price,
+                }))
+                .filter((m) => m !== undefined || m !== null)
             : [],
         },
       };

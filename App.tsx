@@ -41,19 +41,13 @@ export default function App() {
   const preload = () => {
     return Promise.all([
       getSettings(),
-      Localization.getLocalizationAsync()
-        .then((res) => res.locale)
-        .catch(() => {
-          console.error("device language could not be set");
-          return undefined;
-        }),
       Font.loadAsync({
         "karla-light": require("./assets/fonts/Karla-Light.ttf"),
         "karla-regular": require("./assets/fonts/Karla-Regular.ttf"),
         "karla-semibold": require("./assets/fonts/Karla-SemiBold.ttf"),
         "karla-bold": require("./assets/fonts/Karla-Bold.ttf"),
       }),
-    ]).then(([localSettings, localDeviceLanguage]) => {
+    ]).then(([localSettings]) => {
       if (localSettings) {
         // If saved language is german
         if (localSettings.activeLanguage === SupportedLanguages.DE) {
@@ -64,22 +58,30 @@ export default function App() {
           setActiveCurrency(SupportedCurrencies.EUR);
         }
       } else {
-        const isGerman =
-          localDeviceLanguage &&
-          localDeviceLanguage.includes(SupportedLanguages.DE);
+        (async () => {
+          const localDeviceLanguage = await Localization.getLocalizationAsync()
+            .then((res) => res.locale)
+            .catch(() => {
+              console.error("device language could not be set");
+              return undefined;
+            });
+          const isGerman =
+            localDeviceLanguage &&
+            localDeviceLanguage.includes(SupportedLanguages.DE);
 
-        if (isGerman) {
-          // If there are no saved settings and the device language is german and currebcy to EUR
-          setActiveLanguage(SupportedLanguages.DE);
-          setActiveCurrency(SupportedCurrencies.EUR);
-        }
+          if (isGerman) {
+            // If there are no saved settings and the device language is german and currebcy to EUR
+            setActiveLanguage(SupportedLanguages.DE);
+            setActiveCurrency(SupportedCurrencies.EUR);
+          }
 
-        saveSettingsActiveLanguage(
-          isGerman ? SupportedLanguages.DE : SupportedLanguages.EN
-        );
-        saveSettingsActiveCurrency(
-          isGerman ? SupportedCurrencies.EUR : SupportedCurrencies.USD
-        );
+          saveSettingsActiveLanguage(
+            isGerman ? SupportedLanguages.DE : SupportedLanguages.EN
+          );
+          saveSettingsActiveCurrency(
+            isGerman ? SupportedCurrencies.EUR : SupportedCurrencies.USD
+          );
+        })();
       }
     });
   };
