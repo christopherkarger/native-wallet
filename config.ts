@@ -44,6 +44,10 @@ export const SupportedWallets = [
     currency: "MATIC",
     name: "Polygon",
   },
+  {
+    currency: "VET",
+    name: "VeChain",
+  },
 ];
 
 export const SupportedCoins = [
@@ -65,10 +69,7 @@ export const SupportedCoins = [
     currency: "ALGO",
     name: "Algorand",
   },
-  {
-    currency: "VET",
-    name: "VeChain",
-  },
+
   {
     currency: "LUNA",
     name: "Terra",
@@ -91,4 +92,5 @@ export const SupportedUrls = {
   ripple: "https://api.blockchair.com/ripple/raw/account/${address}",
   avalancheX: "https://api.avax.network/ext/bc/X",
   solana: "https://api.mainnet-beta.solana.com",
+  vechain: "https://sync-mainnet.vechain.org/accounts/${address}",
 };

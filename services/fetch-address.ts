@@ -3,6 +3,7 @@ import { SupportedCryptos } from "~/models/config";
 import { fetchAvalanche } from "./fetch-avalanche";
 import { fetchERC20 } from "./fetch-erc20";
 import { fetchSolana } from "./fetch-solana";
+import { fetchVechain } from "./fetch-vechain";
 
 const CARDANO_UNIT = 1000000;
 const RIPPLE_UNIT = 1000000;
@@ -16,6 +17,10 @@ export const fetchAddress = (address: string, name: string) => {
 
   if (name === SupportedCryptos.Solana) {
     return fetchSolana(address, name);
+  }
+
+  if (name === SupportedCryptos.VeChain) {
+    return fetchVechain(address, name);
   }
 
   if (

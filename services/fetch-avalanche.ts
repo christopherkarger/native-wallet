@@ -5,7 +5,7 @@ export const fetchAvalanche = (address: string, name: string) => {
   const AVAX_UNIT = 1000000000;
 
   let avaxAddress = address;
-  if (avaxAddress.substr(0, 2) !== XChainPrefix) {
+  if (avaxAddress.substring(0, 2) !== XChainPrefix) {
     avaxAddress = XChainPrefix + address;
   }
 
