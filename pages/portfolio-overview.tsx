@@ -99,7 +99,8 @@ const PortfolioOverview = (props) => {
     const walletWrapper = listProps.item as WalletWrapper;
     const itemBalance = calcTotalBalance(marketData, [walletWrapper]);
     const portfolioBalance = calcTotalBalance(marketData, allWalletWrapper);
-    const percentage = (itemBalance / portfolioBalance) * 100;
+    const percentage =
+      portfolioBalance > 0 ? (itemBalance / portfolioBalance) * 100 : 0;
 
     return (
       <TouchableOpacity
@@ -139,7 +140,7 @@ const PortfolioOverview = (props) => {
           </View>
           <View style={styles.rightWrapper}>
             <AppText>
-              {percentage < 0.1
+              {percentage > 0 && percentage < 0.1
                 ? "< 0.1"
                 : formatNumber({
                     number: percentage,

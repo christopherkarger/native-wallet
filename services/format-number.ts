@@ -53,7 +53,7 @@ export const formatNumberWithCurrency = (x: IFormatCurrency) => {
   return formatNumber({
     ...x,
     number:
-      x.currency === SupportedCurrencies.EUR
+      x.currency === SupportedCurrencies.EUR && x.number > 0
         ? x.number * (x.number / (x.number * x.euroPrice))
         : x.number,
   });
@@ -61,7 +61,7 @@ export const formatNumberWithCurrency = (x: IFormatCurrency) => {
 
 export const formatNumber = (x: IFormatNumber): string => {
   if (isNaN(x.number) || x.number === null) {
-    return " ";
+    return "";
   }
 
   const num = parseFloat(x.number.toString());
@@ -82,6 +82,5 @@ export const formatNumber = (x: IFormatNumber): string => {
   if (x.maxChar && formatedNumber.length > x.maxChar) {
     formatedNumber = `${formatedNumber.substring(0, x.maxChar)}...`;
   }
-
   return formatedNumber;
 };

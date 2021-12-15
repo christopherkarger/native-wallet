@@ -105,11 +105,7 @@ const getRippleBalance = (walletAddress: any) => {
  * Gets Ethereum Balance
  */
 const getEthereumBalance = (walletAddress: any) => {
-  if (!walletAddress.address?.type) {
-    throw new Error("ethereum type not set");
-  }
-
-  if (!walletAddress.address.balance && walletAddress.address.balance !== 0) {
+  if (!walletAddress.address?.balance && walletAddress.address.balance !== 0) {
     throw new Error("ethereum balance not set");
   }
   // Balance returned in Wei
@@ -120,11 +116,7 @@ const getEthereumBalance = (walletAddress: any) => {
  * Gets Default Balance
  */
 const getDefaultBalance = (walletAddress: any) => {
-  if (!walletAddress.address?.type) {
-    throw new Error("default type not set");
-  }
-
-  if (!walletAddress.address.balance && walletAddress.address.balance !== 0) {
+  if (!walletAddress.address?.balance && walletAddress.address.balance !== 0) {
     throw new Error("default balance not set");
   }
 
