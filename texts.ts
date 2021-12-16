@@ -4,7 +4,7 @@ export const Texts = {
     en: "New Wallet",
   },
   addWalletHeadline: {
-    de: "Eine physiche Adresse hinzufügen",
+    de: "Eine physische Adresse hinzufügen",
     en: "Add a physical address",
   },
   addWallet: {

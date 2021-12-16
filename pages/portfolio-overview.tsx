@@ -9,7 +9,6 @@ import AppText from "~/components/text";
 import { Colors, Fonts, PathNames, UPDATE_WALLETS_EVENT } from "~/constants";
 import { selectLocalDBTableWallets } from "~/db";
 import { useIsMounted } from "~/hooks/mounted";
-import { UPDATE_WALLETS_EVENT_TYPE } from "~/hooks/update-local-wallet-balances";
 import {
   ActiveCurrencyContext,
   ActiveLanguageContext,
@@ -47,14 +46,10 @@ const PortfolioOverview = (props) => {
   useEffect(() => {
     const subscription = DeviceEventEmitter.addListener(
       UPDATE_WALLETS_EVENT,
-      async (event) => {
-        if (event === UPDATE_WALLETS_EVENT_TYPE.Update) {
-          const localWallets = await selectLocalDBTableWallets().catch(
-            () => {}
-          );
-          if (localWallets && localWallets.rows.length && mounted.current) {
-            setAllWalletWrapper(getWalletWrapper(localWallets.rows._array));
-          }
+      async () => {
+        const localWallets = await selectLocalDBTableWallets().catch(() => {});
+        if (localWallets && localWallets.rows.length && mounted.current) {
+          setAllWalletWrapper(getWalletWrapper(localWallets.rows._array));
         }
       }
     );
@@ -139,16 +134,18 @@ const PortfolioOverview = (props) => {
             <AppText>{walletWrapper.wallets[0].name}</AppText>
           </View>
           <View style={styles.rightWrapper}>
-            <AppText>
-              {percentage > 0 && percentage < 0.1
-                ? "< 0.1"
-                : formatNumber({
-                    number: percentage,
-                    language: activeLanguage,
-                    decimal: "00",
-                  })}
-              %
-            </AppText>
+            {percentage > 0 && (
+              <AppText>
+                {percentage < 0.1
+                  ? "< 0.1"
+                  : formatNumber({
+                      number: percentage,
+                      language: activeLanguage,
+                      decimal: "00",
+                    })}
+                %
+              </AppText>
+            )}
             <AppText style={styles.grey}>
               {formatNumberWithCurrency({
                 number: calcTotalBalance(marketData, [walletWrapper]),
@@ -192,12 +189,14 @@ const PortfolioOverview = (props) => {
                   })}{" "}
                   {CurrencyIcon.icon(activeCurrency)}
                 </AppText>
-                <PieChart
-                  padAngle={0}
-                  innerRadius={"40%"}
-                  style={{ height: 200 }}
-                  data={chartData}
-                />
+                {chartData.length > 0 && (
+                  <PieChart
+                    padAngle={0}
+                    innerRadius={"40%"}
+                    style={{ height: 200 }}
+                    data={chartData}
+                  />
+                )}
               </View>
             );
           }}
