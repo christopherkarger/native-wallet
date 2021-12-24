@@ -133,7 +133,7 @@ const SingleWalletScreen = (props) => {
           <AppText style={styles.balance}>
             {formatNumber({
               number: listProps.item.balance,
-              decimal: "000000",
+              decimal: "00000000",
               language: activeLanguage,
             })}{" "}
             {listProps.item.currency}

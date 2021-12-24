@@ -82,6 +82,10 @@ export const SupportedCoins = [
     currency: "MINA",
     name: "Mina",
   },
+  {
+    currency: "FTM",
+    name: "Fantom",
+  },
 ];
 
 export const SupportedUrls = {

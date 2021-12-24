@@ -61,6 +61,8 @@ export class WalletWrapper {
         return Colors.cryptos.terra;
       case SupportedCryptos.Mina:
         return Colors.cryptos.mina;
+      case SupportedCryptos.Fantom:
+        return Colors.cryptos.fantom;
 
       default:
         return Colors.transparent;

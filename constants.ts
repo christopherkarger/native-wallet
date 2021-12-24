@@ -68,5 +68,6 @@ export const Colors = {
     shibaInu: "#e63017",
     terra: "#0a1c73",
     mina: "#8470F0",
+    fantom: "#1766F7",
   },
 };
