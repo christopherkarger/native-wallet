@@ -16,7 +16,7 @@ export enum SupportedCryptos {
   Algorand = "Algorand",
   Polygon = "Polygon",
   VeChain = "VeChain",
-  "SHIBA INU" = "SHIBA INU",
+  "Shiba Inu" = "Shiba Inu",
   Terra = "Terra",
   Mina = "Mina",
   Fantom = "Fantom",

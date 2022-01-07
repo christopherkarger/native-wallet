@@ -40,7 +40,7 @@ export class CryptoIcon {
         return require("~/node_modules/cryptocurrency-icons/128/color/matic.png");
       case SupportedCryptos.VeChain:
         return require("~/node_modules/cryptocurrency-icons/128/color/vet.png");
-      case SupportedCryptos["SHIBA INU"]:
+      case SupportedCryptos["Shiba Inu"]:
         return require("~/images/coins/shib.png");
       case SupportedCryptos.Terra:
         return require("~/images/coins/luna.png");
