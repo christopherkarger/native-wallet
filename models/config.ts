@@ -17,7 +17,6 @@ export enum SupportedCryptos {
   Polygon = "Polygon",
   VeChain = "VeChain",
   "Shiba Inu" = "Shiba Inu",
-  Terra = "Terra",
   Mina = "Mina",
   Fantom = "Fantom",
 }

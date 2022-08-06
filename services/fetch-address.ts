@@ -24,7 +24,7 @@ export const fetchAddress = (address: string, name: string) => {
   }
 
   if (
-    name === SupportedCryptos["SHIBA INU"] ||
+    name === SupportedCryptos["Shiba Inu"] ||
     name === SupportedCryptos.Polygon
   ) {
     return fetchERC20(address, name);

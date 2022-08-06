@@ -6,7 +6,7 @@ export const fetchERC20 = (address: string, name: string) => {
   const tokenPlaceholder = "${tokenAddress}";
   const ETHEREUM_UNIT = 1000000000000000000;
 
-  if (name === SupportedCryptos["SHIBA INU"]) {
+  if (name === SupportedCryptos["Shiba Inu"]) {
     url = url.replace(
       tokenPlaceholder,
       "0x95ad61b0a150d79219dcf64e1e6cc01f0b64c4ce"

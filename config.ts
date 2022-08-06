@@ -38,7 +38,7 @@ export const SupportedWallets = [
   },
   {
     currency: "SHIB",
-    name: "SHIBA INU",
+    name: "Shiba Inu",
   },
   {
     currency: "MATIC",
@@ -91,7 +91,7 @@ export const SupportedCoins = [
 export const SupportedUrls = {
   main: "https://api.blockchair.com/${name}/dashboards/address/${address}",
   erc20:
-    "https://api.blockchair.com/ethereum/erc-20/${tokenAddress}/dashboards/address/${address}  ",
+    "https://api.blockchair.com/ethereum/erc-20/${tokenAddress}/dashboards/address/${address}",
   cardano: "https://api.blockchair.com/cardano/raw/address/${address}",
   ripple: "https://api.blockchair.com/ripple/raw/account/${address}",
   avalancheX: "https://api.avax.network/ext/bc/X",
