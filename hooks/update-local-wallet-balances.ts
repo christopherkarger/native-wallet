@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import { DeviceEventEmitter } from "react-native";
 import { UPDATE_WALLETS_EVENT } from "~/constants";
 import {
@@ -14,61 +13,48 @@ export enum UPDATE_WALLETS_EVENT_TYPE {
   Delete,
 }
 
-const MAX_FETCHING_ADDRESSES = 500;
+export const updateLocalWalletBalances = async () => {
+  const localWallets = await selectLocalDBTableWallets().catch(() => {});
 
-export const useUpdateLocalWalletBalances = async () => {
-  const update = async () => {
-    const localWallets = await selectLocalDBTableWallets().catch(() => {});
+  if (localWallets && localWallets.rows.length) {
+    const allWallets = localWallets.rows._array
+      .map((w) => ({
+        id: w.id,
+        address: w.address,
+        name: w.name,
+        lastFetched: w.lastFetched,
+        isDemoAddress: w.isDemoAddress,
+      }))
+      .sort((a, b) =>
+        a.lastFetched !== undefined && b.lastFetched !== undefined
+          ? a.lastFetched - b.lastFetched
+          : 0
+      );
 
-    if (localWallets && localWallets.rows.length) {
-      const allWallets = localWallets.rows._array
-        .map((w) => ({
-          id: w.id,
-          address: w.address,
-          name: w.name,
-          lastFetched: w.lastFetched,
-          isDemoAddress: w.isDemoAddress,
-        }))
-        .sort((a, b) =>
-          a.lastFetched !== undefined && b.lastFetched !== undefined
-            ? a.lastFetched - b.lastFetched
-            : 0
-        );
-
-      for (const wallet of allWallets) {
-        if (wallet.address && !wallet.isDemoAddress) {
-          try {
-            await waitTime(1000);
-            const fetchedAddress = await fetchAddress(
-              wallet.address,
-              wallet.name
-            );
-            updateItemBalanceToLocalDBTableWallets(
-              wallet.id,
-              fetchedAddress.balance,
-              new Date().getTime()
-            );
-          } catch (err) {
-            console.error(err);
-          }
+    for (const wallet of allWallets) {
+      if (wallet.address && !wallet.isDemoAddress) {
+        try {
+          await waitTime(1000);
+          const fetchedAddress = await fetchAddress(
+            wallet.address,
+            wallet.name
+          );
+          updateItemBalanceToLocalDBTableWallets(
+            wallet.id,
+            fetchedAddress.balance,
+            new Date().getTime()
+          );
+        } catch (err) {
+          console.error(err);
         }
       }
-
-      if (!allWallets.some((w) => !!w.isDemoAddress)) {
-        DeviceEventEmitter.emit(
-          UPDATE_WALLETS_EVENT,
-          UPDATE_WALLETS_EVENT_TYPE.Update
-        );
-      }
     }
-  };
 
-  useEffect(() => {
-    (async () => {
-      await update();
-      setInterval(() => {
-        update();
-      }, 10 * 1000);
-    })();
-  }, []);
+    if (!allWallets.some((w) => !!w.isDemoAddress)) {
+      DeviceEventEmitter.emit(
+        UPDATE_WALLETS_EVENT,
+        UPDATE_WALLETS_EVENT_TYPE.Update
+      );
+    }
+  }
 };

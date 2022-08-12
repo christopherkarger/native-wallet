@@ -1,13 +1,13 @@
 import { FontAwesome5 } from "@expo/vector-icons";
-import React, { useContext, useEffect, useState } from "react";
-import { DeviceEventEmitter, StyleSheet, View } from "react-native";
+import React, { useContext, useEffect, useRef, useState } from "react";
+import { AppState, DeviceEventEmitter, StyleSheet, View } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import GradientView from "~/components/gradient-view";
 import Market from "~/components/market";
 import SafeArea from "~/components/safe-area";
 import { selectLocalDBTableWallets } from "~/db";
 import { useIsMounted } from "~/hooks/mounted";
-import { useUpdateLocalWalletBalances } from "~/hooks/update-local-wallet-balances";
+import { updateLocalWalletBalances } from "~/hooks/update-local-wallet-balances";
 import {
   ActiveCurrencyContext,
   ActiveLanguageContext,
@@ -35,18 +35,29 @@ const HomeScreen = (props) => {
   const [totalBalance, setTotalBalance] = useState("0");
   const marketData: MarketData = useContext(MarketDataContext);
   const mounted = useIsMounted();
-
-  useUpdateLocalWalletBalances();
+  const appState = useRef(AppState.currentState);
 
   useEffect(() => {
+    const appStateSub = AppState.addEventListener("change", (nextAppState) => {
+      if (
+        appState.current.match(/inactive|background/) &&
+        nextAppState === "active"
+      ) {
+        updateLocalWalletBalances();
+      }
+
+      appState.current = nextAppState;
+    });
+
     updateWallets();
-    const sub = DeviceEventEmitter.addListener(
+    const updateWalletsSub = DeviceEventEmitter.addListener(
       UPDATE_WALLETS_EVENT,
       updateWallets
     );
 
     return () => {
-      sub.remove();
+      updateWalletsSub.remove();
+      appStateSub.remove();
     };
   }, []);
 
