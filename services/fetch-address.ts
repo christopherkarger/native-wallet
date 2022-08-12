@@ -42,8 +42,11 @@ export const fetchAddress = (address: string, name: string) => {
 
   url = url.replace("${address}", address);
 
-  return fetch(url).then((response) =>
-    response.json().then((res) => {
+  return fetch(url)
+    .then((response) => {
+      return response.json();
+    })
+    .then((res) => {
       if (!res?.data) {
         throw new Error("response data missing");
       }
@@ -74,8 +77,7 @@ export const fetchAddress = (address: string, name: string) => {
       return {
         balance,
       };
-    })
-  );
+    });
 };
 
 /**

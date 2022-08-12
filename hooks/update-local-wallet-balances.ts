@@ -2,13 +2,11 @@ import { useEffect } from "react";
 import { DeviceEventEmitter } from "react-native";
 import { UPDATE_WALLETS_EVENT } from "~/constants";
 import {
-  getAddressUpdate,
-  saveAddressUpdate,
   selectLocalDBTableWallets,
   updateItemBalanceToLocalDBTableWallets,
 } from "~/db";
 import { fetchAddress } from "../services/fetch-address";
-import { datesAreEqual, waitTime } from "../services/helper";
+import { waitTime } from "../services/helper";
 
 export enum UPDATE_WALLETS_EVENT_TYPE {
   Update,
@@ -38,12 +36,7 @@ export const useUpdateLocalWalletBalances = async () => {
         );
 
       for (const wallet of allWallets) {
-        const addressUpdate = await localAddressUpdate();
-        if (
-          addressUpdate.count < MAX_FETCHING_ADDRESSES &&
-          wallet.address &&
-          !wallet.isDemoAddress
-        ) {
+        if (wallet.address && !wallet.isDemoAddress) {
           try {
             await waitTime(1000);
             const fetchedAddress = await fetchAddress(
@@ -58,8 +51,6 @@ export const useUpdateLocalWalletBalances = async () => {
           } catch (err) {
             console.error(err);
           }
-
-          await saveAddressUpdate(addressUpdate.date, addressUpdate.count + 1);
         }
       }
 
@@ -72,41 +63,12 @@ export const useUpdateLocalWalletBalances = async () => {
     }
   };
 
-  const localAddressUpdate = async () => {
-    try {
-      const addressUpdate = await getAddressUpdate();
-
-      if (addressUpdate) {
-        const now = new Date();
-        const lastUpdated = new Date(addressUpdate.date);
-        const sameDay = datesAreEqual(lastUpdated, now);
-
-        return {
-          count: sameDay ? addressUpdate.count : 0,
-          date: sameDay ? lastUpdated.getTime() : now.getTime(),
-        };
-      }
-    } catch (err) {
-      console.error(err);
-    }
-
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-
-    return {
-      count: 0,
-      date: today.getTime(),
-    };
-  };
-
   useEffect(() => {
     (async () => {
-      if (!__DEV__) {
-        await update();
-        setInterval(() => {
-          update();
-        }, 4 * 1000 * 60);
-      }
+      await update();
+      setInterval(() => {
+        update();
+      }, 10 * 1000);
     })();
   }, []);
 };
