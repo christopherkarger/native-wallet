@@ -38,6 +38,8 @@ const HomeScreen = (props) => {
   const appState = useRef(AppState.currentState);
 
   useEffect(() => {
+    updateLocalWalletBalances();
+
     const appStateSub = AppState.addEventListener("change", (nextAppState) => {
       if (
         appState.current.match(/inactive|background/) &&

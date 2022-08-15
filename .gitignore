@@ -15,3 +15,5 @@ web-build/
 my-upload-key.keystore
 
 firebase-config.ts
+
+secrets.ts

@@ -37,10 +37,10 @@ export const fetchAddress = (address: string, name: string) => {
   if (configUrls[lowerCaseName]) {
     url = configUrls[lowerCaseName] as string;
   } else {
-    url = url.replace("${name}", lowerCaseName);
+    url = url.replace("{{name}}", lowerCaseName);
   }
 
-  url = url.replace("${address}", address);
+  url = url.replace("{{address}}", address);
 
   return fetch(url)
     .then((response) => {

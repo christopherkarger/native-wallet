@@ -34,8 +34,10 @@ const AddWalletScreen = (props) => {
   const [currency, setCurrency] = useState("");
   const [address, setEnteredAddress] = useState("");
   const [showCryptoModal, setShowCryptoModal] = useState(false);
-  const [existingWallet, setExistingWallet] =
-    useState<{ name: string; id: number }>();
+  const [existingWallet, setExistingWallet] = useState<{
+    name: string;
+    id: number;
+  }>();
   const [fetchingAndSavingAddress, setFetchingAndSavingAddress] =
     useState(false);
   const [connectedToId, setConnectedToId] = useState<number>();
@@ -183,7 +185,7 @@ const AddWalletScreen = (props) => {
       <AlertModal
         show={existingWallet !== undefined}
         headline={Texts.walletExistsHeadline[activeLanguage].replace(
-          "${name}",
+          "{{name}}",
           existingWallet?.name ?? ""
         )}
         subHeadline={Texts.walletExistsSubheadline[activeLanguage]}

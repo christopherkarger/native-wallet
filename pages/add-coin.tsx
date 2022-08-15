@@ -40,8 +40,10 @@ const AddCoinScreen = (props) => {
   const [connectedToId, setConnectedToId] = useState<number>();
   const marketData: MarketData = useContext(MarketDataContext);
   const [showIsNotANumberAlert, setShowIsNotANumberAlert] = useState(false);
-  const [existingWallet, setExistingWallet] =
-    useState<{ name: string; id: number }>();
+  const [existingWallet, setExistingWallet] = useState<{
+    name: string;
+    id: number;
+  }>();
 
   useEffect(() => {
     if (props.route.params && props.route.params.isAddingTo) {
@@ -175,7 +177,7 @@ const AddCoinScreen = (props) => {
       <AlertModal
         show={existingWallet !== undefined}
         headline={Texts.walletExistsHeadline[activeLanguage].replace(
-          "${name}",
+          "{{name}}",
           existingWallet?.name ?? ""
         )}
         subHeadline={Texts.walletExistsSubheadline[activeLanguage]}

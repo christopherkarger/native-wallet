@@ -1,3 +1,5 @@
+import { API_KEY } from "./secrets";
+
 export const SupportedWallets = [
   {
     currency: "BTC",
@@ -89,12 +91,11 @@ export const SupportedCoins = [
 ];
 
 export const SupportedUrls = {
-  main: "https://api.blockchair.com/${name}/dashboards/address/${address}",
-  erc20:
-    "https://api.blockchair.com/ethereum/erc-20/${tokenAddress}/dashboards/address/${address}",
-  cardano: "https://api.blockchair.com/cardano/raw/address/${address}",
-  ripple: "https://api.blockchair.com/ripple/raw/account/${address}",
+  main: `https://api.blockchair.com/{{name}}/dashboards/address/{{address}}?key=${API_KEY}`,
+  erc20: `https://api.blockchair.com/ethereum/erc-20/?{tokenAddress}/dashboards/address/{{address}}?key=${API_KEY}`,
+  cardano: `https://api.blockchair.com/cardano/raw/address/{{address}}?key=${API_KEY}`,
+  ripple: `https://api.blockchair.com/ripple/raw/account/{{address}}?key=${API_KEY}}`,
   avalancheX: "https://api.avax.network/ext/bc/X",
   solana: "https://api.mainnet-beta.solana.com",
-  vechain: "https://sync-mainnet.vechain.org/accounts/${address}",
+  vechain: "https://sync-mainnet.vechain.org/accounts/{{address}}",
 };

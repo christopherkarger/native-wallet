@@ -157,8 +157,8 @@ export const Texts = {
     en: "supported cryptocurrencies",
   },
   walletExistsHeadline: {
-    de: "Du hast schon ein ${name} wallet",
-    en: "You already have a ${name} wallet",
+    de: "Du hast schon ein {{name}} wallet",
+    en: "You already have a {{name}} wallet",
   },
   walletExistsSubheadline: {
     de: "Möchtest du ein Neues anlegen, oder zum bestehenden hinzufügen?",

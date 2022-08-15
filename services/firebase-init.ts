@@ -1,5 +1,5 @@
 import firebase from "firebase";
-import { FIREBASE_CONFIG } from "~/firebase-config";
+import { FIREBASE_CONFIG } from "./firebase-config";
 
 export type firebaseDB = firebase.database.Reference;
 
