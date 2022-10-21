@@ -1,3 +1,5 @@
+import { API_KEY } from "./secrets";
+
 export const SupportedWallets = [
   {
     currency: "BTC",
@@ -82,7 +84,6 @@ export const SupportedCoins = [
     name: "Fantom",
   },
 ];
-const API_KEY = "A___OKb7vvS0uZtCCnefAiMSVMPKgE0P";
 export const SupportedUrls = {
   main: `https://api.blockchair.com/{{name}}/dashboards/address/{{address}}?key=${API_KEY}`,
   erc20: `https://api.blockchair.com/ethereum/erc-20/?{tokenAddress}/dashboards/address/{{address}}?key=${API_KEY}`,
