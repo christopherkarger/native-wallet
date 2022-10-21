@@ -56,8 +56,10 @@ const SingleWalletScreen = (props) => {
 
   const [qrCodeModalVisible, setQrCodeModalVisible] = useState(false);
   const [qrCodeAdress, setQrCodeAdress] = useState("");
-  const [toDeleteWallet, setToDeleteWallet] =
-    useState<{ item: Wallet; index: number }>();
+  const [toDeleteWallet, setToDeleteWallet] = useState<{
+    item: Wallet;
+    index: number;
+  }>();
 
   useEffect(() => {
     const subscription = DeviceEventEmitter.addListener(
@@ -161,8 +163,8 @@ const SingleWalletScreen = (props) => {
             <View style={styles.wrapper}>
               <AppText>{Texts.addedAt[activeLanguage]}:</AppText>
               <DateTime
-                style={styles.addedInfo}
                 date={listProps.item.addedAt}
+                style={styles.addedInfo}
                 withTime={true}
               ></DateTime>
             </View>

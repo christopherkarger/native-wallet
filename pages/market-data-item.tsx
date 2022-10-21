@@ -1,6 +1,12 @@
 import * as shape from "d3-shape";
 import React, { useContext, useEffect, useMemo, useState } from "react";
-import { Dimensions, Image, StyleSheet, View } from "react-native";
+import {
+  Dimensions,
+  Image,
+  ImageSourcePropType,
+  StyleSheet,
+  View,
+} from "react-native";
 import { FlatList, TouchableOpacity } from "react-native-gesture-handler";
 import { LineChart } from "react-native-svg-charts";
 import { DateTime } from "~/components/date-time";
@@ -22,6 +28,7 @@ import {
   IMarketDataItemData,
   MarketData,
 } from "~/models/market-data";
+import { INavigation } from "~/models/models";
 import {
   formatNumber,
   formatNumberWithCurrency,
@@ -35,7 +42,10 @@ enum ChartView {
   week,
 }
 
-const MarketdataItem = (props) => {
+const MarketdataItem = (props: {
+  route: { params: { item: any; name: string; iconPath: ImageSourcePropType } };
+  navigation: INavigation;
+}) => {
   if (!props.route?.params?.item) {
     throw new Error("maket data item not provided");
   }
@@ -91,7 +101,9 @@ const MarketdataItem = (props) => {
     }
   }, [marketData, activeCurrency]);
 
-  const renderedListItem = (listProps) => {
+  const renderedListItem = (listProps: {
+    item: { date: number; price: number };
+  }) => {
     return (
       <View style={styles.chartDataListItem}>
         <DateTime

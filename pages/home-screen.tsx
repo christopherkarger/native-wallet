@@ -16,6 +16,7 @@ import {
 } from "~/models/context";
 import { CurrencyIcon } from "~/models/currency-icon";
 import { MarketData } from "~/models/market-data";
+import { INavigation } from "~/models/models";
 import { WalletWrapper } from "~/models/wallet-wrapper";
 import { calcTotalBalance } from "~/services/calc-balance";
 import { formatNumberWithCurrency } from "~/services/format-number";
@@ -26,7 +27,7 @@ import AppText from "../components/text";
 import WalletList from "../components/wallet-list";
 import { Colors, Fonts, PathNames, UPDATE_WALLETS_EVENT } from "../constants";
 
-const HomeScreen = (props) => {
+const HomeScreen = (props: { navigation: INavigation }) => {
   const euroPrice = useContext(EURPriceContext);
   const [activeLanguage] = useContext(ActiveLanguageContext);
   const [activeCurrency] = useContext(ActiveCurrencyContext);

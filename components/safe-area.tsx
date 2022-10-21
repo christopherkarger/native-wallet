@@ -1,9 +1,10 @@
-import React from "react";
+import React, { ReactNode } from "react";
 import { SafeAreaView, StyleSheet } from "react-native";
 import { SafeAreaView as DefaultSaveAreaView } from "react-native-safe-area-context";
 import { isIOS } from "~/constants";
+import { IStyle } from "~/models/models";
 
-const SafeArea = (props) => {
+const SafeArea = (props: { children: ReactNode; style: IStyle }) => {
   if (isIOS) {
     return (
       <SafeAreaView style={[styles.areaView, props.style]}>

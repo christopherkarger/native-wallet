@@ -1,9 +1,9 @@
-import AppLoading from "expo-app-loading";
 import * as Font from "expo-font";
 import * as Localization from "expo-localization";
+import * as SplashScreen from "expo-splash-screen";
 import { StatusBar } from "expo-status-bar";
-import React, { useEffect, useState } from "react";
-import { LogBox, StyleSheet } from "react-native";
+import React, { useCallback, useEffect, useState } from "react";
+import { LogBox, StyleSheet, View } from "react-native";
 import { EURO_STABLECOIN, Fonts } from "./constants";
 import {
   getLocalStorageMarketData,
@@ -38,7 +38,13 @@ export default function App() {
   const [activeLanguage, setActiveLanguage] = useState(DefaultLanguage);
   const [activeCurrency, setActiveCurrency] = useState(DefaultCurrency);
 
-  const preload = () => {
+  const onLayoutRootView = useCallback(async () => {
+    if (appIsReady) {
+      await SplashScreen.hideAsync();
+    }
+  }, [appIsReady]);
+
+  const preload = async () => {
     return Promise.all([
       getSettings(),
       Font.loadAsync({
@@ -48,10 +54,12 @@ export default function App() {
         "karla-bold": require("./assets/fonts/Karla-Bold.ttf"),
       }),
     ]).then(([localSettings]) => {
+      let activeDeviceLanguage: SupportedLanguages = SupportedLanguages.EN;
+
       if (localSettings) {
         // If saved language is german
         if (localSettings.activeLanguage === SupportedLanguages.DE) {
-          setActiveLanguage(SupportedLanguages.DE);
+          activeDeviceLanguage = SupportedLanguages.DE;
         }
 
         if (localSettings.activeCurrency === SupportedCurrencies.EUR) {
@@ -71,22 +79,24 @@ export default function App() {
 
           if (isGerman) {
             // If there are no saved settings and the device language is german and currebcy to EUR
-            setActiveLanguage(SupportedLanguages.DE);
+            activeDeviceLanguage = SupportedLanguages.DE;
             setActiveCurrency(SupportedCurrencies.EUR);
           }
-
-          saveSettingsActiveLanguage(
-            isGerman ? SupportedLanguages.DE : SupportedLanguages.EN
-          );
+          saveSettingsActiveLanguage(activeDeviceLanguage);
           saveSettingsActiveCurrency(
             isGerman ? SupportedCurrencies.EUR : SupportedCurrencies.USD
           );
         })();
       }
+
+      setActiveLanguage(activeDeviceLanguage);
+      registerNumeralFormat(activeDeviceLanguage);
+      setAppIsReady(true);
     });
   };
 
   useEffect(() => {
+    preload();
     let dbConnection: firebaseDB | undefined;
     (async () => {
       try {
@@ -124,32 +134,23 @@ export default function App() {
     };
   }, []);
 
-  if (!appIsReady) {
-    return (
-      <AppLoading
-        startAsync={preload}
-        onFinish={() => {
-          registerNumeralFormat(activeLanguage);
-          setAppIsReady(true);
-        }}
-        onError={console.warn}
-      />
-    );
-  }
-
   return (
-    <ActiveCurrencyContext.Provider value={[activeCurrency, setActiveCurrency]}>
-      <EURPriceContext.Provider value={USDPrice}>
-        <ActiveLanguageContext.Provider
-          value={[activeLanguage, setActiveLanguage]}
-        >
-          <MarketDataContext.Provider value={marketData}>
-            <StatusBar style={statusBarStyle} />
-            <Main />
-          </MarketDataContext.Provider>
-        </ActiveLanguageContext.Provider>
-      </EURPriceContext.Provider>
-    </ActiveCurrencyContext.Provider>
+    <View style={{ flex: 1 }} onLayout={onLayoutRootView}>
+      <ActiveCurrencyContext.Provider
+        value={[activeCurrency, setActiveCurrency]}
+      >
+        <EURPriceContext.Provider value={USDPrice}>
+          <ActiveLanguageContext.Provider
+            value={[activeLanguage, setActiveLanguage]}
+          >
+            <MarketDataContext.Provider value={marketData}>
+              <StatusBar style={statusBarStyle} />
+              <Main />
+            </MarketDataContext.Provider>
+          </ActiveLanguageContext.Provider>
+        </EURPriceContext.Provider>
+      </ActiveCurrencyContext.Provider>
+    </View>
   );
 }
 

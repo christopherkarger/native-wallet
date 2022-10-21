@@ -1,9 +1,9 @@
 import { LinearGradient } from "expo-linear-gradient";
-import React from "react";
+import React, { ReactNode } from "react";
 import { StyleSheet, View } from "react-native";
 import { Colors } from "~/constants";
 
-const GradientView = (props) => {
+const GradientView = (props: { children: ReactNode }) => {
   return (
     <View style={styles.container}>
       <LinearGradient

@@ -1,7 +1,7 @@
 import { SupportedUrls } from "~/config";
 import { SupportedCryptos } from "~/models/config";
 
-export const fetchERC20 = (address: string, name: string) => {
+export const fetchERC20 = async (address: string, name: string) => {
   let url = SupportedUrls.erc20.replace("${address}", address);
   const tokenPlaceholder = "${tokenAddress}";
   const ETHEREUM_UNIT = 1000000000000000000;

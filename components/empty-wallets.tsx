@@ -3,13 +3,17 @@ import { Image, StyleSheet, View } from "react-native";
 import { SupportedWallets } from "~/config";
 import { insertItemToLocalDBTableWallets } from "~/db";
 import { ActiveLanguageContext } from "~/models/context";
+import { INavigation } from "~/models/models";
 import { Texts } from "~/texts";
 import { Fonts, PathNames } from "../constants";
 import Button from "./button";
 import AppText from "./text";
 import { TextButton } from "./text-button";
 
-const EmptyWallets = (props) => {
+const EmptyWallets = (props: {
+  onDemoCreated: () => void;
+  navigation: INavigation;
+}) => {
   const [activeLanguage] = useContext(ActiveLanguageContext);
   const [creatingDemo, setCreatingDemo] = useState(false);
 

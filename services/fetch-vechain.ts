@@ -1,6 +1,6 @@
 import { SupportedUrls } from "~/config";
 
-export const fetchVechain = (address: string, name: string) => {
+export const fetchVechain = async (address: string, name: string) => {
   const VECHAIN_UNIT = 1000000000000000000;
 
   return fetch(SupportedUrls.vechain.replace("${address}", address))

@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useMemo, useState } from "react";
+import React, { useContext, useMemo } from "react";
 import {
   FlatList,
   Image,
@@ -14,34 +14,34 @@ import { CryptoIcon } from "~/models/crypto-icon";
 import { MarketData } from "~/models/market-data";
 import { randomString } from "~/services/helper";
 
-interface IModalData {
+export interface IModalData {
   name: string;
   currency: string;
   info?: string;
 }
 
-const AddCryptoModal = (props) => {
+const AddCryptoModal = (props: {
+  data: IModalData[];
+  onSelect: (selected: { name: string; currency: string }) => void;
+  show: boolean;
+  onClose: () => void;
+  showCryptoInfo?: boolean;
+}) => {
   const marketData: MarketData = useContext(MarketDataContext);
-  const [modalData, setModalData] = useState<IModalData[]>();
+  const modalData = useMemo(() => {
+    return props.data.sort((a, b) => {
+      return (
+        market.findIndex((m) => m.currency === a.currency) -
+        market.findIndex((m) => m.currency === b.currency)
+      );
+    });
+  }, []);
+  const market = marketData.itemsByMarketCap.map((m) => ({
+    currency: m.data.currency,
+    rank: m.data.rank,
+  }));
 
-  useEffect(() => {
-    const modalData = props.data as IModalData[];
-    const market = marketData.itemsByMarketCap.map((m) => ({
-      currency: m.data.currency,
-      rank: m.data.rank,
-    }));
-
-    setModalData(
-      modalData.sort((a, b) => {
-        return (
-          market.findIndex((m) => m.currency === a.currency) -
-          market.findIndex((m) => m.currency === b.currency)
-        );
-      })
-    );
-  }, [props.data]);
-
-  const renderedListItem = (listProps) => {
+  const renderedListItem = (listProps: { item: IModalData }) => {
     const icon = new CryptoIcon(listProps.item.name);
     return (
       <TouchableOpacity

@@ -4,7 +4,16 @@ import { Colors, Fonts } from "~/constants";
 import Modal from "./modal";
 import AppText from "./text";
 
-const AlertModal = (props) => {
+const AlertModal = (props: {
+  show: boolean;
+  headline: string;
+  onConfirm: () => void;
+  onCancel: () => void;
+  cancelText?: string;
+  highlightButton?: number;
+  subHeadline?: string;
+  confirmText?: string;
+}) => {
   return (
     <Modal style={styles.modalWrapper} show={props.show} onClose={() => {}}>
       <View style={styles.inner}>

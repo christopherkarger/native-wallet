@@ -73,11 +73,11 @@ export const insertItemToLocalDBTableWallets = (x: IWalletInsertInput) => {
           x.balance,
           x.isCoinWallet ? 1 : 0,
           x.isDemoAddress ? 1 : 0,
-          x.addedAt,
-          x.coinPrice,
-          x.address,
-          x.lastFetched,
-          x.connectedToId,
+          x.addedAt ?? null,
+          x.coinPrice ?? null,
+          x.address ?? null,
+          x.lastFetched ?? null,
+          x.connectedToId ?? null,
         ],
         (_, result) => {
           resolve(<ISQLResult>result);

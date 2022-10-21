@@ -8,9 +8,10 @@ import AppText from "~/components/text";
 import { SupportedCoins, SupportedWallets } from "~/config";
 import { Colors, PathNames } from "~/constants";
 import { ActiveLanguageContext } from "~/models/context";
+import { INavigation } from "~/models/models";
 import { Texts } from "~/texts";
 
-const AddAssetScreen = (props) => {
+const AddAssetScreen = (props: { navigation: INavigation }) => {
   const [activeLanguage] = useContext(ActiveLanguageContext);
   return (
     <GradientView>

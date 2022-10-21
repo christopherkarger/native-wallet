@@ -3,9 +3,13 @@ import { BarCodeScanner } from "expo-barcode-scanner";
 import React, { useEffect, useState } from "react";
 import { Dimensions, StyleSheet, TouchableOpacity, View } from "react-native";
 import { Colors, PathNames } from "~/constants";
+import { INavigation } from "~/models/models";
 import SafeArea from "./safe-area";
 
-const QrCodeScanner = (props) => {
+const QrCodeScanner = (props: {
+  navigation: INavigation;
+  disabled?: boolean;
+}) => {
   const [hasPermission, setHasPermission] = useState(false);
   const [scanned, setScanned] = useState(false);
 
@@ -21,11 +25,11 @@ const QrCodeScanner = (props) => {
     })();
   }, []);
 
-  const handleBarCodeScanned = ({ data }) => {
-    if (data) {
+  const handleBarCodeScanned = (barcodeProps: { data: string }) => {
+    if (barcodeProps.data) {
       setScanned(true);
       props.navigation.navigate(PathNames.addWallet, {
-        address: data,
+        address: barcodeProps.data,
       });
     }
   };
@@ -37,7 +41,7 @@ const QrCodeScanner = (props) => {
           onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
           style={[StyleSheet.absoluteFill, styles.scanner]}
         >
-          <SafeArea>
+          <SafeArea style={{ flex: 1 }}>
             <View style={styles.overlay}></View>
             <TouchableOpacity
               style={styles.closeButton}

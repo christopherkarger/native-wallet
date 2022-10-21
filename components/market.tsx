@@ -1,5 +1,5 @@
 import * as shape from "d3-shape";
-import React, { useContext, useMemo } from "react";
+import React, { ReactNode, useContext, useMemo } from "react";
 import {
   Dimensions,
   FlatList,
@@ -17,6 +17,7 @@ import {
 import { CryptoIcon } from "~/models/crypto-icon";
 import { CurrencyIcon } from "~/models/currency-icon";
 import { MarketData } from "~/models/market-data";
+import { INavigation } from "~/models/models";
 import {
   formatNumber,
   formatNumberWithCurrency,
@@ -27,13 +28,27 @@ import { Colors, Fonts, PathNames } from "../constants";
 import { DateTime } from "./date-time";
 import AppText from "./text";
 
-const Market = (props) => {
+const Market = (props: {
+  data: MarketData;
+  navigation: INavigation;
+  ListHeaderComponent: ReactNode;
+}) => {
   const marketData = props.data as MarketData;
   const euroPrice = useContext(EURPriceContext);
   const [activeLanguage] = useContext(ActiveLanguageContext);
   const [activeCurrency] = useContext(ActiveCurrencyContext);
 
-  const renderedListItem = (listProps) => {
+  const renderedListItem = (listProps: {
+    item: {
+      name: string;
+      data: {
+        lastDayHistory: { date: number; price: number }[];
+        currency: string;
+        price: number;
+      };
+    };
+    index: number;
+  }) => {
     const icon = new CryptoIcon(listProps.item.name);
     const chartData = listProps.item.data.lastDayHistory.map((h) => h.price);
     const positiveTrend = chartData[0] < chartData[chartData.length - 1];
@@ -134,7 +149,7 @@ const Market = (props) => {
               {marketData?.items[0]?.data.lastFetched && (
                 <DateTime
                   style={styles.lastFetched}
-                  date={marketData.items[0].data.lastFetched}
+                  date={`${marketData.items[0].data.lastFetched}`}
                   withTime={true}
                 ></DateTime>
               )}

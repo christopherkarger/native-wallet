@@ -29,7 +29,17 @@ import { waitTime } from "~/services/helper";
 import { Texts } from "~/texts";
 import SubPageHeader from "../components/sub-page-header";
 
-const AddCoinScreen = (props) => {
+const AddCoinScreen = (props: {
+  route: {
+    params: {
+      isAddingTo: boolean;
+      id: React.SetStateAction<number | undefined>;
+      name: React.SetStateAction<string>;
+      currency: React.SetStateAction<string>;
+    };
+  };
+  navigation: { navigate: (arg0: string) => void; goBack: () => void };
+}) => {
   const [activeLanguage] = useContext(ActiveLanguageContext);
   const mounted = useIsMounted();
   const [nameChangeAllowed, setNameChangeAllowed] = useState(true);

@@ -1,5 +1,5 @@
 import { BlurView } from "expo-blur";
-import React, { useEffect } from "react";
+import React, { ReactNode, useEffect } from "react";
 import {
   Keyboard,
   Modal as ExpoModal,
@@ -7,8 +7,14 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+import { IStyle } from "~/models/models";
 
-const Modal = (props) => {
+const Modal = (props: {
+  onClose: () => void;
+  children: ReactNode;
+  style?: IStyle;
+  show?: boolean;
+}) => {
   useEffect(() => {
     Keyboard.dismiss();
   }, [props.show]);

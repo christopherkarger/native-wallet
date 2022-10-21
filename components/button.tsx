@@ -1,10 +1,20 @@
 import { LinearGradient } from "expo-linear-gradient";
-import React from "react";
+import React, { ReactNode } from "react";
 import { StyleSheet, TouchableOpacity, View } from "react-native";
 import { Colors, Fonts } from "~/constants";
+import { IStyle } from "~/models/models";
 import AppText from "./text";
 
-const Button = (props) => {
+const Button = (props: {
+  onPress: () => void;
+  gradientStartColor?: string;
+  gradientEndColor?: string;
+  disabled?: boolean;
+  style?: IStyle;
+  textStyle?: IStyle;
+  text?: string;
+  children?: ReactNode;
+}) => {
   return (
     <View style={styles.buttonWrapper}>
       <TouchableOpacity

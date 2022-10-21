@@ -11,7 +11,7 @@ export const calcPercentage = (prev: number, current: number): number => {
 };
 
 export const randomString = (index = 0) => {
-  return Math.random().toString(36).substr(2, 5) + index.toString();
+  return Math.random().toString(36).substring(2, 5) + index.toString();
 };
 
 export const datesAreEqual = (date1: Date, date2: Date) => {

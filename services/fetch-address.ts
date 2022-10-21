@@ -10,7 +10,7 @@ const RIPPLE_UNIT = 1000000;
 const ETHEREUM_UNIT = 1000000000000000000;
 const DEFAULT_UNIT = 100000000;
 
-export const fetchAddress = (address: string, name: string) => {
+export const fetchAddress = async (address: string, name: string) => {
   if (name === SupportedCryptos.Avalanche) {
     return fetchAvalanche(address, name);
   }

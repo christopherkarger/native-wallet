@@ -22,11 +22,24 @@ import { useIsMounted } from "~/hooks/mounted";
 import { UPDATE_WALLETS_EVENT_TYPE } from "~/hooks/update-local-wallet-balances";
 import { ActiveLanguageContext, MarketDataContext } from "~/models/context";
 import { MarketData } from "~/models/market-data";
+import { INavigation } from "~/models/models";
 import { fetchAddress } from "~/services/fetch-address";
 import { Texts } from "~/texts";
 import SubPageHeader from "../components/sub-page-header";
 
-const AddWalletScreen = (props) => {
+const AddWalletScreen = (props: {
+  route: {
+    params: {
+      id: number;
+      address: string;
+      name: string;
+      currency: string;
+      isAddingTo: boolean;
+    };
+  };
+  navigation: INavigation;
+  disabled: boolean | null | undefined;
+}) => {
   const [activeLanguage] = useContext(ActiveLanguageContext);
   const mounted = useIsMounted();
   const [nameChangeAllowed, setNameChangeAllowed] = useState(true);

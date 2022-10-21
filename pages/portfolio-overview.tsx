@@ -1,5 +1,11 @@
 import React, { useContext, useEffect, useState } from "react";
-import { DeviceEventEmitter, FlatList, StyleSheet, View } from "react-native";
+import {
+  DeviceEventEmitter,
+  FlatList,
+  ListRenderItemInfo,
+  StyleSheet,
+  View,
+} from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { PieChart } from "react-native-svg-charts";
 import GradientView from "~/components/gradient-view";
@@ -17,6 +23,7 @@ import {
 } from "~/models/context";
 import { CurrencyIcon } from "~/models/currency-icon";
 import { MarketData } from "~/models/market-data";
+import { INavigation } from "~/models/models";
 import { WalletWrapper } from "~/models/wallet-wrapper";
 import { calcTotalBalance } from "~/services/calc-balance";
 import {
@@ -27,15 +34,27 @@ import { getWalletWrapper } from "~/services/getWalletWrapper";
 import { randomString } from "~/services/helper";
 import { Texts } from "~/texts";
 
-const PortfolioOverview = (props) => {
+interface IChartData {
+  value: number;
+  svg: {
+    fill: string;
+    onPress: () => void;
+  };
+  key: string;
+}
+
+const PortfolioOverview = (props: {
+  route: { params: WalletWrapper[] };
+  navigation: INavigation;
+}) => {
   if (!props.route?.params) {
     throw new Error("wallet data not provided");
   }
 
   const [activeLanguage] = useContext(ActiveLanguageContext);
   const [activeCurrency] = useContext(ActiveCurrencyContext);
-  const [chartData, setChartData] = useState<any[]>([]);
-  const [listData, setListData] = useState<any[]>([]);
+  const [chartData, setChartData] = useState<IChartData[]>([]);
+  const [listData, setListData] = useState<WalletWrapper[]>([]);
   const [allWalletWrapper, setAllWalletWrapper] = useState(
     props.route?.params as WalletWrapper[]
   );
@@ -61,7 +80,7 @@ const PortfolioOverview = (props) => {
 
   useEffect(() => {
     const portfolioBalance = calcTotalBalance(marketData, allWalletWrapper);
-    const data: any[] = [];
+    const data: IChartData[] = [];
     allWalletWrapper.forEach((w, i) => {
       const itemBalance = calcTotalBalance(marketData, [w]);
       const percentage = (itemBalance / portfolioBalance) * 100;
@@ -90,7 +109,7 @@ const PortfolioOverview = (props) => {
     }
   }, [marketData, allWalletWrapper]);
 
-  const RenderedListItem = (listProps) => {
+  const RenderedListItem = (listProps: ListRenderItemInfo<WalletWrapper>) => {
     const walletWrapper = listProps.item as WalletWrapper;
     const itemBalance = calcTotalBalance(marketData, [walletWrapper]);
     const portfolioBalance = calcTotalBalance(marketData, allWalletWrapper);

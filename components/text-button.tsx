@@ -1,8 +1,21 @@
-import React from "react";
-import { StyleSheet, TouchableOpacity, View } from "react-native";
+import React, { ReactNode } from "react";
+import {
+  GestureResponderEvent,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+} from "react-native";
+import { IStyle } from "~/models/models";
 import AppText from "./text";
 
-export const TextButton = (props) => {
+export const TextButton = (props: {
+  disabled?: boolean;
+  onPress: (e: GestureResponderEvent) => void;
+  style?: IStyle;
+  text?: string;
+  textStyle?: IStyle;
+  children?: ReactNode;
+}) => {
   const Button = (
     <TouchableOpacity
       disabled={props.disabled}

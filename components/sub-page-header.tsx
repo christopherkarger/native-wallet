@@ -1,10 +1,15 @@
 import { MaterialIcons } from "@expo/vector-icons";
-import React from "react";
+import React, { ReactNode } from "react";
 import { StyleSheet, TouchableOpacity, View } from "react-native";
+import { INavigation, IStyle } from "~/models/models";
 import { Colors } from "../constants";
 import AppText from "./text";
 
-const SubPageHeader = (props) => {
+const SubPageHeader = (props: {
+  navigation: INavigation;
+  style: IStyle;
+  children: ReactNode;
+}) => {
   return (
     <View style={{ ...styles.header, ...props.style }}>
       <TouchableOpacity

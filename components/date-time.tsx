@@ -1,10 +1,16 @@
 import React, { useContext } from "react";
 import { ActiveLanguageContext, SupportedLanguages } from "~/models/context";
+import { IStyle } from "~/models/models";
 import { datesAreEqual } from "~/services/helper";
 import { Texts } from "~/texts";
 import AppText from "./text";
 
-export const DateTime = (props) => {
+export const DateTime = (props: {
+  date: string | number;
+  style?: IStyle;
+  hourView?: boolean;
+  withTime?: boolean;
+}) => {
   const [activeLanguage] = useContext(ActiveLanguageContext);
   let d = new Date(props.date);
   const todayText = Texts.today[activeLanguage];
@@ -17,13 +23,16 @@ export const DateTime = (props) => {
   if (!d.getTime()) {
     d = new Date(+props.date);
     if (!d.getTime()) {
-      d = new Date(props.date.split(" ")[0]);
-      const time = props.date.split(" ")[1];
-      if (time) {
-        const timeArr = time.split(":");
-        if (timeArr[0] && timeArr[1]) {
-          d.setUTCHours(timeArr[0]);
-          d.setUTCMinutes(timeArr[1]);
+      if (typeof props.date === "string") {
+        d = new Date(props.date.split(" ")[0]);
+        const time = props.date.split(" ")[1];
+
+        if (time) {
+          const timeArr = time.split(":");
+          if (timeArr[0] && timeArr[1]) {
+            d.setUTCHours(+timeArr[0]);
+            d.setUTCMinutes(+timeArr[1]);
+          }
         }
       }
 

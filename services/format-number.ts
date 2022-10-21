@@ -41,10 +41,7 @@ export const registerNumeralFormat = (language: string) => {
         symbol: "€",
       },
     });
-  } catch (err) {
-    console.error(err);
-    console.error("not able to register locale");
-  }
+  } catch (err) {}
 
   switchNumeralLocal(language);
 };

@@ -4,7 +4,11 @@ import SvgQRCode from "react-native-qrcode-svg";
 import { Colors } from "~/constants";
 import Modal from "./modal";
 
-const QrCodeModal = (props) => {
+const QrCodeModal = (props: {
+  show: boolean;
+  onClose: () => void;
+  address: string;
+}) => {
   return (
     <Modal show={props.show} onClose={() => props.onClose()}>
       <View style={styles.codeWrapper}>
