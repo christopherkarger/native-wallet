@@ -94,7 +94,7 @@ const HomeScreen = (props: { navigation: INavigation }) => {
 
   return (
     <GradientView>
-      <SafeArea>
+      <SafeArea style={{ flex: 1 }}>
         {walletsData.length === 0 && (
           <EmptyWallets
             navigation={props.navigation}

@@ -44,19 +44,16 @@ const Main = () => {
           }}
         >
           <Stack.Screen name={PathNames.home} component={BottomTabs} />
-
           <Stack.Screen name={PathNames.addAsset} component={AddAssetScreen} />
           <Stack.Screen
             name={PathNames.addWallet}
             component={AddWalletScreen}
           />
           <Stack.Screen name={PathNames.addCoin} component={AddCoinScreen} />
-
           <Stack.Screen
             name={PathNames.portfolioOverview}
             component={PortfolioOverview}
           />
-
           <Stack.Screen
             name={PathNames.marketDataItem}
             component={MarketdataItem}
@@ -65,7 +62,6 @@ const Main = () => {
             name={PathNames.singleWallet}
             component={SingleWalletScreen}
           />
-
           <Stack.Screen name={PathNames.scanCode} component={QrCodeScanner} />
         </Stack.Navigator>
       </NavigationContainer>

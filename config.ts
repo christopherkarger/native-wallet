@@ -69,11 +69,6 @@ export const SupportedCoins = [
     currency: "ALGO",
     name: "Algorand",
   },
-
-  {
-    currency: "LUNA",
-    name: "Terra",
-  },
   {
     currency: "SAND",
     name: "The Sandbox",

@@ -28,6 +28,10 @@ const AddCryptoModal = (props: {
   showCryptoInfo?: boolean;
 }) => {
   const marketData: MarketData = useContext(MarketDataContext);
+  const market = marketData.itemsByMarketCap.map((m) => ({
+    currency: m.data.currency,
+    rank: m.data.rank,
+  }));
   const modalData = useMemo(() => {
     return props.data.sort((a, b) => {
       return (
@@ -36,10 +40,6 @@ const AddCryptoModal = (props: {
       );
     });
   }, []);
-  const market = marketData.itemsByMarketCap.map((m) => ({
-    currency: m.data.currency,
-    rank: m.data.rank,
-  }));
 
   const renderedListItem = (listProps: { item: IModalData }) => {
     const icon = new CryptoIcon(listProps.item.name);

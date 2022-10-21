@@ -3,7 +3,7 @@ import React, { ReactNode } from "react";
 import { StyleSheet, View } from "react-native";
 import { Colors } from "~/constants";
 
-const GradientView = (props: { children: ReactNode }) => {
+const GradientView = (props: { children?: ReactNode }) => {
   return (
     <View style={styles.container}>
       <LinearGradient
