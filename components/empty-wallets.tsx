@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useCallback, useContext, useState } from "react";
 import { Image, StyleSheet, View } from "react-native";
 import { SupportedWallets } from "~/config";
 import { insertItemToLocalDBTableWallets } from "~/db";
@@ -17,32 +17,33 @@ const EmptyWallets = (props: {
   const [activeLanguage] = useContext(ActiveLanguageContext);
   const [creatingDemo, setCreatingDemo] = useState(false);
 
-  const createDemo = async () => {
-    if (creatingDemo) {
-      return;
-    }
-    setCreatingDemo(true);
-    for (const coin of SupportedWallets) {
-      try {
-        const amount = Math.random() * 10;
-        await insertItemToLocalDBTableWallets({
-          name: coin.name,
-          currency: coin.currency,
-          balance: +amount.toFixed(2),
-          isCoinWallet: false,
-          isDemoAddress: true,
-          lastFetched: new Date().getTime(),
-          address: `0xD3dcA6c100515a5D7941afDd2efcA21903ac8299`,
-        });
-      } catch (err) {
-        console.error(err);
-        setCreatingDemo(false);
+  const createDemo = useCallback(() => {
+    (async () => {
+      if (creatingDemo) {
+        return;
       }
-    }
+      setCreatingDemo(true);
+      for (const coin of SupportedWallets) {
+        try {
+          const amount = Math.random() * 10;
+          await insertItemToLocalDBTableWallets({
+            name: coin.name,
+            currency: coin.currency,
+            balance: +amount.toFixed(2),
+            isCoinWallet: false,
+            isDemoAddress: true,
+            lastFetched: new Date().getTime(),
+            address: `0xD3dcA6c100515a5D7941afDd2efcA21903ac8299`,
+          });
+        } catch (err) {
+          console.error(err);
+        }
+      }
 
-    setCreatingDemo(false);
-    props.onDemoCreated();
-  };
+      setCreatingDemo(false);
+      props.onDemoCreated();
+    })();
+  }, [creatingDemo]);
 
   return (
     <View style={styles.wrapper}>
@@ -67,7 +68,7 @@ const EmptyWallets = (props: {
           style={styles.demoLink}
           textStyle={styles.demoLinkText}
           text={Texts.demoAccount[activeLanguage]}
-          onPress={() => createDemo()}
+          onPress={createDemo}
         ></TextButton>
       </View>
     </View>

@@ -28,11 +28,12 @@ const AddCryptoModal = (props: {
   showCryptoInfo?: boolean;
 }) => {
   const marketData: MarketData = useContext(MarketDataContext);
-  const market = marketData.itemsByMarketCap.map((m) => ({
-    currency: m.data.currency,
-    rank: m.data.rank,
-  }));
   const modalData = useMemo(() => {
+    const market = marketData.itemsByMarketCap.map((m) => ({
+      currency: m.data.currency,
+      rank: m.data.rank,
+    }));
+
     return props.data.sort((a, b) => {
       return (
         market.findIndex((m) => m.currency === a.currency) -
