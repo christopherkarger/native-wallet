@@ -21,12 +21,13 @@ import {
   SupportedCurrencies,
   SupportedLanguages,
 } from "~/models/context";
+import { INavigation } from "~/models/models";
 import { switchNumeralLocal } from "~/services/format-number";
 import { waitTime } from "~/services/helper";
 import { Texts } from "~/texts";
 import Toggle from "../components/toggle";
 
-const SettingsScreen = (props) => {
+const SettingsScreen = (props: { navigation: INavigation }) => {
   const [activeLanguage, setActiveLanguage] = useContext(ActiveLanguageContext);
   const [activeCurrency, setActiveCurrency] = useContext(ActiveCurrencyContext);
   const [isDemoAccount, setIsDemoAccount] = useState(false);
@@ -96,7 +97,6 @@ const SettingsScreen = (props) => {
               {Texts.language[activeLanguage]}
             </AppText>
             <Toggle
-              headline={Texts.language[activeLanguage]}
               text={["De", "En"]}
               active={[
                 activeLanguage === SupportedLanguages.DE,
@@ -119,7 +119,6 @@ const SettingsScreen = (props) => {
               {Texts.currency[activeLanguage]}
             </AppText>
             <Toggle
-              headline={Texts.language[activeLanguage]}
               text={["US-Dollar", "Euro"]}
               active={[
                 activeCurrency === SupportedCurrencies.USD,

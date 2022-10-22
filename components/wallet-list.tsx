@@ -1,10 +1,12 @@
 import React, { useEffect, useMemo } from "react";
 import { DeviceEventEmitter, FlatList, StyleSheet } from "react-native";
 import { UPDATE_WALLETS_EVENT } from "~/constants";
+import { INavigation } from "~/models/models";
+import { WalletWrapper } from "~/models/wallet-wrapper";
 import { randomString } from "~/services/helper";
 import WalletCard from "./wallet-card";
 
-const Wallets = (props) => {
+const Wallets = (props: { navigation: INavigation; data: WalletWrapper[] }) => {
   let flatListRef: FlatList<any> | null;
 
   useEffect(() => {
@@ -20,7 +22,10 @@ const Wallets = (props) => {
     };
   }, []);
 
-  const renderedListItem = (listProps) => (
+  const renderedListItem = (listProps: {
+    item: WalletWrapper;
+    index: number;
+  }) => (
     <WalletCard
       navigation={props.navigation}
       data={listProps.item}

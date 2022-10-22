@@ -1,25 +1,18 @@
+import { BottomTabBarProps } from "@react-navigation/bottom-tabs";
 import React, { useEffect, useState } from "react";
-import { Keyboard, StyleSheet, View } from "react-native";
+import { Keyboard, StyleSheet, Text, View } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { Colors, PathNames } from "~/constants";
-import { INavigation } from "~/models/models";
 import { randomString } from "~/services/helper";
 
-const CustomTabs = (props: {
-  state: {
-    routes: { name: string; key: string }[];
-    index: number;
-  };
-  descriptors: any;
-  navigation: INavigation;
-}) => {
+const CustomTabs = (props: BottomTabBarProps) => {
   const [keyboard, setKeyboard] = useState(false);
   useEffect(() => {
-    Keyboard.addListener("keyboardDidShow", _keyboardDidShow);
-    Keyboard.addListener("keyboardDidHide", _keyboardDidHide);
+    const showSub = Keyboard.addListener("keyboardDidShow", _keyboardDidShow);
+    const hideSub = Keyboard.addListener("keyboardDidHide", _keyboardDidHide);
     return () => {
-      Keyboard.removeListener("keyboardDidShow", _keyboardDidShow);
-      Keyboard.removeListener("keyboardDidHide", _keyboardDidHide);
+      showSub.remove();
+      hideSub.remove();
     };
   }, []);
 
@@ -56,11 +49,16 @@ const CustomTabs = (props: {
 
             if (!isFocused && !event.defaultPrevented) {
               // The `merge: true` option makes sure that the params inside the tab screen are preserved
-              props.navigation.navigate({ name: path, merge: true });
+              props.navigation.navigate(path, { merge: true });
             }
           };
 
-          let TabIcon = options.tabBarIcon({
+          if (!options.tabBarIcon) {
+            return <Text>Tabbar icon not set</Text>;
+          }
+
+          const TabIcon = options.tabBarIcon({
+            size: 25,
             color: Colors.white,
             focused: isFocused,
           });

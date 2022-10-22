@@ -7,8 +7,8 @@ import AppText from "./text";
 
 const SubPageHeader = (props: {
   navigation: INavigation;
-  style: IStyle;
   children: ReactNode;
+  style?: IStyle;
 }) => {
   return (
     <View style={{ ...styles.header, ...props.style }}>

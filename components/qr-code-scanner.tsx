@@ -41,7 +41,7 @@ const QrCodeScanner = (props: {
           onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
           style={[StyleSheet.absoluteFill, styles.scanner]}
         >
-          <SafeArea style={{ flex: 1 }}>
+          <SafeArea>
             <View style={styles.overlay}></View>
             <TouchableOpacity
               style={styles.closeButton}

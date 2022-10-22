@@ -8,6 +8,8 @@ import {
 } from "~/models/context";
 import { CurrencyIcon } from "~/models/currency-icon";
 import { MarketData } from "~/models/market-data";
+import { INavigation, IStyle } from "~/models/models";
+import { WalletWrapper } from "~/models/wallet-wrapper";
 import { calcTotalBalance } from "~/services/calc-balance";
 import {
   formatNumber,
@@ -16,7 +18,12 @@ import {
 import { Colors, Fonts, PathNames } from "../constants";
 import AppText from "./text";
 
-const WalletCard = (props) => {
+const WalletCard = (props: {
+  data: WalletWrapper;
+  navigation: INavigation;
+  index: number;
+  style: IStyle;
+}) => {
   const euroPrice = useContext(EURPriceContext);
   const [activeLanguage] = useContext(ActiveLanguageContext);
   const [activeCurrency] = useContext(ActiveCurrencyContext);

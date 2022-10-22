@@ -7,7 +7,11 @@ import AppText from "./text";
 let toggleTimeout: NodeJS.Timeout | undefined;
 const THRESHOLD = 150;
 
-const Toggle = (props) => {
+const Toggle = (props: {
+  active: React.SetStateAction<boolean[]>;
+  toggle: (toggled: number) => void;
+  text: string[];
+}) => {
   const [active, setActive] = useState<boolean[]>([]);
 
   useEffect(() => {

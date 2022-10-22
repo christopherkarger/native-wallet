@@ -1,12 +1,9 @@
+import { BottomTabNavigationEventMap } from "@react-navigation/bottom-tabs/lib/typescript/src/types";
+import { NavigationHelpers, ParamListBase } from "@react-navigation/native";
 import { StyleProp } from "react-native";
 
-export interface INavigation {
-  navigate: (
-    path: string | { name: string; merge: boolean },
-    data?: unknown
-  ) => void;
-  goBack: () => void;
-  emit: (args: any) => any;
-}
-
+export type INavigation = NavigationHelpers<
+  ParamListBase,
+  BottomTabNavigationEventMap
+>;
 export type IStyle = StyleProp<any>;

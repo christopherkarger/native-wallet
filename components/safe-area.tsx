@@ -4,7 +4,7 @@ import { SafeAreaView as DefaultSaveAreaView } from "react-native-safe-area-cont
 import { isIOS } from "~/constants";
 import { IStyle } from "~/models/models";
 
-const SafeArea = (props: { children: ReactNode; style: IStyle }) => {
+const SafeArea = (props: { children: ReactNode; style?: IStyle }) => {
   if (isIOS) {
     return (
       <SafeAreaView style={[styles.areaView, props.style]}>

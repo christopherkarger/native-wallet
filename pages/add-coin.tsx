@@ -25,6 +25,7 @@ import {
   SupportedLanguages,
 } from "~/models/context";
 import { MarketData } from "~/models/market-data";
+import { INavigation } from "~/models/models";
 import { waitTime } from "~/services/helper";
 import { Texts } from "~/texts";
 import SubPageHeader from "../components/sub-page-header";
@@ -38,7 +39,7 @@ const AddCoinScreen = (props: {
       currency: React.SetStateAction<string>;
     };
   };
-  navigation: { navigate: (arg0: string) => void; goBack: () => void };
+  navigation: INavigation;
 }) => {
   const [activeLanguage] = useContext(ActiveLanguageContext);
   const mounted = useIsMounted();

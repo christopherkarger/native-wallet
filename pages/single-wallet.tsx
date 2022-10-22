@@ -31,6 +31,7 @@ import {
 } from "~/models/context";
 import { CurrencyIcon } from "~/models/currency-icon";
 import { MarketData } from "~/models/market-data";
+import { INavigation } from "~/models/models";
 import { Wallet } from "~/models/wallet";
 import { WalletWrapper } from "~/models/wallet-wrapper";
 import { calcTotalBalance } from "~/services/calc-balance";
@@ -42,18 +43,24 @@ import { getWalletWrapper } from "~/services/getWalletWrapper";
 import { Texts } from "~/texts";
 import AppText from "../components/text";
 
-const SingleWalletScreen = (props) => {
+const SingleWalletScreen = (props: {
+  route: {
+    params: {
+      data: WalletWrapper;
+      index?: number;
+    };
+  };
+  navigation: INavigation;
+}) => {
   const euroPrice = useContext(EURPriceContext);
   const [activeLanguage] = useContext(ActiveLanguageContext);
   const [activeCurrency] = useContext(ActiveCurrencyContext);
   const [walletWrapper, setWalletWrapper] = useState<WalletWrapper>(
     props.route.params.data
   );
-
   const [moneyBalance, setMoneyBalance] = useState("0");
   const marketData: MarketData = useContext(MarketDataContext);
   const mounted = useIsMounted();
-
   const [qrCodeModalVisible, setQrCodeModalVisible] = useState(false);
   const [qrCodeAdress, setQrCodeAdress] = useState("");
   const [toDeleteWallet, setToDeleteWallet] = useState<{
@@ -127,7 +134,7 @@ const SingleWalletScreen = (props) => {
     [walletWrapper]
   );
 
-  const renderedListItem = (listProps) => {
+  const renderedListItem = (listProps: { item: Wallet; index: number }) => {
     return (
       <View style={styles.singleWalletWrapper}>
         <View style={styles.walletInner}>
@@ -162,11 +169,13 @@ const SingleWalletScreen = (props) => {
           {listProps.item.isCoinWallet && (
             <View style={styles.wrapper}>
               <AppText>{Texts.addedAt[activeLanguage]}:</AppText>
-              <DateTime
-                date={listProps.item.addedAt}
-                style={styles.addedInfo}
-                withTime={true}
-              ></DateTime>
+              {listProps.item.addedAt && (
+                <DateTime
+                  date={listProps.item.addedAt}
+                  style={styles.addedInfo}
+                  withTime={true}
+                ></DateTime>
+              )}
             </View>
           )}
 
@@ -191,7 +200,7 @@ const SingleWalletScreen = (props) => {
             <TextButton
               style={styles.openQrCode}
               onPress={() => {
-                setQrCodeAdress(listProps.item.address);
+                setQrCodeAdress(listProps.item.address!);
                 setQrCodeModalVisible(true);
               }}
             >

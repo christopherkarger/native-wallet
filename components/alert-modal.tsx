@@ -8,7 +8,7 @@ const AlertModal = (props: {
   show: boolean;
   headline: string;
   onConfirm: () => void;
-  onCancel: () => void;
+  onCancel?: () => void;
   cancelText?: string;
   highlightButton?: number;
   subHeadline?: string;
