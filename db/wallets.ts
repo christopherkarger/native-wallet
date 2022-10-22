@@ -109,24 +109,6 @@ export const selectLocalDBTableWallets = () => {
   });
 };
 
-export const dropLocalDBTableWallets = () => {
-  return new Promise<ISQLResult>((resolve, reject) => {
-    db.transaction((tx) => {
-      tx.executeSql(
-        `DROP TABLE ${tableWallets}`,
-        [],
-        (_, result) => {
-          resolve(<ISQLResult>result);
-        },
-        (_, error) => {
-          reject(error);
-          return true;
-        }
-      );
-    });
-  });
-};
-
 const deleteAllFromLocalDBTableWallets = () => {
   return new Promise<ISQLResult>((resolve, reject) => {
     db.transaction((tx) => {
@@ -169,9 +151,10 @@ export const updateItemBalanceToLocalDBTableWallets = (
 
 export const updateItemConnectedToIdToLocalDBTableWallets = (
   id: number,
-  newId?: number
+  newId: number
 ) => {
   return new Promise<SQLite.SQLResultSet>((resolve, reject) => {
+    console.log(newId);
     db.transaction((tx) => {
       tx.executeSql(
         `UPDATE ${tableWallets} SET connectedToId = ? WHERE id = ?;`,
@@ -216,15 +199,6 @@ export const deleteMainItemFromLocalDBTableWallets = (
       .slice()
       .filter((e) => e.connectedToId)
       .map((w) => w.clone());
-
-    // Update new main wallet address
-    try {
-      await updateItemConnectedToIdToLocalDBTableWallets(wallets[0].id);
-    } catch {
-      reject(
-        "deleteMainItemFromLocalDBTableWallets - failed to update first item"
-      );
-    }
 
     // Delete first one
     wallets.shift();

@@ -52,7 +52,9 @@ const AlertModal = (props: {
           {!!props.cancelText && (
             <TouchableOpacity
               onPress={() => {
-                props.onCancel();
+                if (props.onCancel) {
+                  props.onCancel();
+                }
               }}
             >
               <AppText
